@@ -7,6 +7,19 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
+    <!-- 早期注入：确保新素材在任何代码执行前就写入 localStorage -->
+    <script>
+    (function(){
+        try{
+            var k='media_workflow_materials';
+            var raw=localStorage.getItem(k);
+            var mats=raw?JSON.parse(raw):[];
+            var newMat={id:9999,title:'TikTok爆卖万件！帝王蝶开衫成秋季流量密码',source:'https://m.toutiao.com/group/7670098246307545638/',score:8,tags:['TikTok','图文/短视频'],spreadScore:18,fitScore:17,growthScore:16,difficultyScore:15,priorityScore:18,totalScore:84,used:false};
+            var exists=mats.some(function(m){return m.title===newMat.title;});
+            if(!exists){mats.push(newMat);localStorage.setItem(k,JSON.stringify(mats));console.log('[早期注入] 已注入素材');}
+        }catch(e){}
+    })();
+    </script>
     <title>新媒体运营工作台</title>
     <!-- iOS PWA 图标配置 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
