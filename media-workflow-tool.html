@@ -6815,7 +6815,7 @@ CREATE POLICY "allow_all" ON workbench_sync
         const STORAGE_KEY_AUTO_DATA_DATE = 'media_workflow_auto_data_date';
         const STORAGE_KEY_PROFILE = 'media_workflow_profile';
         const STORAGE_KEY_SCHEMA_VERSION = 'media_workflow_schema_version';
-        const CURRENT_SCHEMA_VERSION = 6;
+        const CURRENT_SCHEMA_VERSION = 7;
 
         // ===== 云同步核心逻辑 =====
         const SYNC_KEY_CONFIG = 'media_workflow_sync_config';
@@ -7431,6 +7431,28 @@ CREATE POLICY "allow_all" ON workbench_sync
                         console.warn('素材合并迁移跳过:', e);
                     }
                     version = 6;
+                }
+
+                // v6 -> v7: 合并 initialAccounts 中的账号到已有数据（仅新增，不删除已有）
+                if (version < 7) {
+                    try {
+                        const existingAccts = getStoredData(STORAGE_KEY_ACCOUNTS, []);
+                        let changed = false;
+                        initialAccounts.forEach(initAcct => {
+                            const exists = existingAccts.some(a => a.id === initAcct.id || (a.name === initAcct.name && a.platform === initAcct.platform));
+                            if (!exists) {
+                                existingAccts.push({ ...initAcct, id: Date.now() + Math.floor(Math.random() * 10000) });
+                                changed = true;
+                            }
+                        });
+                        if (changed) {
+                            saveData(STORAGE_KEY_ACCOUNTS, existingAccts);
+                            console.log('[迁移] v6->v7: 已合并新增账号');
+                        }
+                    } catch (e) {
+                        console.warn('账号合并迁移跳过:', e);
+                    }
+                    version = 7;
                 }
 
                 localStorage.setItem(STORAGE_KEY_SCHEMA_VERSION, String(version));
