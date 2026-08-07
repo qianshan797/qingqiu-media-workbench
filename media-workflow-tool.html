@@ -7,7 +7,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <!-- 早期注入：确保新素材在任何代码执行前就写入 localStorage -->
+    <!-- 早期注入：确保新素材在任何代码执行前就写入 localStorage，并清除默认任务和账号 -->
     <script>
     (function(){
         try{
@@ -17,6 +17,42 @@
             var newMat={id:9999,title:'TikTok爆卖万件！帝王蝶开衫成秋季流量密码',source:'https://m.toutiao.com/group/7670098246307545638/',score:8,tags:['TikTok','图文/短视频'],spreadScore:18,fitScore:17,growthScore:16,difficultyScore:15,priorityScore:18,totalScore:84,used:false};
             var exists=mats.some(function(m){return m.title===newMat.title;});
             if(!exists){mats.push(newMat);localStorage.setItem(k,JSON.stringify(mats));console.log('[早期注入] 已注入素材');}
+        }catch(e){}
+        try{
+            var tk='media_workflow_tasks';
+            var taskRaw=localStorage.getItem(tk);
+            var tasks=taskRaw?JSON.parse(taskRaw):[];
+            var DEFAULT_TITLES=['撰写公众号推文：如何打造爆款短视频','剪辑抖音视频：粉丝增长技巧分享','小红书图文排版与发布','更新运营小助手(公众号)数据','更新增长实验室(抖音)数据','更新新媒体日记(小红书)数据'];
+            var DEFAULT_ACCTS=['运营小助手','增长实验室','新媒体日记'];
+            var len=tasks.length;
+            tasks=tasks.filter(function(t){
+                if(DEFAULT_TITLES.indexOf(t.title)!==-1)return false;
+                for(var i=0;i<DEFAULT_ACCTS.length;i++){
+                    if(t.title && t.title.indexOf('更新'+DEFAULT_ACCTS[i]+'(')!==-1 && t.title.indexOf(')数据')!==-1)return false;
+                }
+                return true;
+            });
+            if(tasks.length!==len){localStorage.setItem(tk,JSON.stringify(tasks));console.log('[早期注入] 已清除 '+ (len-tasks.length) +' 个默认任务');}
+        }catch(e){}
+        try{
+            var ak='media_workflow_accounts';
+            var acctRaw=localStorage.getItem(ak);
+            var accts=acctRaw?JSON.parse(acctRaw):[];
+            var DEFAULT_ACCTS2=['运营小助手','增长实验室','新媒体日记'];
+            var len2=accts.length;
+            accts=accts.filter(function(a){return DEFAULT_ACCTS2.indexOf(a.name)===-1;});
+            if(accts.length!==len2){
+                localStorage.setItem(ak,JSON.stringify(accts));
+                var adk='media_workflow_account_data';
+                var adRaw=localStorage.getItem(adk);
+                if(adRaw){
+                    var ad=JSON.parse(adRaw);
+                    var newAd={};
+                    accts.forEach(function(a){if(ad[a.id])newAd[a.id]=ad[a.id];});
+                    localStorage.setItem(adk,JSON.stringify(newAd));
+                }
+                console.log('[早期注入] 已清除默认账号');
+            }
         }catch(e){}
     })();
     </script>
@@ -6836,7 +6872,7 @@ CREATE POLICY "allow_all" ON workbench_sync
         const STORAGE_KEY_AUTO_DATA_DATE = 'media_workflow_auto_data_date';
         const STORAGE_KEY_PROFILE = 'media_workflow_profile';
         const STORAGE_KEY_SCHEMA_VERSION = 'media_workflow_schema_version';
-        const CURRENT_SCHEMA_VERSION = 9;
+        const CURRENT_SCHEMA_VERSION = 10;
 
         // ===== 云同步核心逻辑 =====
         const SYNC_KEY_CONFIG = 'media_workflow_sync_config';
@@ -7559,6 +7595,63 @@ CREATE POLICY "allow_all" ON workbench_sync
                     version = 9;
                 }
 
+                // v9 -> v10: 删除所有默认任务（初始示例任务 + 默认账号的每日更新任务）
+                if (version < 10) {
+                    try {
+                        const DEFAULT_TASK_TITLES = [
+                            '撰写公众号推文：如何打造爆款短视频',
+                            '剪辑抖音视频：粉丝增长技巧分享',
+                            '小红书图文排版与发布',
+                            '更新运营小助手(公众号)数据',
+                            '更新增长实验室(抖音)数据',
+                            '更新新媒体日记(小红书)数据'
+                        ];
+                        const DEFAULT_ACCT_NAMES = ['运营小助手', '增长实验室', '新媒体日记'];
+
+                        const existingTasks = getStoredData(STORAGE_KEY_TASKS, []);
+                        const originalCount = existingTasks.length;
+
+                        const filteredTasks = existingTasks.filter(t => {
+                            // 按标题删除默认任务
+                            if (DEFAULT_TASK_TITLES.includes(t.title)) return false;
+                            // 删除包含"更新运营小助手/增长实验室/新媒体日记"和"数据"的任务（兼容各种日期/格式）
+                            for (const acct of DEFAULT_ACCT_NAMES) {
+                                if (t.title && t.title.includes(`更新${acct}(`) && t.title.includes(')数据')) return false;
+                            }
+                            return true;
+                        });
+
+                        if (filteredTasks.length !== originalCount) {
+                            saveData(STORAGE_KEY_TASKS, filteredTasks);
+                            console.log(`[迁移] v9->v10: 已删除 ${originalCount - filteredTasks.length} 个默认任务`);
+                        } else {
+                            console.log('[迁移] v9->v10: 无默认任务需删除');
+                        }
+
+                        // 再次确保默认账号已清除（防止旧缓存）
+                        const existingAccts = getStoredData(STORAGE_KEY_ACCOUNTS, []);
+                        const filteredAccts = existingAccts.filter(a => !DEFAULT_ACCT_NAMES.includes(a.name));
+                        if (filteredAccts.length !== existingAccts.length) {
+                            saveData(STORAGE_KEY_ACCOUNTS, filteredAccts);
+                            // 同步清理默认账号的粉丝数据
+                            const existingAcctData = getStoredData(STORAGE_KEY_ACCOUNT_DATA, {});
+                            const filteredAcctData = {};
+                            filteredAccts.forEach(a => {
+                                if (existingAcctData[a.id]) {
+                                    filteredAcctData[a.id] = existingAcctData[a.id];
+                                }
+                            });
+                            if (Object.keys(filteredAcctData).length !== Object.keys(existingAcctData).length) {
+                                saveData(STORAGE_KEY_ACCOUNT_DATA, filteredAcctData);
+                            }
+                            console.log('[迁移] v9->v10: 再次清除默认账号');
+                        }
+                    } catch (e) {
+                        console.warn('默认任务清除跳过:', e);
+                    }
+                    version = 10;
+                }
+
                 localStorage.setItem(STORAGE_KEY_SCHEMA_VERSION, String(version));
             } catch (e) {
                 console.error('数据迁移失败:', e);
@@ -7645,11 +7738,7 @@ CREATE POLICY "allow_all" ON workbench_sync
             }
         };
 
-        const initialTasks = [
-            { id: 1, title: '撰写公众号推文：如何打造爆款短视频', priority: 'high', platform: '公众号', status: 'pending' },
-            { id: 2, title: '剪辑抖音视频：粉丝增长技巧分享', priority: 'medium', platform: '抖音', status: 'inProgress' },
-            { id: 3, title: '小红书图文排版与发布', priority: 'low', platform: '小红书', status: 'completed' }
-        ];
+        const initialTasks = [];
 
         const initialMaterials = [
             { id: 1, title: '揭秘：头部博主如何在3个月涨粉100万', source: 'https://www.baidu.com/s?wd=头部博主涨粉秘诀', score: 9, tags: ['情绪价值', '干货'], spreadScore: 18, fitScore: 16, growthScore: 19, difficultyScore: 12, priorityScore: 17, totalScore: 82 },
