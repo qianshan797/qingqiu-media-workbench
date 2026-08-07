@@ -3686,6 +3686,10 @@
             color: #34C759;
         }
 
+        .calendar-stat-num.completed { color: #22c55e; }
+        .calendar-stat-num.in-progress { color: #f59e0b; }
+        .calendar-stat-num.pending { color: #64748b; }
+
         .calendar-stat-label {
             font-size: 12px;
             color: #8E8E93;
@@ -4195,8 +4199,16 @@
         }
 
         body.dark-mode .task-card {
+            background: #1C1C1E;
+            border-color: rgba(84, 84, 88, 0.5);
+        }
+
+        body.dark-mode .task-card:hover {
             background: #2C2C2E;
-            border-color: rgba(84, 84, 88, 0.6);
+        }
+
+        body.dark-mode .task-title {
+            color: #FFFFFF;
         }
 
         body.dark-mode .task-name {
@@ -4207,6 +4219,88 @@
             color: rgba(235, 235, 245, 0.6);
         }
 
+        /* ===== 工作流看板 · 任务徽章暗色 ===== */
+        body.dark-mode .priority-badge.high {
+            background: rgba(255, 69, 58, 0.2);
+            color: #FF453A;
+        }
+
+        body.dark-mode .priority-badge.medium {
+            background: rgba(255, 149, 0, 0.2);
+            color: #FF9F0A;
+        }
+
+        body.dark-mode .priority-badge.low {
+            background: rgba(52, 199, 89, 0.2);
+            color: #30D158;
+        }
+
+        body.dark-mode .platform-badge {
+            background: rgba(175, 82, 222, 0.25);
+            color: #DA8FFF;
+        }
+
+        body.dark-mode .daily-badge {
+            background: linear-gradient(135deg, #30D158, #34C759);
+            color: #000000;
+        }
+
+        body.dark-mode .date-badge {
+            background: rgba(10, 132, 255, 0.2);
+            color: #0A84FF;
+        }
+
+        /* ===== 工作流看板 · 任务动作按钮暗色 ===== */
+        body.dark-mode .task-actions .action-btn {
+            background: #2C2C2E;
+            color: rgba(235, 235, 245, 0.85);
+        }
+
+        body.dark-mode .task-actions .action-btn.move {
+            background: rgba(175, 82, 222, 0.22);
+            color: #DA8FFF;
+        }
+
+        body.dark-mode .task-actions .action-btn.move:hover {
+            background: rgba(175, 82, 222, 0.35);
+        }
+
+        body.dark-mode .task-actions .action-btn.complete {
+            background: rgba(52, 199, 89, 0.22);
+            color: #30D158;
+        }
+
+        body.dark-mode .task-actions .action-btn.complete:hover {
+            background: rgba(52, 199, 89, 0.35);
+        }
+
+        body.dark-mode .task-actions .action-btn.back {
+            background: rgba(118, 118, 128, 0.28);
+            color: rgba(235, 235, 245, 0.85);
+        }
+
+        body.dark-mode .task-actions .action-btn.back:hover {
+            background: rgba(118, 118, 128, 0.4);
+        }
+
+        body.dark-mode .task-actions .action-btn.edit {
+            background: rgba(10, 132, 255, 0.22);
+            color: #0A84FF;
+        }
+
+        body.dark-mode .task-actions .action-btn.edit:hover {
+            background: rgba(10, 132, 255, 0.35);
+        }
+
+        body.dark-mode .task-actions .action-btn.delete {
+            background: rgba(255, 69, 58, 0.22);
+            color: #FF453A;
+        }
+
+        body.dark-mode .task-actions .action-btn.delete:hover {
+            background: rgba(255, 69, 58, 0.35);
+        }
+
         body.dark-mode .task-actions button {
             color: rgba(235, 235, 245, 0.3);
         }
@@ -4214,6 +4308,27 @@
         body.dark-mode .task-actions button:hover {
             background: #3A3A3C;
             color: #FFFFFF;
+        }
+
+        /* ===== 工作流看板 · 添加任务区暗色 ===== */
+        body.dark-mode .add-task-section {
+            border-top-color: rgba(84, 84, 88, 0.5);
+        }
+
+        body.dark-mode .add-task-form input,
+        body.dark-mode .add-task-form select {
+            background: #2C2C2E;
+            color: #FFFFFF;
+        }
+
+        body.dark-mode .add-task-form input::placeholder {
+            color: rgba(235, 235, 245, 0.35);
+        }
+
+        body.dark-mode .add-task-form input:focus,
+        body.dark-mode .add-task-form select:focus {
+            background: #3A3A3C;
+            box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.25);
         }
 
         body.dark-mode .materials-toolbar {
@@ -4291,15 +4406,42 @@
         }
 
         body.dark-mode .calendar-add-task {
-            background: #1C1C1E;
+            background: #2C2C2E;
             border-color: rgba(84, 84, 88, 0.6);
         }
 
         body.dark-mode .calendar-add-task input,
         body.dark-mode .calendar-add-task select {
-            background: #2C2C2E;
+            background: #3A3A3C;
             border-color: rgba(84, 84, 88, 0.6);
             color: #FFFFFF;
+        }
+
+        body.dark-mode .calendar-add-task input[type="text"] {
+            background: #3A3A3C;
+            border-color: rgba(84, 84, 88, 0.6);
+            color: #FFFFFF;
+        }
+
+        body.dark-mode .calendar-add-task input[type="text"]::placeholder {
+            color: rgba(235, 235, 245, 0.35);
+        }
+
+        body.dark-mode .calendar-add-task input[type="text"]:focus,
+        body.dark-mode .calendar-add-task select:focus {
+            background: #48484A;
+            border-color: #0A84FF;
+            box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.25);
+        }
+
+        body.dark-mode .calendar-add-task button,
+        body.dark-mode .calendar-add-task .add-task-btn {
+            background: #0A84FF;
+            color: #FFFFFF;
+        }
+
+        body.dark-mode .calendar-add-task button:hover {
+            background: #409CFF;
         }
 
         body.dark-mode .calendar-task-card {
@@ -4320,23 +4462,20 @@
             color: #34C759;
         }
 
+        body.dark-mode .calendar-stat-num.completed {
+            color: #30D158;
+        }
+
+        body.dark-mode .calendar-stat-num.in-progress {
+            color: #FF9F0A;
+        }
+
+        body.dark-mode .calendar-stat-num.pending {
+            color: #8E8E93;
+        }
+
         body.dark-mode .calendar-stat-label {
             color: rgba(235, 235, 245, 0.55);
-        }
-
-        body.dark-mode .calendar-add-task input[type="text"] {
-            background: #2C2C2E;
-            color: #FFFFFF;
-        }
-
-        body.dark-mode .calendar-add-task input[type="text"]::placeholder {
-            color: rgba(235, 235, 245, 0.35);
-        }
-
-        body.dark-mode .calendar-add-task button,
-        body.dark-mode .calendar-add-task .add-task-btn {
-            background: #0A84FF;
-            color: #FFFFFF;
         }
 
         body.dark-mode .calendar-detail-header h3 {
@@ -4426,6 +4565,8 @@
         }
 
         body.dark-mode .calendar-detail {
+            background: #1C1C1E;
+            border-color: rgba(84, 84, 88, 0.5);
             color: rgba(235, 235, 245, 0.6);
         }
 
@@ -7515,15 +7656,15 @@ CREATE POLICY "allow_all" ON workbench_sync
             html += `
                 <div class="calendar-stats">
                     <div class="calendar-stat-item">
-                        <div class="calendar-stat-num" style="color: #22c55e;">${completedTasks.length}</div>
+                        <div class="calendar-stat-num completed">${completedTasks.length}</div>
                         <div class="calendar-stat-label">已完成</div>
                     </div>
                     <div class="calendar-stat-item">
-                        <div class="calendar-stat-num" style="color: #f59e0b;">${inProgressTasks.length}</div>
+                        <div class="calendar-stat-num in-progress">${inProgressTasks.length}</div>
                         <div class="calendar-stat-label">进行中</div>
                     </div>
                     <div class="calendar-stat-item">
-                        <div class="calendar-stat-num" style="color: #64748b;">${pendingTasksList.length}</div>
+                        <div class="calendar-stat-num pending">${pendingTasksList.length}</div>
                         <div class="calendar-stat-label">待处理</div>
                     </div>
                 </div>
