@@ -1035,8 +1035,9 @@
         }
 
         .avatar-emoji-btn {
-            width: 36px;
-            height: 36px;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            min-width: 0;
             border-radius: 10px;
             border: none;
             background: #F2F2F7;
@@ -1046,6 +1047,7 @@
             align-items: center;
             justify-content: center;
             transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            padding: 0;
         }
 
         .avatar-emoji-btn:hover {
@@ -3857,6 +3859,117 @@
 
             .page-header h1 {
                 font-size: 18px;
+            }
+
+            /* 移动端：修改个人信息模态框尺寸优化 */
+            .avatar-picker {
+                gap: 8px;
+            }
+
+            .avatar-input-row {
+                gap: 8px;
+                flex-wrap: wrap;
+            }
+
+            .avatar-preview {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+
+            .avatar-text-input {
+                padding: 8px 12px;
+                font-size: 13px;
+            }
+
+            .avatar-upload-btn {
+                padding: 8px 12px;
+                font-size: 12px;
+                width: 100%;
+                justify-content: center;
+            }
+
+            /* 表情格子响应式：8 列在窄屏改为 6 列，格子大小自适应 */
+            .avatar-emoji-grid {
+                grid-template-columns: repeat(6, 1fr);
+                gap: 5px;
+            }
+
+            .avatar-emoji-btn {
+                border-radius: 8px;
+                font-size: 16px;
+            }
+
+            .avatar-emoji-btn:hover {
+                transform: scale(1.05);
+            }
+
+            /* 模态框移动端尺寸 */
+            .modal {
+                width: 96%;
+                max-height: 92vh;
+                border-radius: 16px;
+            }
+
+            .modal-header {
+                padding: 16px 18px;
+            }
+
+            .modal-header h2 {
+                font-size: 15px;
+            }
+
+            .modal-header h2 svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            .modal-close {
+                width: 32px;
+                height: 32px;
+            }
+
+            .modal-close svg {
+                width: 16px;
+                height: 16px;
+            }
+
+            .modal-body {
+                padding: 16px 18px;
+            }
+
+            .modal-actions {
+                padding: 14px 18px;
+                margin-top: 4px;
+                gap: 8px;
+            }
+
+            .modal-actions .modal-btn {
+                flex: 1;
+                justify-content: center;
+            }
+
+            /* 表单移动端尺寸 */
+            .form-group {
+                margin-bottom: 12px;
+            }
+
+            .form-group label {
+                font-size: 12px;
+                margin-bottom: 4px;
+            }
+
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                padding: 9px 12px;
+                font-size: 13px;
+                border-radius: 10px;
+            }
+
+            /* profile-modal 底部安全区 */
+            .modal-overlay.active .modal {
+                padding-bottom: env(safe-area-inset-bottom);
             }
         }
 
