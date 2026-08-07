@@ -8327,9 +8327,30 @@ CREATE POLICY "allow_all" ON workbench_sync
             if (stored) {
                 try {
                     const parsed = JSON.parse(stored);
-                    // 用户已删除所有素材后，不应再回退到初始素材
-                    if (key === STORAGE_KEY_MATERIALS && Array.isArray(parsed) && parsed.length === 0) {
-                        return [];
+                    if (key === STORAGE_KEY_MATERIALS && Array.isArray(parsed)) {
+                        // 修复：空数组 或 不含帝王蝶/跨境种子素材 的数组，都强制回退到 initialMaterials 重新注入，
+                        // 防止旧版本清空空数组后永久丢失素材
+                        const MUST_HAVE_TITLES = [
+                            'TikTok爆卖万件！帝王蝶开衫成秋季流量密码',
+                            '2026跨境最赚钱的8个品类，最后一个90%的人不知道'
+                        ];
+                        const hasRequired = MUST_HAVE_TITLES.some(t => parsed.some(m => m.title === t));
+                        if (parsed.length === 0 || !hasRequired) {
+                            console.warn('[getStoredData] materials 缺少必填素材，强制重置为 initialMaterials（',
+                                '空数组:', parsed.length === 0,
+                                '/ 有帝王蝶:', parsed.some(m => m.title === MUST_HAVE_TITLES[0]),
+                                ')');
+                            // 先把用户自定义的非种子/非默认素材存起来
+                            const DEFAULT_TITLES = ['揭秘：头部博主如何在3个月涨粉100万','2024年新媒体趋势报告解读','用户情绪共鸣：让你的内容被疯狂转发'].concat(MUST_HAVE_TITLES, ['外贸报价比同行低15%，客户还是跑了？真相扎心','做东南亚跨境，泰国和马来西亚根本不是一个玩法','2026年做外贸，这4个赛道普通人也能年入百万']);
+                            const userCustom = parsed.filter(m => !DEFAULT_TITLES.includes(m.title));
+                            const merged = [...initial, ...userCustom];
+                            // 去重
+                            const seen = {};
+                            const finalArr = [];
+                            merged.forEach(m => { const k = m.title || JSON.stringify(m); if (!seen[k]) { seen[k]=1; finalArr.push(m); } });
+                            localStorage.setItem(key, JSON.stringify(finalArr));
+                            return finalArr;
+                        }
                     }
                     return parsed;
                 } catch (e) {
@@ -12064,6 +12085,47 @@ CREATE POLICY "allow_all" ON workbench_sync
         accounts = getStoredData(STORAGE_KEY_ACCOUNTS, initialAccounts); // 重新加载迁移/早期注入后的账号数据
         accountData = getStoredData(STORAGE_KEY_ACCOUNT_DATA, initialAccountData);
         tasks = getStoredData(STORAGE_KEY_TASKS, initialTasks); // 重新加载迁移后的数据
+        tags = getStoredData(STORAGE_KEY_TAGS, initialTags);
+        materials = getStoredData(STORAGE_KEY_MATERIALS, initialMaterials); // 重新加载迁移后的数据，触发 getStoredData 内的帝王蝶强制修复逻辑
+
+        // ===== 终极兜底：无论如何都要确保帝王蝶等种子素材存在 =====
+        (function ultimateMaterialFix() {
+            try {
+                // 如果用户访问 URL 带 ?reset=1 或 ?v=19，强制清空所有旧 key 重新初始化（最暴力修复）
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('reset') === '1' || urlParams.get('v') === '19') {
+                    const ALL_KEYS = ['media_workflow_schema_version','media_workflow_materials','media_workflow_accounts','media_workflow_account_data','media_workflow_tasks','media_workflow_tags','media_workflow_profile','media_workflow_api_config','media_workflow_auto_data_date','media_workflow_sync_config','media_workflow_sync_log','media_workflow_last_push'];
+                    ALL_KEYS.forEach(k => localStorage.removeItem(k));
+                    localStorage.setItem('media_workflow_schema_version','18');
+                    console.warn('[终极修复] 已强制清除所有 localStorage 旧 key 并重置 schema');
+                }
+                const SEED = [
+                    { id: 9999, title: 'TikTok爆卖万件！帝王蝶开衫成秋季流量密码', source: 'https://m.toutiao.com/group/7670098246307545638/', score: 8, tags: ['TikTok','图文/短视频'], spreadScore: 18, fitScore: 17, growthScore: 16, difficultyScore: 15, priorityScore: 18, totalScore: 84, used: false },
+                    { id: 9998, title: '2026跨境最赚钱的8个品类，最后一个90%的人不知道', source: 'https://m.haibeigoods.com/article/qPmtApqeTsW', score: 9, tags: ['抖音','选品测评','外贸跨境'], spreadScore: 17, fitScore: 18, growthScore: 16, difficultyScore: 18, priorityScore: 18, totalScore: 87, used: false },
+                    { id: 9997, title: '外贸报价比同行低15%，客户还是跑了？真相扎心', source: 'https://m.sohu.com/a/1035371344_122832798/', score: 8, tags: ['知乎','深度长文','外贸跨境'], spreadScore: 15, fitScore: 18, growthScore: 16, difficultyScore: 15, priorityScore: 17, totalScore: 81, used: false },
+                    { id: 9996, title: '做东南亚跨境，泰国和马来西亚根本不是一个玩法', source: 'http://caijing.chinadaily.com.cn/a/202604/28/WS69f05858a310942cc49a9d28.html', score: 8, tags: ['视频号','地域攻略','外贸跨境'], spreadScore: 16, fitScore: 16, growthScore: 15, difficultyScore: 16, priorityScore: 17, totalScore: 80, used: false },
+                    { id: 9995, title: '2026年做外贸，这4个赛道普通人也能年入百万', source: 'http://m.toutiao.com/group/7658321986296316443/', score: 8, tags: ['抖音','创业故事','外贸跨境'], spreadScore: 17, fitScore: 14, growthScore: 17, difficultyScore: 17, priorityScore: 15, totalScore: 80, used: false }
+                ];
+                let changed = false;
+                SEED.forEach(s => {
+                    if (!materials.some(m => m.title === s.title)) {
+                        materials.push({ ...s, id: Date.now() + Math.floor(Math.random() * 99999) });
+                        changed = true;
+                        console.log('[终极修复] 注入缺失素材:', s.title);
+                    }
+                });
+                // 标签兜底
+                ['TikTok','图文/短视频','外贸跨境','抖音','选品测评','知乎','深度长文','视频号','地域攻略','创业故事'].forEach(t => {
+                    if (!tags.includes(t)) { tags.push(t); changed = true; }
+                });
+                if (changed) {
+                    saveData(STORAGE_KEY_MATERIALS, materials);
+                    saveData(STORAGE_KEY_TAGS, tags);
+                    console.log('[终极修复] 已保存修复后的素材库（共', materials.length, '条，标签', tags.length, '个）');
+                }
+            } catch (e) { console.error('[终极修复] 执行失败:', e); }
+        })();
+
         deduplicateTasks(); // 清理重复任务
         initDarkMode(); // 初始化深色模式
         renderTasks();
