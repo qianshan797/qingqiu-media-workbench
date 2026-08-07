@@ -2050,14 +2050,36 @@
         }
 
         .add-task-date {
-            padding: 10px 14px;
+            padding: 0 14px;
+            height: 42px;
+            line-height: 42px;
             border: 1px solid #E5E5EA;
             border-radius: 10px;
             font-size: 14px;
+            font-family: inherit;
             background: #F2F2F7;
             color: #1C1C1E;
             min-width: 160px;
+            text-align: left;
+            -webkit-appearance: none;
+            appearance: none;
             transition: box-shadow 0.3s, background 0.3s, border-color 0.3s;
+        }
+
+        .add-task-date::-webkit-date-and-time-value {
+            text-align: left;
+            line-height: 42px;
+        }
+
+        .add-task-date::-webkit-calendar-picker-indicator {
+            cursor: pointer;
+            opacity: 0.55;
+            height: 20px;
+            width: 20px;
+        }
+
+        .add-task-date::-webkit-calendar-picker-indicator:hover {
+            opacity: 0.85;
         }
 
         .add-task-date:focus {
@@ -4058,7 +4080,13 @@
             .add-task-date {
                 width: 100%;
                 min-width: 0;
+                height: 44px;
+                line-height: 44px;
                 font-size: 15px;
+            }
+
+            .add-task-date::-webkit-date-and-time-value {
+                line-height: 44px;
             }
 
             .daily-task-checkbox {
@@ -4427,6 +4455,17 @@
             border-color: rgba(84, 84, 88, 0.6);
             color: #FFFFFF;
             color-scheme: dark;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        body.dark-mode .add-task-date::-webkit-calendar-picker-indicator {
+            filter: invert(1) opacity(0.6);
+            cursor: pointer;
+        }
+
+        body.dark-mode .add-task-date::-webkit-calendar-picker-indicator:hover {
+            filter: invert(1) opacity(0.9);
         }
 
         body.dark-mode .add-task-date:focus {
