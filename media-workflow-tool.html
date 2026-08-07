@@ -5929,9 +5929,9 @@
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
                             删除账号 <span class="btn-badge" id="deleteCount">0</span>
                         </button>
-                        <button class="toolbar-btn" onclick="resetToDefaultAccounts()" title="恢复默认账号">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
-                            同步账号
+                        <button class="toolbar-btn" onclick="clearDefaultAccounts()" title="清除旧默认账号">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                            清除旧账号
                         </button>
                         <button class="toolbar-btn invert" onclick="openApiConfigModal()">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L-3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
@@ -6819,7 +6819,7 @@ CREATE POLICY "allow_all" ON workbench_sync
         const STORAGE_KEY_AUTO_DATA_DATE = 'media_workflow_auto_data_date';
         const STORAGE_KEY_PROFILE = 'media_workflow_profile';
         const STORAGE_KEY_SCHEMA_VERSION = 'media_workflow_schema_version';
-        const CURRENT_SCHEMA_VERSION = 7;
+        const CURRENT_SCHEMA_VERSION = 8;
 
         // ===== 云同步核心逻辑 =====
         const SYNC_KEY_CONFIG = 'media_workflow_sync_config';
@@ -7459,6 +7459,55 @@ CREATE POLICY "allow_all" ON workbench_sync
                     version = 7;
                 }
 
+                // v7 -> v8: 清除旧默认账号（运营小助手、增长实验室、新媒体日记）及其关联数据
+                if (version < 8) {
+                    try {
+                        const DEFAULT_ACCT_NAMES = ['运营小助手', '增长实验室', '新媒体日记'];
+                        let changed = false;
+
+                        // 清除默认账号
+                        const existingAccts = getStoredData(STORAGE_KEY_ACCOUNTS, []);
+                        const filteredAccts = existingAccts.filter(a => !DEFAULT_ACCT_NAMES.includes(a.name));
+                        if (filteredAccts.length !== existingAccts.length) {
+                            saveData(STORAGE_KEY_ACCOUNTS, filteredAccts);
+                            changed = true;
+                            console.log('[迁移] v7->v8: 已清除默认账号');
+                        }
+
+                        // 清除默认账号关联的任务
+                        const existingTasks = getStoredData(STORAGE_KEY_TASKS, []);
+                        const filteredTasks = existingTasks.filter(t => {
+                            if (!t.accountId) return true;
+                            const acct = filteredAccts.find(a => String(a.id) === String(t.accountId));
+                            return !!acct;
+                        });
+                        if (filteredTasks.length !== existingTasks.length) {
+                            saveData(STORAGE_KEY_TASKS, filteredTasks);
+                            changed = true;
+                        }
+
+                        // 清除默认账号的粉丝数据
+                        const existingAcctData = getStoredData(STORAGE_KEY_ACCOUNT_DATA, {});
+                        const filteredAcctData = {};
+                        filteredAccts.forEach(a => {
+                            if (existingAcctData[a.id]) {
+                                filteredAcctData[a.id] = existingAcctData[a.id];
+                            }
+                        });
+                        if (Object.keys(filteredAcctData).length !== Object.keys(existingAcctData).length) {
+                            saveData(STORAGE_KEY_ACCOUNT_DATA, filteredAcctData);
+                            changed = true;
+                        }
+
+                        if (!changed) {
+                            console.log('[迁移] v7->v8: 无默认账号需清除');
+                        }
+                    } catch (e) {
+                        console.warn('默认账号清除跳过:', e);
+                    }
+                    version = 8;
+                }
+
                 localStorage.setItem(STORAGE_KEY_SCHEMA_VERSION, String(version));
             } catch (e) {
                 console.error('数据迁移失败:', e);
@@ -7562,28 +7611,11 @@ CREATE POLICY "allow_all" ON workbench_sync
             { id: 8, title: 'TikTok爆卖万件！帝王蝶开衫成秋季流量密码', source: 'https://m.toutiao.com/group/7670098246307545638/', score: 8, tags: ['TikTok', '图文/短视频'], spreadScore: 18, fitScore: 17, growthScore: 16, difficultyScore: 15, priorityScore: 18, totalScore: 84 }
         ];
 
-        const initialAccounts = [
-            { id: 1, name: '运营小助手', platform: '公众号', followers: 28600, avatar: '📢', url: '' },
-            { id: 2, name: '增长实验室', platform: '抖音', followers: 52300, avatar: '🚀', url: '' },
-            { id: 3, name: '新媒体日记', platform: '小红书', followers: 15800, avatar: '📔', url: '' }
-        ];
+        const initialAccounts = [];
 
         const initialTags = ['情绪价值', '干货', '热点', '抖音', '选品测评', '外贸跨境', '知乎', '深度长文', '视频号', '地域攻略', '创业故事', 'TikTok', '图文/短视频'];
 
-        const initialAccountData = {
-            1: [
-                { date: '2026-07-04', followersChange: 128, views: 5600, likes: 380 },
-                { date: '2026-07-03', followersChange: 95, views: 4200, likes: 290 }
-            ],
-            2: [
-                { date: '2026-07-04', followersChange: 256, views: 12800, likes: 920 },
-                { date: '2026-07-03', followersChange: 198, views: 10500, likes: 750 }
-            ],
-            3: [
-                { date: '2026-07-04', followersChange: 64, views: 3200, likes: 220 },
-                { date: '2026-07-03', followersChange: 42, views: 2800, likes: 180 }
-            ]
-        };
+        const initialAccountData = {};
 
         function getStoredData(key, initial) {
             const stored = localStorage.getItem(key);
@@ -10923,33 +10955,37 @@ CREATE POLICY "allow_all" ON workbench_sync
             renderTasks();
         }
 
-        function resetToDefaultAccounts() {
-            if (!confirm('确定要将账号同步为默认账号吗？\n将保留你已添加的账号，但会补充默认账号（运营小助手、增长实验室、新媒体日记）。')) {
+        function clearDefaultAccounts() {
+            const DEFAULT_ACCT_NAMES = ['运营小助手', '增长实验室', '新媒体日记'];
+            const hasDefaults = accounts.some(a => DEFAULT_ACCT_NAMES.includes(a.name));
+            if (!hasDefaults) {
+                alert('没有旧默认账号需要清除');
                 return;
             }
-            let changed = false;
-            initialAccounts.forEach(initAcct => {
-                const exists = accounts.some(a => a.id === initAcct.id || (a.name === initAcct.name && a.platform === initAcct.platform));
-                if (!exists) {
-                    accounts.push({ ...initAcct, id: Date.now() + Math.floor(Math.random() * 10000) });
-                    changed = true;
-                }
-            });
-            initialTags.forEach(t => {
-                if (!tags.includes(t)) {
-                    tags.push(t);
-                    changed = true;
-                }
-            });
-            if (changed) {
-                saveData(STORAGE_KEY_ACCOUNTS, accounts);
-                saveData(STORAGE_KEY_TAGS, tags);
-                alert('✅ 已同步默认账号和标签');
-            } else {
-                alert('账号已是最新，无需同步');
+            if (!confirm('确定要清除旧默认账号吗？\n将删除「运营小助手」「增长实验室」「新媒体日记」及其关联任务数据。')) {
+                return;
             }
+            const filteredAccts = accounts.filter(a => !DEFAULT_ACCT_NAMES.includes(a.name));
+            accounts = filteredAccts;
+            const filteredTasks = tasks.filter(t => {
+                if (!t.accountId) return true;
+                const acct = filteredAccts.find(a => String(a.id) === String(t.accountId));
+                return !!acct;
+            });
+            tasks = filteredTasks;
+            const filteredAcctData = {};
+            filteredAccts.forEach(a => {
+                if (accountData[a.id]) {
+                    filteredAcctData[a.id] = accountData[a.id];
+                }
+            });
+            accountData = filteredAcctData;
+            saveData(STORAGE_KEY_ACCOUNTS, accounts);
+            saveData(STORAGE_KEY_TASKS, tasks);
+            saveData(STORAGE_KEY_ACCOUNT_DATA, accountData);
+            alert('✅ 已清除旧默认账号');
             renderAccounts();
-            renderTags();
+            renderTasks();
         }
 
         function openAccountDetailModal(accountId) {
