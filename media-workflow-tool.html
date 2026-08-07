@@ -7,13 +7,17 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <!-- 早期注入：确保新素材在任何代码执行前就写入 localStorage，并清除默认任务和账号 -->
+    <!-- 早期注入：清理默认任务、账号和素材，确保在任何代码执行前完成 -->
     <script>
     (function(){
         try{
             var k='media_workflow_materials';
             var raw=localStorage.getItem(k);
             var mats=raw?JSON.parse(raw):[];
+            var defTitles=['揭秘：头部博主如何在3个月涨粉100万','2024年新媒体趋势报告解读','用户情绪共鸣：让你的内容被疯狂转发'];
+            var len0=mats.length;
+            mats=mats.filter(function(m){return defTitles.indexOf(m.title)===-1;});
+            if(mats.length!==len0){localStorage.setItem(k,JSON.stringify(mats));console.log('[早期注入] 已清除默认素材');}
             var newMat={id:9999,title:'TikTok爆卖万件！帝王蝶开衫成秋季流量密码',source:'https://m.toutiao.com/group/7670098246307545638/',score:8,tags:['TikTok','图文/短视频'],spreadScore:18,fitScore:17,growthScore:16,difficultyScore:15,priorityScore:18,totalScore:84,used:false};
             var exists=mats.some(function(m){return m.title===newMat.title;});
             if(!exists){mats.push(newMat);localStorage.setItem(k,JSON.stringify(mats));console.log('[早期注入] 已注入素材');}
@@ -53,6 +57,15 @@
                 }
                 console.log('[早期注入] 已清除默认账号');
             }
+        }catch(e){}
+        try{
+            var tgk='media_workflow_tags';
+            var tgRaw=localStorage.getItem(tgk);
+            var tags=tgRaw?JSON.parse(tgRaw):[];
+            var TAGS_REMOVE=['情绪价值','干货','热点'];
+            var len3=tags.length;
+            tags=tags.filter(function(t){return TAGS_REMOVE.indexOf(t)===-1;});
+            if(tags.length!==len3){localStorage.setItem(tgk,JSON.stringify(tags));}
         }catch(e){}
     })();
     </script>
@@ -6872,7 +6885,7 @@ CREATE POLICY "allow_all" ON workbench_sync
         const STORAGE_KEY_AUTO_DATA_DATE = 'media_workflow_auto_data_date';
         const STORAGE_KEY_PROFILE = 'media_workflow_profile';
         const STORAGE_KEY_SCHEMA_VERSION = 'media_workflow_schema_version';
-        const CURRENT_SCHEMA_VERSION = 10;
+        const CURRENT_SCHEMA_VERSION = 11;
 
         // ===== 云同步核心逻辑 =====
         const SYNC_KEY_CONFIG = 'media_workflow_sync_config';
@@ -7652,6 +7665,37 @@ CREATE POLICY "allow_all" ON workbench_sync
                     version = 10;
                 }
 
+                // v10 -> v11: 删除3条默认素材（头部博主涨粉、新媒体趋势报告、用户情绪共鸣）
+                if (version < 11) {
+                    try {
+                        const DEFAULT_MATERIAL_TITLES = [
+                            '揭秘：头部博主如何在3个月涨粉100万',
+                            '2024年新媒体趋势报告解读',
+                            '用户情绪共鸣：让你的内容被疯狂转发'
+                        ];
+                        const existingMats = getStoredData(STORAGE_KEY_MATERIALS, []);
+                        const originalCount = existingMats.length;
+                        const filteredMats = existingMats.filter(m => !DEFAULT_MATERIAL_TITLES.includes(m.title));
+                        if (filteredMats.length !== originalCount) {
+                            saveData(STORAGE_KEY_MATERIALS, filteredMats);
+                            console.log(`[迁移] v10->v11: 已删除 ${originalCount - filteredMats.length} 个默认素材`);
+                        } else {
+                            console.log('[迁移] v10->v11: 无默认素材需删除');
+                        }
+                        // 清理仅属于这3条素材的标签
+                        const TAGS_TO_REMOVE = ['情绪价值', '干货', '热点'];
+                        const existingTags = getStoredData(STORAGE_KEY_TAGS, []);
+                        const filteredTags = existingTags.filter(t => !TAGS_TO_REMOVE.includes(t));
+                        if (filteredTags.length !== existingTags.length) {
+                            saveData(STORAGE_KEY_TAGS, filteredTags);
+                            console.log(`[迁移] v10->v11: 已删除 ${existingTags.length - filteredTags.length} 个废弃标签`);
+                        }
+                    } catch (e) {
+                        console.warn('默认素材清除跳过:', e);
+                    }
+                    version = 11;
+                }
+
                 localStorage.setItem(STORAGE_KEY_SCHEMA_VERSION, String(version));
             } catch (e) {
                 console.error('数据迁移失败:', e);
@@ -7741,9 +7785,6 @@ CREATE POLICY "allow_all" ON workbench_sync
         const initialTasks = [];
 
         const initialMaterials = [
-            { id: 1, title: '揭秘：头部博主如何在3个月涨粉100万', source: 'https://www.baidu.com/s?wd=头部博主涨粉秘诀', score: 9, tags: ['情绪价值', '干货'], spreadScore: 18, fitScore: 16, growthScore: 19, difficultyScore: 12, priorityScore: 17, totalScore: 82 },
-            { id: 2, title: '2024年新媒体趋势报告解读', source: 'https://www.baidu.com/s?wd=2024新媒体趋势', score: 8, tags: ['干货', '热点'], spreadScore: 16, fitScore: 18, growthScore: 15, difficultyScore: 14, priorityScore: 16, totalScore: 79 },
-            { id: 3, title: '用户情绪共鸣：让你的内容被疯狂转发', source: 'https://www.baidu.com/s?wd=用户情绪共鸣内容', score: 7, tags: ['情绪价值', '热点'], spreadScore: 19, fitScore: 14, growthScore: 16, difficultyScore: 15, priorityScore: 15, totalScore: 79 },
             { id: 4, title: '2026跨境最赚钱的8个品类，最后一个90%的人不知道', source: 'https://m.haibeigoods.com/article/qPmtApqeTsW', score: 9, tags: ['抖音', '选品测评', '外贸跨境'], spreadScore: 17, fitScore: 18, growthScore: 16, difficultyScore: 18, priorityScore: 18, totalScore: 87 },
             { id: 5, title: '外贸报价比同行低15%，客户还是跑了？真相扎心', source: 'https://m.sohu.com/a/1035371344_122832798/', score: 8, tags: ['知乎', '深度长文', '外贸跨境'], spreadScore: 15, fitScore: 18, growthScore: 16, difficultyScore: 15, priorityScore: 17, totalScore: 81 },
             { id: 6, title: '做东南亚跨境，泰国和马来西亚根本不是一个玩法', source: 'http://caijing.chinadaily.com.cn/a/202604/28/WS69f05858a310942cc49a9d28.html', score: 8, tags: ['视频号', '地域攻略', '外贸跨境'], spreadScore: 16, fitScore: 16, growthScore: 15, difficultyScore: 16, priorityScore: 17, totalScore: 80 },
@@ -7753,7 +7794,7 @@ CREATE POLICY "allow_all" ON workbench_sync
 
         const initialAccounts = [];
 
-        const initialTags = ['情绪价值', '干货', '热点', '抖音', '选品测评', '外贸跨境', '知乎', '深度长文', '视频号', '地域攻略', '创业故事', 'TikTok', '图文/短视频'];
+        const initialTags = ['抖音', '选品测评', '外贸跨境', '知乎', '深度长文', '视频号', '地域攻略', '创业故事', 'TikTok', '图文/短视频'];
 
         const initialAccountData = {};
 
