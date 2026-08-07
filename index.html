@@ -5771,7 +5771,7 @@ CREATE POLICY "allow_all" ON workbench_sync
         const STORAGE_KEY_AUTO_DATA_DATE = 'media_workflow_auto_data_date';
         const STORAGE_KEY_PROFILE = 'media_workflow_profile';
         const STORAGE_KEY_SCHEMA_VERSION = 'media_workflow_schema_version';
-        const CURRENT_SCHEMA_VERSION = 4;
+        const CURRENT_SCHEMA_VERSION = 5;
 
         // ===== 云同步核心逻辑 =====
         const SYNC_KEY_CONFIG = 'media_workflow_sync_config';
@@ -6008,7 +6008,19 @@ CREATE POLICY "allow_all" ON workbench_sync
             const profile = getStoredData(STORAGE_KEY_PROFILE, { name: '运营者', avatar: '👤' });
             const avatarEl = document.getElementById('profileAvatar');
             const nameEl = document.getElementById('profileName');
-            if (avatarEl && profile.avatar) avatarEl.innerHTML = profile.avatar;
+            if (avatarEl && profile.avatar) {
+                const av = String(profile.avatar);
+                if (av.startsWith('data:image/')) {
+                    avatarEl.innerHTML = `<img src="${av}" alt="头像">`;
+                } else if (av.startsWith('http://') || av.startsWith('https://')) {
+                    avatarEl.innerHTML = `<img src="${av}" alt="头像" referrerpolicy="no-referrer" onerror="this.parentElement.textContent='👤'">`;
+                } else if (av.length > 40 && /^[A-Za-z0-9+/=]+$/.test(av.slice(0, 20))) {
+                    // 看起来像被截断的 Base64，尝试自动补前缀
+                    avatarEl.innerHTML = `<img src="data:image/png;base64,${av}" alt="头像" onerror="this.parentElement.textContent='👤'">`;
+                } else {
+                    avatarEl.textContent = av || '👤';
+                }
+            }
             if (nameEl && profile.name) nameEl.textContent = profile.name;
         }
 
@@ -6308,6 +6320,36 @@ CREATE POLICY "allow_all" ON workbench_sync
                         saveData(STORAGE_KEY_TASKS, tks);
                     }
                     version = 4;
+                }
+
+                // v4 -> v5: 修复 profile.avatar 格式异常问题
+                // 旧版本可能把损坏的 Base64 或 URL 存进 avatar 字段，导致显示成文本
+                if (version < 5) {
+                    try {
+                        const p = getStoredData(STORAGE_KEY_PROFILE, { name: '运营者', avatar: '👤' });
+                        let changed = false;
+                        if (p && p.avatar) {
+                            const av = String(p.avatar);
+                            const isDataUrl = av.startsWith('data:image/');
+                            const isUrl = av.startsWith('http://') || av.startsWith('https://');
+                            const looksLikeBase64 = !isDataUrl && !isUrl && av.length > 40 && /^[A-Za-z0-9+/=]+$/.test(av.slice(0, 20));
+                            // 数据过大（>500KB 的 Base64）可能会导致本地存储问题，降级为 emoji
+                            const tooLarge = av.length > 500 * 1024;
+                            if (looksLikeBase64 || tooLarge) {
+                                p.avatar = '👤';
+                                changed = true;
+                                console.warn('[迁移] profile.avatar 格式异常，已重置为默认 👤');
+                            } else if (!isDataUrl && !isUrl && !looksLikeBase64) {
+                                // 正常的 emoji/文字类型，保持不变
+                            }
+                        }
+                        if (changed) {
+                            saveData(STORAGE_KEY_PROFILE, p);
+                        }
+                    } catch (e) {
+                        console.warn('profile 数据迁移跳过:', e);
+                    }
+                    version = 5;
                 }
 
                 localStorage.setItem(STORAGE_KEY_SCHEMA_VERSION, String(version));
@@ -9260,10 +9302,19 @@ CREATE POLICY "allow_all" ON workbench_sync
             const avatarEl = document.getElementById('profileAvatar');
             const nameEl = document.getElementById('profileName');
             
-            if (profile.avatar && profile.avatar.startsWith('data:image/')) {
-                avatarEl.innerHTML = `<img src="${profile.avatar}" alt="头像">`;
+            if (profile.avatar) {
+                const av = String(profile.avatar);
+                if (av.startsWith('data:image/')) {
+                    avatarEl.innerHTML = `<img src="${av}" alt="头像">`;
+                } else if (av.startsWith('http://') || av.startsWith('https://')) {
+                    avatarEl.innerHTML = `<img src="${av}" alt="头像" referrerpolicy="no-referrer" onerror="this.parentElement.textContent='👤'">`;
+                } else if (av.length > 40 && /^[A-Za-z0-9+/=]+$/.test(av.slice(0, 20))) {
+                    avatarEl.innerHTML = `<img src="data:image/png;base64,${av}" alt="头像" onerror="this.parentElement.textContent='👤'">`;
+                } else {
+                    avatarEl.textContent = av || '👤';
+                }
             } else {
-                avatarEl.innerHTML = profile.avatar || '👤';
+                avatarEl.textContent = '👤';
             }
             nameEl.textContent = profile.name || '运营者';
         }
