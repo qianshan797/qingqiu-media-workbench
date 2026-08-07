@@ -7693,6 +7693,31 @@ CREATE POLICY "allow_all" ON workbench_sync
         // 新增素材的未读计数（用户浏览后清零）
         let newMaterialsCount = 0;
 
+        // 每次加载时检查并补充 initialMaterials / initialTags 中的新增数据
+        (function syncInitialData() {
+            let changed = false;
+            initialMaterials.forEach(initMat => {
+                const exists = materials.some(m => m.title === initMat.title);
+                if (!exists) {
+                    materials.push({ ...initMat, id: Date.now() + Math.floor(Math.random() * 10000) });
+                    changed = true;
+                    newMaterialsCount++;
+                }
+            });
+            initialTags.forEach(t => {
+                if (!tags.includes(t)) {
+                    tags.push(t);
+                    changed = true;
+                }
+            });
+            if (changed) {
+                saveData(STORAGE_KEY_MATERIALS, materials);
+                saveData(STORAGE_KEY_TAGS, tags);
+                updateMaterialsBadge();
+                console.log('[同步] 已补充默认素材/标签');
+            }
+        })();
+
         function updateMaterialsBadge() {
             const badge = document.getElementById('navMaterialsBadge');
             if (!badge) return;
