@@ -75,6 +75,39 @@
             tags=tags.filter(function(t){return TAGS_REMOVE.indexOf(t)===-1;});
             if(tags.length!==len3){localStorage.setItem(tgk,JSON.stringify(tags));}
         }catch(e){}
+        try{
+            var ak2='media_workflow_accounts';
+            var acctRaw2=localStorage.getItem(ak2);
+            var accts2=acctRaw2?JSON.parse(acctRaw2):[];
+            var TEST_ACCTS=['测试账号','test'];
+            var lenA=accts2.length;
+            accts2=accts2.filter(function(a){return TEST_ACCTS.indexOf(a.name)===-1;});
+            if(accts2.length!==lenA){
+                localStorage.setItem(ak2,JSON.stringify(accts2));
+                var adk2='media_workflow_account_data';
+                var adRaw2=localStorage.getItem(adk2);
+                if(adRaw2){
+                    var ad2=JSON.parse(adRaw2);
+                    var newAd2={};
+                    accts2.forEach(function(a){if(ad2[a.id])newAd2[a.id]=ad2[a.id];});
+                    localStorage.setItem(adk2,JSON.stringify(newAd2));
+                }
+                console.log('[早期注入] 已清除测试账号');
+            }
+            var tk2='media_workflow_tasks';
+            var taskRaw2=localStorage.getItem(tk2);
+            var tasks2=taskRaw2?JSON.parse(taskRaw2):[];
+            var TEST_TITLES=['测试任务','验证日期任务'];
+            var lenB=tasks2.length;
+            tasks2=tasks2.filter(function(t){
+                if(TEST_TITLES.indexOf(t.title)!==-1)return false;
+                for(var i=0;i<TEST_ACCTS.length;i++){
+                    if(t.title && t.title.indexOf('更新'+TEST_ACCTS[i]+'(')!==-1 && t.title.indexOf(')数据')!==-1)return false;
+                }
+                return true;
+            });
+            if(tasks2.length!==lenB){localStorage.setItem(tk2,JSON.stringify(tasks2));console.log('[早期注入] 已清除测试任务');}
+        }catch(e){}
     })();
     </script>
     <title>新媒体运营工作台</title>
@@ -6893,7 +6926,7 @@ CREATE POLICY "allow_all" ON workbench_sync
         const STORAGE_KEY_AUTO_DATA_DATE = 'media_workflow_auto_data_date';
         const STORAGE_KEY_PROFILE = 'media_workflow_profile';
         const STORAGE_KEY_SCHEMA_VERSION = 'media_workflow_schema_version';
-        const CURRENT_SCHEMA_VERSION = 11;
+        const CURRENT_SCHEMA_VERSION = 12;
 
         // ===== 云同步核心逻辑 =====
         const SYNC_KEY_CONFIG = 'media_workflow_sync_config';
@@ -7702,6 +7735,40 @@ CREATE POLICY "allow_all" ON workbench_sync
                         console.warn('默认素材清除跳过:', e);
                     }
                     version = 11;
+                }
+
+                // v11 -> v12: 删除调试产生的测试账号和测试任务
+                if (version < 12) {
+                    try {
+                        const TEST_ACCT_NAMES = ['测试账号', 'test'];
+                        const existingAccts = getStoredData(STORAGE_KEY_ACCOUNTS, []);
+                        const filteredAccts = existingAccts.filter(a => !TEST_ACCT_NAMES.includes(a.name));
+                        if (filteredAccts.length !== existingAccts.length) {
+                            saveData(STORAGE_KEY_ACCOUNTS, filteredAccts);
+                            console.log(`[迁移] v11->v12: 已删除 ${existingAccts.length - filteredAccts.length} 个测试账号`);
+                            // 同步清理账号数据
+                            const accountData = getStoredData(STORAGE_KEY_ACCOUNT_DATA, {});
+                            const newAccountData = {};
+                            filteredAccts.forEach(a => { if (accountData[a.id]) newAccountData[a.id] = accountData[a.id]; });
+                            saveData(STORAGE_KEY_ACCOUNT_DATA, newAccountData);
+                        }
+                        const TEST_TASK_TITLES = ['测试任务', '验证日期任务'];
+                        const existingTasks = getStoredData(STORAGE_KEY_TASKS, []);
+                        const filteredTasks = existingTasks.filter(t => {
+                            if (TEST_TASK_TITLES.includes(t.title)) return false;
+                            for (const ta of TEST_ACCT_NAMES) {
+                                if (t.title && t.title.indexOf('更新' + ta + '(') !== -1 && t.title.indexOf(')数据') !== -1) return false;
+                            }
+                            return true;
+                        });
+                        if (filteredTasks.length !== existingTasks.length) {
+                            saveData(STORAGE_KEY_TASKS, filteredTasks);
+                            console.log(`[迁移] v11->v12: 已删除 ${existingTasks.length - filteredTasks.length} 个测试任务`);
+                        }
+                    } catch (e) {
+                        console.warn('测试数据清除跳过:', e);
+                    }
+                    version = 12;
                 }
 
                 localStorage.setItem(STORAGE_KEY_SCHEMA_VERSION, String(version));
