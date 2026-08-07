@@ -26,6 +26,14 @@
             var tk='media_workflow_tasks';
             var taskRaw=localStorage.getItem(tk);
             var tasks=taskRaw?JSON.parse(taskRaw):[];
+            // 修复 dueDate 为事件对象的旧数据
+            var fixed=false;
+            tasks.forEach(function(t){
+                if(t.dueDate && typeof t.dueDate!=='string'){
+                    t.dueDate=new Date().toISOString().slice(0,10);
+                    fixed=true;
+                }
+            });
             var DEFAULT_TITLES=['撰写公众号推文：如何打造爆款短视频','剪辑抖音视频：粉丝增长技巧分享','小红书图文排版与发布','更新运营小助手(公众号)数据','更新增长实验室(抖音)数据','更新新媒体日记(小红书)数据'];
             var DEFAULT_ACCTS=['运营小助手','增长实验室','新媒体日记'];
             var len=tasks.length;
@@ -36,7 +44,7 @@
                 }
                 return true;
             });
-            if(tasks.length!==len){localStorage.setItem(tk,JSON.stringify(tasks));console.log('[早期注入] 已清除 '+ (len-tasks.length) +' 个默认任务');}
+            if(tasks.length!==len || fixed){localStorage.setItem(tk,JSON.stringify(tasks));if(fixed)console.log('[早期注入] 已修复日期数据');if(tasks.length!==len)console.log('[早期注入] 已清除 '+ (len-tasks.length) +' 个默认任务');}
         }catch(e){}
         try{
             var ak='media_workflow_accounts';
@@ -11523,7 +11531,7 @@ CREATE POLICY "allow_all" ON workbench_sync
             }
         });
 
-        document.getElementById('addTaskBtn').addEventListener('click', addTask);
+        document.getElementById('addTaskBtn').addEventListener('click', function() { addTask(); });
         document.getElementById('newTaskTitle').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') addTask();
         });
