@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>新媒体运营工作台</title>
+    <!-- iOS PWA 图标配置 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="新媒体运营">
+    <!-- 180x180 iOS PWA 图标 (file:// 协议兼容) -->
+    <link rel="icon" type="image/jpeg" href="data:image/jpeg;base64,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">
+    <link rel="apple-touch-icon" sizes="180x180" href="data:image/jpeg;base64,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">
+    <link rel="apple-touch-icon-precomposed" sizes="180x180" href="data:image/jpeg;base64,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">
     <!-- 钉钉 JS-SDK -->
     <script src="https://g.alicdn.com/dingding/dingtalk-jsapi/3.0.12/dingtalk.open.js"></script>
     <!-- Supabase JS SDK -->
@@ -4902,9 +4910,15 @@
             </div>
 
             <div class="page-section" id="page-kanban">
-                <div class="page-header">
-                    <h1>工作流看板</h1>
-                    <div class="subtitle">管理每日任务进度，追踪内容发布状态</div>
+                <div class="page-header" style="display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+                    <div>
+                        <h1>工作流看板</h1>
+                        <div class="subtitle">管理每日任务进度，追踪内容发布状态</div>
+                    </div>
+                    <button class="toolbar-btn primary" onclick="regenerateTodayTasks()" title="为所有账号生成今日数据更新任务">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M21 12a9 9 0 1 1-3-6.7"/><polyline points="21 3 21 9 15 9"/></svg>
+                        重新生成今日任务
+                    </button>
                 </div>
                 <div class="page-content-card">
                     <div class="kanban-columns">
@@ -5921,6 +5935,11 @@ CREATE POLICY "allow_all" ON workbench_sync
             if (toast) toast.classList.remove('show');
         }
 
+        // 通用 Toast 封装（默认 success 类型，无需 spinner）
+        function showToast(text, type) {
+            showSyncToast(text, type || 'success');
+        }
+
         // 推送数据到云端
         async function pushToCloud() {
             if (!syncEnabled || !supabaseClient || isSyncing) return false;
@@ -6632,18 +6651,25 @@ CREATE POLICY "allow_all" ON workbench_sync
             const todayStr = getTodayDate();
             const lastGeneratedDate = localStorage.getItem(STORAGE_KEY_AUTO_TASK_DATE);
 
+            console.log('[每日任务] 开始生成', {
+                today: todayStr,
+                lastGeneratedDate: lastGeneratedDate,
+                accountsCount: accounts.length,
+                tasksCount: tasks.length,
+                taskStatuses: tasks.reduce((m,t)=>(m[t.status]=(m[t.status]||0)+1,m), {})
+            });
+
             // 将已完成任务标记为已归档，保留在数据中用于日历查看
             tasks.forEach(t => {
                 if (t.status === 'completed') {
                     t.status = 'archived';
-                    // 确保归档任务有正确的归属日期
                     if (!t.dueDate) {
                         t.dueDate = t.completedDate || todayStr;
                     }
                 }
             });
 
-            // 将跨天的非日常进行中任务滚动到今天日期，保持在工作流和日历中可见
+            // 将跨天的非日常进行中任务滚动到今天日期
             tasks.forEach(t => {
                 if (t.status === 'inProgress' && !t.isDaily && t.dueDate && t.dueDate !== todayStr) {
                     t.dueDate = todayStr;
@@ -6651,6 +6677,7 @@ CREATE POLICY "allow_all" ON workbench_sync
             });
 
             let changed = false;
+            const createdTasks = [];
 
             // 检查今天是否是工作日
             if (isWorkday(today)) {
@@ -6674,6 +6701,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                             dueDate: todayStr
                         };
                         tasks.push(newTask);
+                        createdTasks.push(newTask.title);
                         changed = true;
                     }
                 });
@@ -6700,17 +6728,60 @@ CREATE POLICY "allow_all" ON workbench_sync
                             dueDate: todayStr
                         };
                         tasks.push(newDailyTask);
+                        createdTasks.push(newDailyTask.title);
                         changed = true;
                     }
                 });
             }
 
-            // 只要有变更就保存（包括归档和日期滚动）
+            console.log('[每日任务] 生成完毕', {
+                changed,
+                createdCount: createdTasks.length,
+                createdTasks,
+                newTasksCount: tasks.length
+            });
+
             if (changed || lastGeneratedDate !== todayStr) {
                 saveData(STORAGE_KEY_TASKS, tasks);
                 localStorage.setItem(STORAGE_KEY_AUTO_TASK_DATE, todayStr);
                 renderTasks();
             }
+        }
+
+        // 手动触发重新生成今日任务（用于调试或数据异常时）
+        async function regenerateTodayTasks() {
+            const confirmed = await showConfirm(
+                '将清空今日已生成的账号更新任务并重新生成，是否继续？'
+            );
+            if (!confirmed) return;
+
+            const todayStr = getTodayDate();
+
+            // 移除今天已生成的 autoGenerated 任务，以便重新生成
+            tasks = tasks.filter(t => !(
+                t.autoGenerated === true &&
+                String(t.dueDate) === todayStr
+            ));
+
+            saveData(STORAGE_KEY_TASKS, tasks);
+            localStorage.removeItem(STORAGE_KEY_AUTO_TASK_DATE);
+
+            const beforeCount = tasks.length;
+            generateDailyAccountTasks();
+            const afterCount = tasks.length;
+            const createdCount = Math.max(0, afterCount - beforeCount);
+
+            // 刷新所有相关视图，避免用户看不到
+            renderTasks();
+            updateDashboardStats();
+            renderCalendar && renderCalendar();
+
+            showToast(
+                createdCount > 0
+                    ? `已为 ${accounts.length} 个账号重新生成 ${createdCount} 条今日任务`
+                    : `今日任务已是最新状态（共 ${accounts.length} 个账号）`,
+                'success'
+            );
         }
 
         // 工作日历相关
