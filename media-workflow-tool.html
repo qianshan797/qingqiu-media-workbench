@@ -7098,9 +7098,105 @@ CREATE POLICY "allow_all" ON workbench_sync
         // 从云端数据恢复到 localStorage
         function restoreFromCloudData(cloudData) {
             if (!cloudData || typeof cloudData !== 'object') return false;
+            const SEED_TITLE_PATTERNS = ['帝王蝶','2026跨境最赚钱的8个品类','外贸报价比同行低15%','做东南亚跨境','2026年做外贸，这4个赛道'];
             Object.keys(cloudData).forEach(k => {
-                localStorage.setItem(k, cloudData[k]);
+                const val = cloudData[k];
+                // ✅ 保护 1：materials 绝对不允许被空数组 或 不含种子素材（帝王蝶/跨境）的内容覆盖本地
+                if (k === STORAGE_KEY_MATERIALS) {
+                    try {
+                        const localRaw = localStorage.getItem(k);
+                        const localMats = localRaw ? JSON.parse(localRaw) : [];
+                        const remoteMats = (typeof val === 'string') ? JSON.parse(val) : (Array.isArray(val) ? val : []);
+                        const localHasSeed = Array.isArray(localMats) && localMats.some(m => m && m.title && SEED_TITLE_PATTERNS.some(p => String(m.title).indexOf(p) !== -1));
+                        const remoteHasSeed = Array.isArray(remoteMats) && remoteMats.some(m => m && m.title && SEED_TITLE_PATTERNS.some(p => String(m.title).indexOf(p) !== -1));
+                        if (!remoteHasSeed && localHasSeed) {
+                            // 云端没有种子素材（旧数据/空），但本地有 → **拒绝云端覆盖 materials**，仅做合并（保留本地种子+云端其他用户素材）
+                            console.warn('[restoreFromCloudData] 云端 materials 不含帝王蝶等种子素材，拒绝覆盖；改为本地+云端合并模式');
+                            const seen = {};
+                            const merged = [];
+                            localMats.concat(remoteMats || []).forEach(m => {
+                                if (!m || !m.title) return;
+                                const key = String(m.title);
+                                if (!seen[key]) { seen[key] = 1; merged.push(m); }
+                            });
+                            localStorage.setItem(k, JSON.stringify(merged));
+                            return; // 跳过直接覆盖
+                        }
+                    } catch (e2) {
+                        console.warn('[restoreFromCloudData] materials 保护检查失败，跳过直接覆盖该 key');
+                        return;
+                    }
+                }
+                // ✅ 保护 2：账号绝对不允许被空覆盖
+                if (k === STORAGE_KEY_ACCOUNTS) {
+                    try {
+                        const localRaw = localStorage.getItem(k);
+                        const localAccts = localRaw ? JSON.parse(localRaw) : [];
+                        const remoteAccts = (typeof val === 'string') ? JSON.parse(val) : (Array.isArray(val) ? val : []);
+                        if (localAccts && localAccts.length >= 5 && (!remoteAccts || remoteAccts.length < localAccts.length)) {
+                            console.warn('[restoreFromCloudData] 云端账号少于本地，拒绝覆盖');
+                            return;
+                        }
+                    } catch (e3) { return; }
+                }
+                // ✅ 保护 3：更新数据任务永远不接受云端覆盖（因为我们已经彻底删除这类任务）
+                if (k === STORAGE_KEY_TASKS) {
+                    try {
+                        const remoteArr = (typeof val === 'string') ? JSON.parse(val) : (Array.isArray(val) ? val : []);
+                        const cleaned = Array.isArray(remoteArr) ? remoteArr.filter(t => !(t && t.title && t.title.indexOf('更新')===0 && t.title.indexOf(')数据')!==-1)) : [];
+                        localStorage.setItem(k, JSON.stringify(cleaned));
+                        return;
+                    } catch (e4) { return; }
+                }
+                localStorage.setItem(k, val);
             });
+            // ✅ 保护 4：同步覆盖完成后，强制触发 getStoredData 的修复逻辑 + 终极素材兜底函数 + syncInitialData
+            //    这样即使云端偷偷覆盖了，也会被立刻重新注入帝王蝶/7账号等种子数据
+            try {
+                accounts = getStoredData(STORAGE_KEY_ACCOUNTS, initialAccounts);
+                accountData = getStoredData(STORAGE_KEY_ACCOUNT_DATA, initialAccountData);
+                tasks = getStoredData(STORAGE_KEY_TASKS, initialTasks);
+                tags = getStoredData(STORAGE_KEY_TAGS, initialTags);
+                materials = getStoredData(STORAGE_KEY_MATERIALS, initialMaterials);
+                // 触发终极兜底（同初始化逻辑）
+                (function () {
+                    try {
+                        const SEED = [
+                            { id: 9999, title: 'TikTok爆卖万件！帝王蝶开衫成秋季流量密码', source: 'https://m.toutiao.com/group/7670098246307545638/', score: 8, tags: ['TikTok','图文/短视频','外贸跨境'], spreadScore: 18, fitScore: 17, growthScore: 16, difficultyScore: 15, priorityScore: 18, totalScore: 84, used: false },
+                            { id: 9998, title: '2026跨境最赚钱的8个品类，最后一个90%的人不知道', source: 'https://m.haibeigoods.com/article/qPmtApqeTsW', score: 9, tags: ['抖音','选品测评','外贸跨境'], spreadScore: 17, fitScore: 18, growthScore: 16, difficultyScore: 18, priorityScore: 18, totalScore: 87, used: false },
+                            { id: 9997, title: '外贸报价比同行低15%，客户还是跑了？真相扎心', source: 'https://m.sohu.com/a/1035371344_122832798/', score: 8, tags: ['知乎','深度长文','外贸跨境'], spreadScore: 15, fitScore: 18, growthScore: 16, difficultyScore: 15, priorityScore: 17, totalScore: 81, used: false },
+                            { id: 9996, title: '做东南亚跨境，泰国和马来西亚根本不是一个玩法', source: 'http://caijing.chinadaily.com.cn/a/202604/28/WS69f05858a310942cc49a9d28.html', score: 8, tags: ['视频号','地域攻略','外贸跨境'], spreadScore: 16, fitScore: 16, growthScore: 15, difficultyScore: 16, priorityScore: 17, totalScore: 80, used: false },
+                            { id: 9995, title: '2026年做外贸，这4个赛道普通人也能年入百万', source: 'http://m.toutiao.com/group/7658321986296316443/', score: 8, tags: ['抖音','创业故事','外贸跨境'], spreadScore: 17, fitScore: 14, growthScore: 17, difficultyScore: 17, priorityScore: 15, totalScore: 80, used: false }
+                        ];
+                        let changed = false;
+                        SEED.forEach(s => {
+                            if (!materials.some(m => m.title === s.title)) {
+                                materials.push({ ...s, id: Date.now() + Math.floor(Math.random() * 99999) });
+                                changed = true;
+                                console.log('[restoreFromCloudData 终极修复] 注入缺失素材:', s.title);
+                            }
+                        });
+                        ['TikTok','图文/短视频','外贸跨境','抖音','选品测评','知乎','深度长文','视频号','地域攻略','创业故事'].forEach(t => {
+                            if (!tags.includes(t)) { tags.push(t); changed = true; }
+                        });
+                        if (changed) {
+                            saveData(STORAGE_KEY_MATERIALS, materials);
+                            saveData(STORAGE_KEY_TAGS, tags);
+                        }
+                        // 同步后也重新跑一遍 syncInitialData（补 initialMaterials/Tags 的缺口）
+                        let sic = false;
+                        initialMaterials.forEach(initMat => {
+                            const exists = materials.some(m => m.title === initMat.title);
+                            if (!exists) {
+                                materials.push({ ...initMat, id: Date.now() + Math.floor(Math.random() * 10000) });
+                                sic = true;
+                            }
+                        });
+                        if (sic) saveData(STORAGE_KEY_MATERIALS, materials);
+                    } catch (e) { console.error('[restoreFromCloudData 终极修复失败]:', e); }
+                })();
+                console.log('[restoreFromCloudData] 已在同步后重新触发种子数据校验');
+            } catch (e) { console.error('[restoreFromCloudData] 同步后种子数据恢复失败:', e); }
             return true;
         }
 
@@ -7293,8 +7389,30 @@ CREATE POLICY "allow_all" ON workbench_sync
         // 刷新页面所有数据（从 localStorage 重新加载）
         function refreshPageData() {
             tasks = getStoredData(STORAGE_KEY_TASKS, initialTasks);
-            materials = getStoredData(STORAGE_KEY_MATERIALS, []);
+            // ✅ 修复：fallback 改为 initialMaterials（含5条跨境素材+帝王蝶），不再用空数组绕过兜底
+            materials = getStoredData(STORAGE_KEY_MATERIALS, initialMaterials);
             tags = getStoredData(STORAGE_KEY_TAGS, initialTags);
+            // ✅ 同步后也跑一遍 ultimateMaterialFix 同等逻辑：强制检查帝王蝶/跨境素材
+            (function () {
+                try {
+                    const T = ['TikTok','图文/短视频','外贸跨境','抖音','选品测评','知乎','深度长文','视频号','地域攻略','创业故事'];
+                    const S = [
+                        {id:9999,title:'TikTok爆卖万件！帝王蝶开衫成秋季流量密码',source:'https://m.toutiao.com/group/7670098246307545638/',score:8,tags:['TikTok','图文/短视频','外贸跨境'],spreadScore:18,fitScore:17,growthScore:16,difficultyScore:15,priorityScore:18,totalScore:84,used:false},
+                        {id:9998,title:'2026跨境最赚钱的8个品类，最后一个90%的人不知道',source:'https://m.haibeigoods.com/article/qPmtApqeTsW',score:9,tags:['抖音','选品测评','外贸跨境'],spreadScore:17,fitScore:18,growthScore:16,difficultyScore:18,priorityScore:18,totalScore:87,used:false},
+                        {id:9997,title:'外贸报价比同行低15%，客户还是跑了？真相扎心',source:'https://m.sohu.com/a/1035371344_122832798/',score:8,tags:['知乎','深度长文','外贸跨境'],spreadScore:15,fitScore:18,growthScore:16,difficultyScore:15,priorityScore:17,totalScore:81,used:false},
+                        {id:9996,title:'做东南亚跨境，泰国和马来西亚根本不是一个玩法',source:'http://caijing.chinadaily.com.cn/a/202604/28/WS69f05858a310942cc49a9d28.html',score:8,tags:['视频号','地域攻略','外贸跨境'],spreadScore:16,fitScore:16,growthScore:15,difficultyScore:16,priorityScore:17,totalScore:80,used:false},
+                        {id:9995,title:'2026年做外贸，这4个赛道普通人也能年入百万',source:'http://m.toutiao.com/group/7658321986296316443/',score:8,tags:['抖音','创业故事','外贸跨境'],spreadScore:17,fitScore:14,growthScore:17,difficultyScore:17,priorityScore:15,totalScore:80,used:false}
+                    ];
+                    let changed = false;
+                    S.forEach(s => { if (!materials.some(m => m.title === s.title)) { materials.push({ ...s, id: Date.now() + Math.floor(Math.random()*99999) }); changed = true; console.log('[refreshPageData 兜底] 注入缺失素材:', s.title); } });
+                    T.forEach(t => { if (!tags.includes(t)) { tags.push(t); changed = true; } });
+                    if (changed) { saveData(STORAGE_KEY_MATERIALS, materials); saveData(STORAGE_KEY_TAGS, tags); }
+                    // 再次保险：清理所有更新数据任务
+                    const bt = tasks.length;
+                    tasks = tasks.filter(t => !(t && t.title && t.title.indexOf('更新')===0 && t.title.indexOf(')数据')!==-1));
+                    if (tasks.length !== bt) saveData(STORAGE_KEY_TASKS, tasks);
+                } catch (e) { console.error('[refreshPageData 兜底失败]:', e); }
+            })();
             renderTasks();
             renderMaterials();
             renderAccounts();
