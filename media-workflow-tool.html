@@ -9711,7 +9711,15 @@ CREATE POLICY "allow_all" ON workbench_sync
                 filtered = filtered.filter(m => m.viralAnalysis && m.viralAnalysis.contentStructure === structureFilter);
             }
 
+            // ✅ 排序规则（优先级从高到低）：
+            //    1. 分组：未使用(used=false/undefined)排在前，已使用(used=true)排在后
+            //    2. 组内：按当前下拉框选中的 sortBy 字段倒序（综合评分/传播潜力…）
             filtered.sort((a, b) => {
+                // 1) 先比较使用状态：used 为真的排下面（权重 1），为假的排上面（权重 0）
+                const aGroup = (a.used === true) ? 1 : 0;
+                const bGroup = (b.used === true) ? 1 : 0;
+                if (aGroup !== bGroup) return aGroup - bGroup;
+                // 2) 同一组内再按 sortBy 字段排序（保持原有倒序逻辑）
                 const aVal = a[sortBy] || 0;
                 const bVal = b[sortBy] || 0;
                 return bVal - aVal;
