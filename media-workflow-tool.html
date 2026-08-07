@@ -11,16 +11,35 @@
     <script>
     (function(){
         try{
+            var vk='media_workflow_schema_version';
+            var curV=parseInt(localStorage.getItem(vk)||'0');
+            if(curV<13){
+                localStorage.removeItem('media_workflow_materials');
+                console.log('[早期注入] schema版本升级，重置素材数据');
+                localStorage.setItem(vk,'13');
+            }
+        }catch(e){}
+        try{
             var k='media_workflow_materials';
             var raw=localStorage.getItem(k);
             var mats=raw?JSON.parse(raw):[];
             var defTitles=['揭秘：头部博主如何在3个月涨粉100万','2024年新媒体趋势报告解读','用户情绪共鸣：让你的内容被疯狂转发'];
             var len0=mats.length;
             mats=mats.filter(function(m){return defTitles.indexOf(m.title)===-1;});
-            if(mats.length!==len0){localStorage.setItem(k,JSON.stringify(mats));console.log('[早期注入] 已清除默认素材');}
-            var newMat={id:9999,title:'TikTok爆卖万件！帝王蝶开衫成秋季流量密码',source:'https://m.toutiao.com/group/7670098246307545638/',score:8,tags:['TikTok','图文/短视频'],spreadScore:18,fitScore:17,growthScore:16,difficultyScore:15,priorityScore:18,totalScore:84,used:false};
-            var exists=mats.some(function(m){return m.title===newMat.title;});
-            if(!exists){mats.push(newMat);localStorage.setItem(k,JSON.stringify(mats));console.log('[早期注入] 已注入素材');}
+            if(mats.length!==len0){console.log('[早期注入] 已清除默认素材');}
+            var SEED_MATS=[
+                {id:9999,title:'TikTok爆卖万件！帝王蝶开衫成秋季流量密码',source:'https://m.toutiao.com/group/7670098246307545638/',score:8,tags:['TikTok','图文/短视频'],spreadScore:18,fitScore:17,growthScore:16,difficultyScore:15,priorityScore:18,totalScore:84,used:false},
+                {id:9998,title:'2026跨境最赚钱的8个品类，最后一个90%的人不知道',source:'https://m.haibeigoods.com/article/qPmtApqeTsW',score:9,tags:['抖音','选品测评','外贸跨境'],spreadScore:17,fitScore:18,growthScore:16,difficultyScore:18,priorityScore:18,totalScore:87,used:false},
+                {id:9997,title:'外贸报价比同行低15%，客户还是跑了？真相扎心',source:'https://m.sohu.com/a/1035371344_122832798/',score:8,tags:['知乎','深度长文','外贸跨境'],spreadScore:15,fitScore:18,growthScore:16,difficultyScore:15,priorityScore:17,totalScore:81,used:false},
+                {id:9996,title:'做东南亚跨境，泰国和马来西亚根本不是一个玩法',source:'http://caijing.chinadaily.com.cn/a/202604/28/WS69f05858a310942cc49a9d28.html',score:8,tags:['视频号','地域攻略','外贸跨境'],spreadScore:16,fitScore:16,growthScore:15,difficultyScore:16,priorityScore:17,totalScore:80,used:false},
+                {id:9995,title:'2026年做外贸，这4个赛道普通人也能年入百万',source:'http://m.toutiao.com/group/7658321986296316443/',score:8,tags:['抖音','创业故事','外贸跨境'],spreadScore:17,fitScore:14,growthScore:17,difficultyScore:17,priorityScore:15,totalScore:80,used:false}
+            ];
+            var injected=0;
+            SEED_MATS.forEach(function(newMat){
+                var exists=mats.some(function(m){return m.title===newMat.title;});
+                if(!exists){mats.push(newMat);injected++;}
+            });
+            if(injected>0){localStorage.setItem(k,JSON.stringify(mats));console.log('[早期注入] 已注入 '+injected+' 条素材');}
         }catch(e){}
         try{
             var tk='media_workflow_tasks';
@@ -6926,7 +6945,7 @@ CREATE POLICY "allow_all" ON workbench_sync
         const STORAGE_KEY_AUTO_DATA_DATE = 'media_workflow_auto_data_date';
         const STORAGE_KEY_PROFILE = 'media_workflow_profile';
         const STORAGE_KEY_SCHEMA_VERSION = 'media_workflow_schema_version';
-        const CURRENT_SCHEMA_VERSION = 12;
+        const CURRENT_SCHEMA_VERSION = 13;
 
         // ===== 云同步核心逻辑 =====
         const SYNC_KEY_CONFIG = 'media_workflow_sync_config';
