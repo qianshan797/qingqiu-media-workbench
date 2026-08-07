@@ -6819,7 +6819,7 @@ CREATE POLICY "allow_all" ON workbench_sync
         const STORAGE_KEY_AUTO_DATA_DATE = 'media_workflow_auto_data_date';
         const STORAGE_KEY_PROFILE = 'media_workflow_profile';
         const STORAGE_KEY_SCHEMA_VERSION = 'media_workflow_schema_version';
-        const CURRENT_SCHEMA_VERSION = 8;
+        const CURRENT_SCHEMA_VERSION = 9;
 
         // ===== 云同步核心逻辑 =====
         const SYNC_KEY_CONFIG = 'media_workflow_sync_config';
@@ -7506,6 +7506,40 @@ CREATE POLICY "allow_all" ON workbench_sync
                         console.warn('默认账号清除跳过:', e);
                     }
                     version = 8;
+                }
+
+                // v8 -> v9: 重新合并 initialMaterials 中的素材到已有数据
+                if (version < 9) {
+                    try {
+                        const existingMats = getStoredData(STORAGE_KEY_MATERIALS, []);
+                        let changed = false;
+                        initialMaterials.forEach(initMat => {
+                            const exists = existingMats.some(m => m.title === initMat.title);
+                            if (!exists) {
+                                existingMats.push({ ...initMat, id: Date.now() + Math.floor(Math.random() * 10000) });
+                                changed = true;
+                            }
+                        });
+                        if (changed) {
+                            saveData(STORAGE_KEY_MATERIALS, existingMats);
+                            console.log('[迁移] v8->v9: 已合并新增素材');
+                        }
+                        const existingTags = getStoredData(STORAGE_KEY_TAGS, []);
+                        let tagChanged = false;
+                        initialTags.forEach(t => {
+                            if (!existingTags.includes(t)) {
+                                existingTags.push(t);
+                                tagChanged = true;
+                            }
+                        });
+                        if (tagChanged) {
+                            saveData(STORAGE_KEY_TAGS, existingTags);
+                            console.log('[迁移] v8->v9: 已合并新增标签');
+                        }
+                    } catch (e) {
+                        console.warn('素材合并迁移跳过:', e);
+                    }
+                    version = 9;
                 }
 
                 localStorage.setItem(STORAGE_KEY_SCHEMA_VERSION, String(version));
