@@ -3983,6 +3983,23 @@
 
         body.dark-mode {
             background: #000000;
+            color: #EBEBF5;
+        }
+
+        body.dark-mode .text-primary {
+            color: #EBEBF5;
+        }
+
+        body.dark-mode .text-secondary {
+            color: rgba(235, 235, 245, 0.6);
+        }
+
+        body.dark-mode .text-tertiary {
+            color: rgba(235, 235, 245, 0.3);
+        }
+
+        body.dark-mode .text-quaternary {
+            color: rgba(235, 235, 245, 0.18);
         }
 
         body.dark-mode .sidebar {
@@ -4104,9 +4121,28 @@
             color: #FF453A;
         }
 
-        body.dark-mode .accounts-grid .account-card {
+        body.dark-mode .accounts-grid .account-item {
             background: #1C1C1E;
             border-color: rgba(84, 84, 88, 0.6);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+        }
+
+        body.dark-mode .account-item.selected {
+            border-color: #0A84FF;
+            background: rgba(10, 132, 255, 0.12);
+        }
+
+        body.dark-mode .account-drag-handle {
+            color: rgba(235, 235, 245, 0.3);
+        }
+
+        body.dark-mode .account-drag-handle:hover {
+            color: rgba(235, 235, 245, 0.6);
+        }
+
+        body.dark-mode .account-checkbox {
+            border-color: rgba(84, 84, 88, 0.8);
+            background: #2C2C2E;
         }
 
         body.dark-mode .account-item-name {
@@ -4468,6 +4504,201 @@
 
         body.dark-mode .viral-analysis-btn.save {
             background: #0A84FF;
+        }
+
+        /* ===== 移动端暗色模式适配 ===== */
+        body.dark-mode .mobile-header {
+            background: rgba(28, 28, 30, 0.85);
+            border-bottom-color: rgba(84, 84, 88, 0.6);
+        }
+
+        body.dark-mode .mobile-menu-btn {
+            background: #2C2C2E;
+            color: rgba(235, 235, 245, 0.8);
+        }
+
+        body.dark-mode .mobile-menu-btn:hover {
+            background: #3A3A3C;
+        }
+
+        body.dark-mode .mobile-header-title {
+            color: #FFFFFF;
+        }
+
+        body.dark-mode .mobile-overlay {
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        body.dark-mode .page-content-card {
+            background: #1C1C1E;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+        }
+
+        body.dark-mode .page-content-card h2,
+        body.dark-mode .page-content-card h3 {
+            color: #FFFFFF;
+        }
+
+        body.dark-mode .page-content-card p,
+        body.dark-mode .page-content-card .text-muted {
+            color: rgba(235, 235, 245, 0.6);
+        }
+
+        body.dark-mode .empty-state,
+        body.dark-mode .empty-state-text {
+            color: rgba(235, 235, 245, 0.4);
+        }
+
+        body.dark-mode .dashed-border {
+            border-color: rgba(84, 84, 88, 0.4);
+        }
+
+        body.dark-mode .dashed-divider {
+            border-color: rgba(84, 84, 88, 0.4);
+        }
+
+        body.dark-mode .hint-text {
+            color: rgba(235, 235, 245, 0.4);
+        }
+
+        body.dark-mode .sub-text {
+            color: rgba(235, 235, 245, 0.5);
+        }
+
+        body.dark-mode .info-text {
+            color: rgba(235, 235, 245, 0.7);
+        }
+
+        body.dark-mode .link-text {
+            color: #0A84FF;
+        }
+
+        body.dark-mode .badge {
+            background: rgba(10, 132, 255, 0.16);
+            color: #0A84FF;
+        }
+
+        body.dark-mode .status-badge.success {
+            background: rgba(52, 199, 89, 0.16);
+            color: #34C759;
+        }
+
+        body.dark-mode .status-badge.warning {
+            background: rgba(255, 149, 0, 0.16);
+            color: #FF9500;
+        }
+
+        body.dark-mode .status-badge.danger {
+            background: rgba(255, 69, 58, 0.16);
+            color: #FF453A;
+        }
+
+        body.dark-mode .status-badge.info {
+            background: rgba(10, 132, 255, 0.16);
+            color: #0A84FF;
+        }
+
+        body.dark-mode .modal-overlay {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        body.dark-mode .toast {
+            background: #2C2C2E;
+            color: #FFFFFF;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        body.dark-mode .toast.success {
+            background: #30D158;
+            color: #000;
+        }
+
+        body.dark-mode .toast.error {
+            background: #FF453A;
+            color: #fff;
+        }
+
+        body.dark-mode .toast.info {
+            background: #0A84FF;
+        }
+
+        body.dark-mode .divider {
+            background-color: rgba(84, 84, 88, 0.6);
+        }
+
+        body.dark-mode .primary-color {
+            color: #0A84FF;
+        }
+
+        body.dark-mode .gradient-text {
+            background: linear-gradient(135deg, #0A84FF, #5AC8FA);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        body.dark-mode .section-title {
+            color: #FFFFFF;
+        }
+
+        body.dark-mode .section-subtitle {
+            color: rgba(235, 235, 245, 0.6);
+        }
+
+        body.dark-mode .card {
+            background: #1C1C1E;
+            border-color: rgba(84, 84, 88, 0.6);
+        }
+
+        body.dark-mode .card-hover:hover {
+            background: #2C2C2E;
+        }
+
+        body.dark-mode .pill-btn {
+            background: #2C2C2E;
+            color: rgba(235, 235, 245, 0.8);
+            border-color: rgba(84, 84, 88, 0.6);
+        }
+
+        body.dark-mode .pill-btn:hover {
+            background: #3A3A3C;
+        }
+
+        body.dark-mode .pill-btn.active {
+            background: #0A84FF;
+            color: #fff;
+            border-color: #0A84FF;
+        }
+
+        body.dark-mode .avatar-text-input {
+            background: #2C2C2E;
+            color: #FFFFFF;
+        }
+
+        body.dark-mode .sync-status {
+            background: #2C2C2E;
+            color: rgba(235, 235, 245, 0.6);
+        }
+
+        body.dark-mode .data-table {
+            background: #1C1C1E;
+        }
+
+        body.dark-mode .data-table th {
+            background: #2C2C2E;
+            color: rgba(235, 235, 245, 0.8);
+            border-color: rgba(84, 84, 88, 0.6);
+        }
+
+        body.dark-mode .data-table td {
+            color: rgba(235, 235, 245, 0.9);
+            border-color: rgba(84, 84, 88, 0.4);
+        }
+
+        body.dark-mode .data-table tr:hover td {
+            background: #2C2C2E;
         }
 
         /* ===== 钉钉 H5 微应用适配 ===== */
