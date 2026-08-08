@@ -4884,9 +4884,23 @@
             color: #FFFFFF;
         }
 
+        body.dark-mode .calendar-container {
+            background: transparent;
+            border-color: transparent;
+            box-shadow: none;
+            padding: 0;
+        }
+
         body.dark-mode .calendar-header {
             background: #1C1C1E;
             border-color: rgba(84, 84, 88, 0.6);
+            border-radius: 16px;
+            padding: 16px 18px;
+            margin-bottom: 16px;
+        }
+
+        body.dark-mode .calendar-title {
+            color: #FFFFFF;
         }
 
         body.dark-mode .calendar-header h2 {
@@ -4894,29 +4908,69 @@
         }
 
         body.dark-mode .calendar-nav-btn {
-            color: rgba(235, 235, 245, 0.6);
+            background: #2C2C2E;
+            color: rgba(235, 235, 245, 0.7);
+            border: 1px solid rgba(84, 84, 88, 0.6);
         }
 
         body.dark-mode .calendar-nav-btn:hover {
-            background: #2C2C2E;
+            background: #3A3A3C;
+            color: #FFFFFF;
         }
 
+        body.dark-mode .calendar-nav-btn svg {
+            stroke: rgba(235, 235, 245, 0.7);
+        }
+
+        body.dark-mode .calendar-nav-btn:hover svg {
+            stroke: #FFFFFF;
+        }
+
+        body.dark-mode .calendar-today-btn {
+            background: rgba(10, 132, 255, 0.18);
+            border: 1px solid #0A84FF;
+            color: #0A84FF;
+        }
+
+        body.dark-mode .calendar-today-btn:hover {
+            background: rgba(10, 132, 255, 0.3);
+            color: #FFFFFF;
+        }
+
+        body.dark-mode .calendar-weekdays {
+            margin-bottom: 10px;
+        }
+
+        body.dark-mode .calendar-weekday,
         body.dark-mode .calendar-weekdays span {
-            color: rgba(235, 235, 245, 0.3);
+            color: rgba(235, 235, 245, 0.55);
         }
 
         body.dark-mode .calendar-day {
             background: #1C1C1E;
-            border-color: rgba(84, 84, 88, 0.6);
-            color: #FFFFFF;
+            border-color: rgba(84, 84, 88, 0.5);
+            color: rgba(235, 235, 245, 0.85);
         }
 
         body.dark-mode .calendar-day.other-month {
-            color: rgba(235, 235, 245, 0.3);
+            color: rgba(235, 235, 245, 0.25);
         }
 
         body.dark-mode .calendar-day:hover {
             background: #2C2C2E;
+            border-color: rgba(84, 84, 88, 0.8);
+            color: #FFFFFF;
+        }
+
+        body.dark-mode .calendar-day .day-number {
+            color: inherit;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        body.dark-mode .calendar-day.today .day-number {
+            color: #FFFFFF;
+            font-weight: 700;
         }
 
         body.dark-mode .calendar-day.selected {
@@ -4924,17 +4978,75 @@
             background: rgba(10, 132, 255, 0.16);
         }
 
+        body.dark-mode .calendar-day.selected .day-number {
+            color: #FFFFFF;
+        }
+
         body.dark-mode .calendar-day.today {
             background: rgba(10, 132, 255, 0.24);
+            border-color: #0A84FF;
+        }
+
+        body.dark-mode .calendar-day.today:hover {
+            background: rgba(10, 132, 255, 0.36);
+        }
+
+        body.dark-mode .calendar-day.has-tasks {
+            background: #1C1C1E;
+            border-color: rgba(10, 132, 255, 0.4);
+        }
+
+        body.dark-mode .calendar-day.has-tasks:hover {
+            background: #2C2C2E;
+            border-color: rgba(10, 132, 255, 0.7);
+        }
+
+        body.dark-mode .calendar-day.has-tasks.selected {
+            background: rgba(10, 132, 255, 0.2);
+            border-color: #0A84FF;
+        }
+
+        body.dark-mode .calendar-day.today.has-tasks {
+            background: rgba(10, 132, 255, 0.3);
+            border-color: #0A84FF;
+        }
+
+        body.dark-mode .calendar-day.today.has-tasks:hover {
+            background: rgba(10, 132, 255, 0.42);
         }
 
         body.dark-mode .calendar-day.has-scheduled {
-            background: rgba(10, 132, 255, 0.16);
+            background: rgba(10, 132, 255, 0.12);
+            border-color: rgba(10, 132, 255, 0.4);
+        }
+
+        body.dark-mode .calendar-day.has-scheduled:hover {
+            background: rgba(10, 132, 255, 0.22);
+        }
+
+        body.dark-mode .calendar-day.has-scheduled.selected {
+            background: rgba(10, 132, 255, 0.22);
+            border-color: #0A84FF;
+        }
+
+        body.dark-mode .calendar-day.today.has-scheduled {
+            background: rgba(10, 132, 255, 0.28);
+            border-color: #0A84FF;
+        }
+
+        body.dark-mode .calendar-day .day-badges {
+            gap: 3px;
+        }
+
+        body.dark-mode .calendar-day .day-badge {
+            color: #FFFFFF;
+            font-weight: 600;
         }
 
         body.dark-mode .calendar-add-task {
             background: #2C2C2E;
             border-color: rgba(84, 84, 88, 0.6);
+            border-radius: 14px;
         }
 
         body.dark-mode .calendar-add-task input,
@@ -4965,6 +5077,7 @@
         body.dark-mode .calendar-add-task .add-task-btn {
             background: #0A84FF;
             color: #FFFFFF;
+            border: none;
         }
 
         body.dark-mode .calendar-add-task button:hover {
@@ -4974,9 +5087,9 @@
         body.dark-mode .calendar-task-card {
             background: #1C1C1E;
             border-color: rgba(84, 84, 88, 0.6);
+            border-radius: 14px;
         }
 
-        /* ===== 工作日历 · 详情区域暗色 ===== */
         body.dark-mode .calendar-stats {
             gap: 12px;
         }
@@ -4998,7 +5111,7 @@
         }
 
         body.dark-mode .calendar-stat-num.pending {
-            color: #8E8E93;
+            color: rgba(235, 235, 245, 0.6);
         }
 
         body.dark-mode .calendar-stat-label {
@@ -5014,12 +5127,13 @@
         }
 
         body.dark-mode .calendar-section-title {
-            color: #FFFFFF;
-            border-top-color: rgba(84, 84, 88, 0.5);
+            color: rgba(235, 235, 245, 0.6);
         }
 
         body.dark-mode .calendar-task-item {
-            background: transparent;
+            background: #2C2C2E;
+            border-color: rgba(84, 84, 88, 0.5);
+            color: rgba(235, 235, 245, 0.85);
         }
 
         body.dark-mode .calendar-task-item .task-name {
@@ -5031,23 +5145,23 @@
         }
 
         body.dark-mode .calendar-task-item .task-status.completed {
-            background: rgba(52, 199, 89, 0.2);
-            color: #34C759;
+            background: rgba(48, 209, 88, 0.18);
+            color: #30D158;
         }
 
         body.dark-mode .calendar-task-item .task-status.in-progress {
-            background: rgba(255, 149, 0, 0.18);
-            color: #FF9500;
+            background: rgba(255, 159, 10, 0.18);
+            color: #FF9F0A;
         }
 
         body.dark-mode .calendar-task-item .task-status.pending {
-            background: rgba(10, 132, 255, 0.18);
-            color: #0A84FF;
+            background: rgba(118, 118, 128, 0.24);
+            color: rgba(235, 235, 245, 0.6);
         }
 
         body.dark-mode .calendar-task-actions .action-btn {
-            background: #2C2C2E;
-            color: rgba(235, 235, 245, 0.75);
+            background: transparent;
+            color: rgba(235, 235, 245, 0.5);
         }
 
         body.dark-mode .calendar-task-actions .action-btn:hover {
@@ -5056,7 +5170,7 @@
         }
 
         body.dark-mode .calendar-task-actions .action-btn.complete {
-            background: rgba(52, 199, 89, 0.2);
+            background: rgba(52, 199, 89, 0.16);
             color: #34C759;
         }
 
@@ -5065,16 +5179,17 @@
         }
 
         body.dark-mode .calendar-task-actions .action-btn.move {
-            background: rgba(10, 132, 255, 0.2);
+            background: rgba(10, 132, 255, 0.18);
             color: #0A84FF;
         }
 
         body.dark-mode .calendar-task-actions .action-btn.move:hover {
-            background: rgba(10, 132, 255, 0.3);
+            background: rgba(10, 132, 255, 0.32);
         }
 
         body.dark-mode .calendar-task-actions .action-btn.back {
             background: rgba(118, 118, 128, 0.24);
+            color: rgba(235, 235, 245, 0.7);
         }
 
         body.dark-mode .calendar-task-actions .action-btn.edit:hover {
@@ -5083,7 +5198,7 @@
         }
 
         body.dark-mode .calendar-task-actions .action-btn.delete {
-            background: rgba(255, 69, 58, 0.18);
+            background: rgba(255, 69, 58, 0.16);
             color: #FF453A;
         }
 
@@ -5094,7 +5209,8 @@
         body.dark-mode .calendar-detail {
             background: #1C1C1E;
             border-color: rgba(84, 84, 88, 0.5);
-            color: rgba(235, 235, 245, 0.6);
+            color: rgba(235, 235, 245, 0.85);
+            border-radius: 16px;
         }
 
         body.dark-mode .calendar-detail-header {
