@@ -7487,6 +7487,9 @@ CREATE POLICY "allow_all" ON workbench_sync
                     showSyncToast('数据已从云端恢复', 'success');
                     // 刷新页面数据
                     refreshPageData();
+                    // ✅ 关键修复：云端同步后，必须再次执行每日任务生成逻辑
+                    console.log('[pullFromCloud] 云同步完成，重新执行每日任务生成...');
+                    generateDailyAccountTasks();
                     return true;
                 }
                 updateSyncButton('synced', '已连接');
@@ -7724,6 +7727,10 @@ CREATE POLICY "allow_all" ON workbench_sync
                         restoreFromCloudData(row.data);
                         lastSyncTime = cloudTime;
                         refreshPageData();
+                        // ✅ 关键修复：云端同步后，必须再次执行每日任务生成逻辑
+                        // 否则刚生成的今日任务会被云端的旧数据覆盖
+                        console.log('[silentPull] 云同步完成，重新执行每日任务生成...');
+                        generateDailyAccountTasks();
                     }
                 }
             } catch (e) {
@@ -8746,6 +8753,10 @@ CREATE POLICY "allow_all" ON workbench_sync
             const today = new Date();
             const todayStr = getTodayDate();
             const lastGeneratedDate = localStorage.getItem(STORAGE_KEY_AUTO_TASK_DATE);
+
+            // ✅ 强制从 localStorage 加载最新的 tasks 数据
+            // 防止因云同步等操作导致的全局变量 tasks 与 localStorage 不一致
+            tasks = getStoredData(STORAGE_KEY_TASKS, initialTasks);
 
             console.log('[每日任务] 开始：仅保留用户自定义日常任务，不再自动生成账号更新任务', {
                 today: todayStr,
