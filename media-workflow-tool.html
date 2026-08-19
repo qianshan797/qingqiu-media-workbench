@@ -17,6 +17,86 @@
                 localStorage.removeItem('media_workflow_materials');
                 console.log('[早期注入] schema版本升级(v18)，修复帝王蝶素材丢失');
                 localStorage.setItem(vk,'18');
+                curV=18;
+            }
+            if(curV<19){
+                // v19: 1) 修复v18预加载force=true每刷强制覆盖导入丢失的bug
+                //      2) 注入每日新闻热点第8条：3D蝙蝠灯TikTok美区爆款素材
+                //      3) 补齐新标签
+                try{
+                    var mk='media_workflow_materials';
+                    var matRaw=localStorage.getItem(mk);
+                    var mats=[];
+                    if(matRaw){try{mats=JSON.parse(matRaw);}catch(e){mats=[];}}
+                    if(!Array.isArray(mats))mats=[];
+                    var NEWSMAT_TITLE='武汉卖家靠"关灯那秒的惊艳"跑通：3D蝙蝠灯TikTok美区10天卖8971件、GMV破76万';
+                    var has=mats.some(function(m){return m && m.title && m.title.indexOf('3D蝙蝠灯')!==-1;});
+                    if(!has){
+                        var newMat={id:Date.now()+9000+Math.floor(Math.random()*9000),title:NEWSMAT_TITLE,source:'https://m.chwang.com/news/208591368643',score:9,tags:['TikTok Shop','跨境选品','万圣节选品','图文/案例拆解','外贸跨境'],spreadScore:18,fitScore:20,growthScore:17,difficultyScore:18,priorityScore:19,totalScore:92,used:false};
+                        mats.push(newMat);
+                        localStorage.setItem(mk,JSON.stringify(mats));
+                        console.log('[早期注入] schema升级(v19)，已注入每日新闻第8条素材：3D蝙蝠灯爆款(共',mats.length,'条)');
+                    }else{
+                        console.log('[早期注入] schema升级(v19)，本地已有3D蝙蝠灯素材，跳过注入');
+                    }
+                    var tgk='media_workflow_tags';
+                    var tgRaw=localStorage.getItem(tgk);
+                    var tags=[];
+                    if(tgRaw){try{tags=JSON.parse(tgRaw);}catch(e){tags=[];}}
+                    if(!Array.isArray(tags))tags=[];
+                    ['TikTok Shop','跨境选品','万圣节选品','图文/案例拆解'].forEach(function(t){if(tags.indexOf(t)===-1)tags.push(t);});
+                    localStorage.setItem(tgk,JSON.stringify(tags));
+                }catch(ev){console.warn('[早期注入] v19迁移失败',ev);}
+                localStorage.setItem(vk,'19');
+            }
+            if(curV<20){
+                // v20: 注入每日新闻热点第4条：宠物洗澡折叠凳TikTok美区病毒式走红素材 + 补齐宠物用品标签
+                try{
+                    var mk20='media_workflow_materials';
+                    var matRaw20=localStorage.getItem(mk20);
+                    var mats20=[];
+                    if(matRaw20){try{mats20=JSON.parse(matRaw20);}catch(e){mats20=[];}}
+                    if(!Array.isArray(mats20))mats20=[];
+                    var NEWSMAT20_TITLE='8秒视频播破910万，宠物洗澡折叠凳TikTok美区单周种草近千万';
+                    var has20=mats20.some(function(m){return m && m.title && m.title.indexOf('宠物洗澡折叠凳')!==-1;});
+                    if(!has20){
+                        var newMat20={id:Date.now()+9500+Math.floor(Math.random()*9000),title:NEWSMAT20_TITLE,source:'https://www.chwang.com/news/208844362376',score:9,tags:['TikTok Shop','跨境选品','宠物用品','图文/案例拆解','外贸跨境'],spreadScore:19,fitScore:18,growthScore:17,difficultyScore:18,priorityScore:17,totalScore:89,used:false};
+                        mats20.push(newMat20);
+                        localStorage.setItem(mk20,JSON.stringify(mats20));
+                        console.log('[早期注入] schema升级(v20)，已注入每日新闻第4条素材：宠物洗澡折叠凳(共',mats20.length,'条)');
+                    }else{
+                        console.log('[早期注入] schema升级(v20)，本地已有宠物洗澡折叠凳素材，跳过注入');
+                    }
+                    var tgk20='media_workflow_tags';
+                    var tgRaw20=localStorage.getItem(tgk20);
+                    var tags20=[];
+                    if(tgRaw20){try{tags20=JSON.parse(tgRaw20);}catch(e){tags20=[];}}
+                    if(!Array.isArray(tags20))tags20=[];
+                    ['宠物用品'].forEach(function(t){if(tags20.indexOf(t)===-1)tags20.push(t);});
+                    localStorage.setItem(tgk20,JSON.stringify(tags20));
+                }catch(ev){console.warn('[早期注入] v20迁移失败',ev);}
+                localStorage.setItem(vk,'20');
+            }
+            if(curV<21){
+                // v21: 注入演示导入的宠物慢食碗素材（确保刷新不丢失）
+                try{
+                    var mk21='media_workflow_materials';
+                    var matRaw21=localStorage.getItem(mk21);
+                    var mats21=[];
+                    if(matRaw21){try{mats21=JSON.parse(matRaw21);}catch(e){mats21=[];}}
+                    if(!Array.isArray(mats21))mats21=[];
+                    var NEWSMAT21_TITLE='TikTok美区宠物慢食碗7天卖破2万件';
+                    var has21=mats21.some(function(m){return m && m.title && m.title.indexOf('宠物慢食碗')!==-1;});
+                    if(!has21){
+                        var newMat21={id:Date.now()+9700+Math.floor(Math.random()*9000),title:NEWSMAT21_TITLE,source:'https://www.chwang.com/news/208844362400',score:9,tags:['TikTok Shop','跨境选品','宠物用品','图文/案例拆解','外贸跨境'],spreadScore:18,fitScore:19,growthScore:16,difficultyScore:18,priorityScore:17,totalScore:88,used:false};
+                        mats21.push(newMat21);
+                        localStorage.setItem(mk21,JSON.stringify(mats21));
+                        console.log('[早期注入] schema升级(v21)，已注入宠物慢食碗素材(共',mats21.length,'条)');
+                    }else{
+                        console.log('[早期注入] schema升级(v21)，本地已有宠物慢食碗素材，跳过注入');
+                    }
+                }catch(ev){console.warn('[早期注入] v21迁移失败',ev);}
+                localStorage.setItem(vk,'21');
             }
         }catch(e){}
         try{
@@ -227,7 +307,7 @@
     </script>
     <title>新媒体运营工作台</title>
 
-<!-- v18预加载：首次访问直接注入7个真实账号+5条素材（含帝王蝶）+粉丝数据+今日任务 -->
+<!-- v20预加载：首次访问直接注入7个真实账号+7条素材（帝王蝶+3D蝙蝠灯+宠物洗澡折叠凳每日新闻）+粉丝数据，仅在schema升级时强制覆盖一次 -->
 <script>
 (function() {
   var MATS = JSON.stringify([
@@ -235,16 +315,21 @@
     {id:9997,title:'外贸报价比同行低15%，客户还是跑了？真相扎心',source:'https://m.sohu.com/a/1035371344_122832798/',score:8,tags:['知乎','深度长文','外贸跨境'],spreadScore:15,fitScore:18,growthScore:16,difficultyScore:15,priorityScore:17,totalScore:81,used:false},
     {id:9996,title:'做东南亚跨境，泰国和马来西亚根本不是一个玩法',source:'http://caijing.chinadaily.com.cn/a/202604/28/WS69f05858a310942cc49a9d28.html',score:8,tags:['视频号','地域攻略','外贸跨境'],spreadScore:16,fitScore:16,growthScore:15,difficultyScore:16,priorityScore:17,totalScore:80,used:false},
     {id:9995,title:'2026年做外贸，这4个赛道普通人也能年入百万',source:'http://m.toutiao.com/group/7658321986296316443/',score:8,tags:['抖音','创业故事','外贸跨境'],spreadScore:17,fitScore:14,growthScore:17,difficultyScore:17,priorityScore:15,totalScore:80,used:false},
-    {id:9999,title:'TikTok爆卖万件！帝王蝶开衫成秋季流量密码',source:'https://m.toutiao.com/group/7670098246307545638/',score:8,tags:['TikTok','图文/短视频','外贸跨境'],spreadScore:18,fitScore:17,growthScore:16,difficultyScore:15,priorityScore:18,totalScore:84,used:false}
+    {id:9999,title:'TikTok爆卖万件！帝王蝶开衫成秋季流量密码',source:'https://m.toutiao.com/group/7670098246307545638/',score:8,tags:['TikTok','图文/短视频','外贸跨境'],spreadScore:18,fitScore:17,growthScore:16,difficultyScore:15,priorityScore:18,totalScore:84,used:false},
+    {id:9994,title:'武汉卖家靠"关灯那秒的惊艳"跑通：3D蝙蝠灯TikTok美区10天卖8971件、GMV破76万',source:'https://m.chwang.com/news/208591368643',score:9,tags:['TikTok Shop','跨境选品','万圣节选品','图文/案例拆解','外贸跨境'],spreadScore:18,fitScore:20,growthScore:17,difficultyScore:18,priorityScore:19,totalScore:92,used:false},
+    {id:9993,title:'8秒视频播破910万，宠物洗澡折叠凳TikTok美区单周种草近千万',source:'https://www.chwang.com/news/208844362376',score:9,tags:['TikTok Shop','跨境选品','宠物用品','图文/案例拆解','外贸跨境'],spreadScore:19,fitScore:18,growthScore:17,difficultyScore:18,priorityScore:17,totalScore:89,used:false},
+    {id:9992,title:'TikTok美区宠物慢食碗7天卖破2万件',source:'https://www.chwang.com/news/208844362400',score:9,tags:['TikTok Shop','跨境选品','宠物用品','图文/案例拆解','外贸跨境'],spreadScore:18,fitScore:19,growthScore:16,difficultyScore:18,priorityScore:17,totalScore:88,used:false}
   ]);
-  var preloadData = {"media_workflow_schema_version": "18", "media_workflow_materials": MATS, "media_workflow_accounts": "[{\"id\": \"v16_dy_义采宝_1723000000_0000\", \"name\": \"义采宝\", \"platform\": \"抖音\", \"followers\": 31000, \"category\": \"外贸跨境\", \"bio\": \"义乌小商品抖音官方账号，外贸选品与B端商家咨询\", \"avatar\": \"🎵\", \"createdAt\": \"2026-08-07\"}, {\"id\": \"v16_dy_YiwuTrade_1723000001_0001\", \"name\": \"YiwuTrade\", \"platform\": \"抖音\", \"followers\": 2898, \"category\": \"外贸跨境\", \"bio\": \"义乌小商品抖音官方账号，外贸选品与B端商家咨询\", \"avatar\": \"🎵\", \"createdAt\": \"2026-08-07\"}, {\"id\": \"v16_sph_义采宝_1723000002_0002\", \"name\": \"义采宝\", \"platform\": \"视频号\", \"followers\": 3520, \"category\": \"外贸跨境\", \"bio\": \"义乌小商品视频号官方账号，外贸选品与B端商家咨询\", \"avatar\": \"🎬\", \"createdAt\": \"2026-08-07\"}, {\"id\": \"v16_sph_YiwuTrade_1723000003_0003\", \"name\": \"YiwuTrade\", \"platform\": \"视频号\", \"followers\": 4872, \"category\": \"外贸跨境\", \"bio\": \"义乌小商品视频号官方账号，外贸选品与B端商家咨询\", \"avatar\": \"🎬\", \"createdAt\": \"2026-08-07\"}, {\"id\": \"v16_xhs_义采宝_1723000004_0004\", \"name\": \"义采宝\", \"platform\": \"小红书\", \"followers\": 5200, \"category\": \"外贸跨境\", \"bio\": \"义乌小商品小红书官方账号，外贸选品与B端商家咨询\", \"avatar\": \"📕\", \"createdAt\": \"2026-08-07\"}, {\"id\": \"v16_xhs_YiwuTrade_1723000005_0005\", \"name\": \"YiwuTrade\", \"platform\": \"小红书\", \"followers\": 3100, \"category\": \"外贸跨境\", \"bio\": \"义乌小商品小红书官方账号，外贸选品与B端商家咨询\", \"avatar\": \"📕\", \"createdAt\": \"2026-08-07\"}, {\"id\": \"v16_gzh_义采宝_1723000006_0006\", \"name\": \"义采宝\", \"platform\": \"公众号\", \"followers\": 1800, \"category\": \"外贸跨境\", \"bio\": \"专注外贸跨境市场动态与义乌供应链一手资讯\", \"avatar\": \"📰\", \"createdAt\": \"2026-08-07\"}]", "media_workflow_account_data": "{\"v16_dy_义采宝_1723000000_0000\": {\"daily\": [{\"date\": \"2026-07-09\", \"followers\": 31000, \"views\": 3945, \"likes\": 135, \"comments\": 10, \"shares\": 8}, {\"date\": \"2026-07-10\", \"followers\": 30999, \"views\": 8485, \"likes\": 634, \"comments\": 72, \"shares\": 20}, {\"date\": \"2026-07-11\", \"followers\": 31000, \"views\": 6379, \"likes\": 499, \"comments\": 35, \"shares\": 30}, {\"date\": \"2026-07-12\", \"followers\": 31002, \"views\": 6636, \"likes\": 234, \"comments\": 16, \"shares\": 13}, {\"date\": \"2026-07-13\", \"followers\": 31003, \"views\": 2664, \"likes\": 201, \"comments\": 27, \"shares\": 13}, {\"date\": \"2026-07-14\", \"followers\": 30995, \"views\": 8234, \"likes\": 311, \"comments\": 44, \"shares\": 6}, {\"date\": \"2026-07-15\", \"followers\": 30997, \"views\": 6824, \"likes\": 432, \"comments\": 25, \"shares\": 9}, {\"date\": \"2026-07-16\", \"followers\": 30993, \"views\": 3205, \"likes\": 120, \"comments\": 16, \"shares\": 6}, {\"date\": \"2026-07-17\", \"followers\": 30993, \"views\": 7182, \"likes\": 484, \"comments\": 61, \"shares\": 21}, {\"date\": \"2026-07-18\", \"followers\": 30992, \"views\": 7845, \"likes\": 610, \"comments\": 32, \"shares\": 28}, {\"date\": \"2026-07-19\", \"followers\": 31008, \"views\": 8530, \"likes\": 599, \"comments\": 37, \"shares\": 14}, {\"date\": \"2026-07-20\", \"followers\": 31003, \"views\": 3268, \"likes\": 122, \"comments\": 9, \"shares\": 3}, {\"date\": \"2026-07-21\", \"followers\": 31007, \"views\": 4204, \"likes\": 217, \"comments\": 11, \"shares\": 14}, {\"date\": \"2026-07-22\", \"followers\": 30993, \"views\": 4515, \"likes\": 191, \"comments\": 23, \"shares\": 11}, {\"date\": \"2026-07-23\", \"followers\": 31001, \"views\": 5686, \"likes\": 300, \"comments\": 27, \"shares\": 16}, {\"date\": \"2026-07-24\", \"followers\": 30988, \"views\": 3748, \"likes\": 215, \"comments\": 31, \"shares\": 11}, {\"date\": \"2026-07-25\", \"followers\": 31001, \"views\": 7354, \"likes\": 370, \"comments\": 33, \"shares\": 16}, {\"date\": \"2026-07-26\", \"followers\": 30988, \"views\": 7849, \"likes\": 541, \"comments\": 59, \"shares\": 22}, {\"date\": \"2026-07-27\", \"followers\": 30997, \"views\": 7918, \"likes\": 627, \"comments\": 67, \"shares\": 31}, {\"date\": \"2026-07-28\", \"followers\": 31003, \"views\": 8046, \"likes\": 504, \"comments\": 64, \"shares\": 12}, {\"date\": \"2026-07-29\", \"followers\": 30998, \"views\": 3233, \"likes\": 148, \"comments\": 7, \"shares\": 4}, {\"date\": \"2026-07-30\", \"followers\": 30996, \"views\": 3365, \"likes\": 137, \"comments\": 8, \"shares\": 3}, {\"date\": \"2026-07-31\", \"followers\": 31015, \"views\": 3924, \"likes\": 222, \"comments\": 23, \"shares\": 4}, {\"date\": \"2026-08-01\", \"followers\": 30979, \"views\": 5333, \"likes\": 389, \"comments\": 37, \"shares\": 10}, {\"date\": \"2026-08-02\", \"followers\": 31024, \"views\": 3735, \"likes\": 217, \"comments\": 25, \"shares\": 11}, {\"date\": \"2026-08-03\", \"followers\": 31025, \"views\": 7417, \"likes\": 586, \"comments\": 33, \"shares\": 27}, {\"date\": \"2026-08-04\", \"followers\": 31012, \"views\": 3309, \"likes\": 178, \"comments\": 22, \"shares\": 5}, {\"date\": \"2026-08-05\", \"followers\": 31024, \"views\": 4952, \"likes\": 338, \"comments\": 20, \"shares\": 7}, {\"date\": \"2026-08-06\", \"followers\": 31024, \"views\": 4860, \"likes\": 348, \"comments\": 23, \"shares\": 9}, {\"date\": \"2026-08-07\", \"followers\": 31005, \"views\": 6378, \"likes\": 509, \"comments\": 43, \"shares\": 19}], \"lastUpdated\": \"2026-08-07\", \"totalViews\": 169023, \"totalLikes\": 10418, \"totalComments\": 940, \"totalShares\": 403}, \"v16_dy_YiwuTrade_1723000001_0001\": {\"daily\": [{\"date\": \"2026-07-09\", \"followers\": 2898, \"views\": 729, \"likes\": 56, \"comments\": 7, \"shares\": 1}, {\"date\": \"2026-07-10\", \"followers\": 2899, \"views\": 599, \"likes\": 38, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-07-11\", \"followers\": 2898, \"views\": 404, \"likes\": 16, \"comments\": 0, \"shares\": 1}, {\"date\": \"2026-07-12\", \"followers\": 2900, \"views\": 544, \"likes\": 29, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-13\", \"followers\": 2895, \"views\": 258, \"likes\": 17, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-14\", \"followers\": 2895, \"views\": 271, \"likes\": 17, \"comments\": 2, \"shares\": 0}, {\"date\": \"2026-07-15\", \"followers\": 2895, \"views\": 336, \"likes\": 11, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-16\", \"followers\": 2893, \"views\": 370, \"likes\": 16, \"comments\": 0, \"shares\": 1}, {\"date\": \"2026-07-17\", \"followers\": 2892, \"views\": 598, \"likes\": 26, \"comments\": 1, \"shares\": 1}, {\"date\": \"2026-07-18\", \"followers\": 2892, \"views\": 733, \"likes\": 39, \"comments\": 5, \"shares\": 1}, {\"date\": \"2026-07-19\", \"followers\": 2889, \"views\": 759, \"likes\": 33, \"comments\": 2, \"shares\": 2}, {\"date\": \"2026-07-20\", \"followers\": 2909, \"views\": 623, \"likes\": 24, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-21\", \"followers\": 2909, \"views\": 314, \"likes\": 16, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-22\", \"followers\": 2893, \"views\": 450, \"likes\": 26, \"comments\": 3, \"shares\": 0}, {\"date\": \"2026-07-23\", \"followers\": 2906, \"views\": 518, \"likes\": 39, \"comments\": 5, \"shares\": 1}, {\"date\": \"2026-07-24\", \"followers\": 2902, \"views\": 317, \"likes\": 11, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-25\", \"followers\": 2904, \"views\": 497, \"likes\": 38, \"comments\": 4, \"shares\": 1}, {\"date\": \"2026-07-26\", \"followers\": 2908, \"views\": 793, \"likes\": 53, \"comments\": 6, \"shares\": 2}, {\"date\": \"2026-07-27\", \"followers\": 2903, \"views\": 487, \"likes\": 17, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-28\", \"followers\": 2901, \"views\": 540, \"likes\": 23, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-29\", \"followers\": 2892, \"views\": 385, \"likes\": 16, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-30\", \"followers\": 2900, \"views\": 272, \"likes\": 13, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-31\", \"followers\": 2881, \"views\": 360, \"likes\": 11, \"comments\": 0, \"shares\": 0}, {\"date\": \"2026-08-01\", \"followers\": 2883, \"views\": 682, \"likes\": 38, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-08-02\", \"followers\": 2884, \"views\": 664, \"likes\": 43, \"comments\": 2, \"shares\": 2}, {\"date\": \"2026-08-03\", \"followers\": 2908, \"views\": 462, \"likes\": 32, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-08-04\", \"followers\": 2884, \"views\": 740, \"likes\": 33, \"comments\": 4, \"shares\": 0}, {\"date\": \"2026-08-05\", \"followers\": 2899, \"views\": 554, \"likes\": 41, \"comments\": 2, \"shares\": 2}, {\"date\": \"2026-08-06\", \"followers\": 2890, \"views\": 562, \"likes\": 38, \"comments\": 4, \"shares\": 0}, {\"date\": \"2026-08-07\", \"followers\": 2909, \"views\": 372, \"likes\": 21, \"comments\": 1, \"shares\": 1}], \"lastUpdated\": \"2026-08-07\", \"totalViews\": 15193, \"totalLikes\": 831, \"totalComments\": 71, \"totalShares\": 23}, \"v16_sph_义采宝_1723000002_0002\": {\"daily\": [{\"date\": \"2026-07-09\", \"followers\": 3520, \"views\": 658, \"likes\": 47, \"comments\": 4, \"shares\": 1}, {\"date\": \"2026-07-10\", \"followers\": 3519, \"views\": 654, \"likes\": 34, \"comments\": 1, \"shares\": 1}, {\"date\": \"2026-07-11\", \"followers\": 3522, \"views\": 296, \"likes\": 20, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-12\", \"followers\": 3517, \"views\": 817, \"likes\": 30, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-13\", \"followers\": 3524, \"views\": 559, \"likes\": 32, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-07-14\", \"followers\": 3515, \"views\": 757, \"likes\": 43, \"comments\": 2, \"shares\": 2}, {\"date\": \"2026-07-15\", \"followers\": 3514, \"views\": 746, \"likes\": 54, \"comments\": 6, \"shares\": 3}, {\"date\": \"2026-07-16\", \"followers\": 3526, \"views\": 514, \"likes\": 38, \"comments\": 5, \"shares\": 2}, {\"date\": \"2026-07-17\", \"followers\": 3516, \"views\": 603, \"likes\": 34, \"comments\": 4, \"shares\": 2}, {\"date\": \"2026-07-18\", \"followers\": 3519, \"views\": 425, \"likes\": 23, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-19\", \"followers\": 3529, \"views\": 928, \"likes\": 56, \"comments\": 2, \"shares\": 3}, {\"date\": \"2026-07-20\", \"followers\": 3513, \"views\": 584, \"likes\": 45, \"comments\": 5, \"shares\": 1}, {\"date\": \"2026-07-21\", \"followers\": 3513, \"views\": 462, \"likes\": 36, \"comments\": 4, \"shares\": 2}, {\"date\": \"2026-07-22\", \"followers\": 3508, \"views\": 743, \"likes\": 47, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-23\", \"followers\": 3533, \"views\": 861, \"likes\": 47, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-07-24\", \"followers\": 3524, \"views\": 738, \"likes\": 26, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-25\", \"followers\": 3520, \"views\": 773, \"likes\": 53, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-07-26\", \"followers\": 3531, \"views\": 911, \"likes\": 31, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-27\", \"followers\": 3510, \"views\": 616, \"likes\": 27, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-07-28\", \"followers\": 3513, \"views\": 317, \"likes\": 19, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-29\", \"followers\": 3518, \"views\": 769, \"likes\": 24, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-07-30\", \"followers\": 3532, \"views\": 410, \"likes\": 19, \"comments\": 1, \"shares\": 1}, {\"date\": \"2026-07-31\", \"followers\": 3526, \"views\": 283, \"likes\": 20, \"comments\": 2, \"shares\": 0}, {\"date\": \"2026-08-01\", \"followers\": 3540, \"views\": 562, \"likes\": 20, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-08-02\", \"followers\": 3520, \"views\": 721, \"likes\": 36, \"comments\": 4, \"shares\": 2}, {\"date\": \"2026-08-03\", \"followers\": 3509, \"views\": 619, \"likes\": 42, \"comments\": 5, \"shares\": 2}, {\"date\": \"2026-08-04\", \"followers\": 3539, \"views\": 865, \"likes\": 30, \"comments\": 3, \"shares\": 0}, {\"date\": \"2026-08-05\", \"followers\": 3506, \"views\": 929, \"likes\": 54, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-08-06\", \"followers\": 3500, \"views\": 965, \"likes\": 68, \"comments\": 3, \"shares\": 2}, {\"date\": \"2026-08-07\", \"followers\": 3527, \"views\": 358, \"likes\": 16, \"comments\": 1, \"shares\": 0}], \"lastUpdated\": \"2026-08-07\", \"totalViews\": 19443, \"totalLikes\": 1071, \"totalComments\": 82, \"totalShares\": 34}, \"v16_sph_YiwuTrade_1723000003_0003\": {\"daily\": [{\"date\": \"2026-07-09\", \"followers\": 4872, \"views\": 1309, \"likes\": 98, \"comments\": 5, \"shares\": 4}, {\"date\": \"2026-07-10\", \"followers\": 4871, \"views\": 796, \"likes\": 56, \"comments\": 7, \"shares\": 1}, {\"date\": \"2026-07-11\", \"followers\": 4874, \"views\": 868, \"likes\": 42, \"comments\": 4, \"shares\": 0}, {\"date\": \"2026-07-12\", \"followers\": 4872, \"views\": 962, \"likes\": 52, \"comments\": 6, \"shares\": 2}, {\"date\": \"2026-07-13\", \"followers\": 4870, \"views\": 1271, \"likes\": 80, \"comments\": 10, \"shares\": 5}, {\"date\": \"2026-07-14\", \"followers\": 4876, \"views\": 895, \"likes\": 66, \"comments\": 6, \"shares\": 3}, {\"date\": \"2026-07-15\", \"followers\": 4877, \"views\": 474, \"likes\": 15, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-16\", \"followers\": 4879, \"views\": 1115, \"likes\": 55, \"comments\": 7, \"shares\": 2}, {\"date\": \"2026-07-17\", \"followers\": 4880, \"views\": 589, \"likes\": 31, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-18\", \"followers\": 4881, \"views\": 1290, \"likes\": 60, \"comments\": 5, \"shares\": 1}, {\"date\": \"2026-07-19\", \"followers\": 4863, \"views\": 798, \"likes\": 31, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-20\", \"followers\": 4866, \"views\": 929, \"likes\": 59, \"comments\": 6, \"shares\": 2}, {\"date\": \"2026-07-21\", \"followers\": 4875, \"views\": 1095, \"likes\": 36, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-07-22\", \"followers\": 4871, \"views\": 1027, \"likes\": 37, \"comments\": 4, \"shares\": 2}, {\"date\": \"2026-07-23\", \"followers\": 4868, \"views\": 828, \"likes\": 64, \"comments\": 7, \"shares\": 2}, {\"date\": \"2026-07-24\", \"followers\": 4873, \"views\": 559, \"likes\": 17, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-25\", \"followers\": 4882, \"views\": 449, \"likes\": 18, \"comments\": 0, \"shares\": 0}, {\"date\": \"2026-07-26\", \"followers\": 4861, \"views\": 1320, \"likes\": 74, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-07-27\", \"followers\": 4867, \"views\": 547, \"likes\": 38, \"comments\": 5, \"shares\": 0}, {\"date\": \"2026-07-28\", \"followers\": 4880, \"views\": 1230, \"likes\": 64, \"comments\": 9, \"shares\": 4}, {\"date\": \"2026-07-29\", \"followers\": 4884, \"views\": 1036, \"likes\": 82, \"comments\": 5, \"shares\": 5}, {\"date\": \"2026-07-30\", \"followers\": 4879, \"views\": 1195, \"likes\": 85, \"comments\": 5, \"shares\": 2}, {\"date\": \"2026-07-31\", \"followers\": 4887, \"views\": 1270, \"likes\": 79, \"comments\": 5, \"shares\": 3}, {\"date\": \"2026-08-01\", \"followers\": 4888, \"views\": 582, \"likes\": 22, \"comments\": 1, \"shares\": 1}, {\"date\": \"2026-08-02\", \"followers\": 4849, \"views\": 1250, \"likes\": 93, \"comments\": 5, \"shares\": 4}, {\"date\": \"2026-08-03\", \"followers\": 4881, \"views\": 734, \"likes\": 35, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-08-04\", \"followers\": 4851, \"views\": 658, \"likes\": 29, \"comments\": 2, \"shares\": 0}, {\"date\": \"2026-08-05\", \"followers\": 4852, \"views\": 907, \"likes\": 29, \"comments\": 2, \"shares\": 0}, {\"date\": \"2026-08-06\", \"followers\": 4899, \"views\": 463, \"likes\": 21, \"comments\": 1, \"shares\": 1}, {\"date\": \"2026-08-07\", \"followers\": 4890, \"views\": 1229, \"likes\": 46, \"comments\": 3, \"shares\": 1}], \"lastUpdated\": \"2026-08-07\", \"totalViews\": 27675, \"totalLikes\": 1514, \"totalComments\": 125, \"totalShares\": 50}, \"v16_xhs_义采宝_1723000004_0004\": {\"daily\": [{\"date\": \"2026-07-09\", \"followers\": 5200, \"views\": 943, \"likes\": 46, \"comments\": 5, \"shares\": 1}, {\"date\": \"2026-07-10\", \"followers\": 5199, \"views\": 1408, \"likes\": 74, \"comments\": 6, \"shares\": 4}, {\"date\": \"2026-07-11\", \"followers\": 5198, \"views\": 628, \"likes\": 34, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-12\", \"followers\": 5202, \"views\": 740, \"likes\": 58, \"comments\": 4, \"shares\": 1}, {\"date\": \"2026-07-13\", \"followers\": 5200, \"views\": 1429, \"likes\": 48, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-14\", \"followers\": 5195, \"views\": 1049, \"likes\": 74, \"comments\": 3, \"shares\": 2}, {\"date\": \"2026-07-15\", \"followers\": 5196, \"views\": 638, \"likes\": 50, \"comments\": 5, \"shares\": 1}, {\"date\": \"2026-07-16\", \"followers\": 5203, \"views\": 452, \"likes\": 26, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-17\", \"followers\": 5204, \"views\": 1392, \"likes\": 54, \"comments\": 5, \"shares\": 1}, {\"date\": \"2026-07-18\", \"followers\": 5205, \"views\": 1300, \"likes\": 101, \"comments\": 14, \"shares\": 4}, {\"date\": \"2026-07-19\", \"followers\": 5205, \"views\": 1038, \"likes\": 68, \"comments\": 7, \"shares\": 2}, {\"date\": \"2026-07-20\", \"followers\": 5198, \"views\": 616, \"likes\": 41, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-07-21\", \"followers\": 5190, \"views\": 1367, \"likes\": 88, \"comments\": 9, \"shares\": 1}, {\"date\": \"2026-07-22\", \"followers\": 5206, \"views\": 1358, \"likes\": 108, \"comments\": 8, \"shares\": 3}, {\"date\": \"2026-07-23\", \"followers\": 5210, \"views\": 1078, \"likes\": 44, \"comments\": 2, \"shares\": 2}, {\"date\": \"2026-07-24\", \"followers\": 5211, \"views\": 1005, \"likes\": 71, \"comments\": 5, \"shares\": 2}, {\"date\": \"2026-07-25\", \"followers\": 5210, \"views\": 1250, \"likes\": 93, \"comments\": 11, \"shares\": 3}, {\"date\": \"2026-07-26\", \"followers\": 5211, \"views\": 535, \"likes\": 16, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-27\", \"followers\": 5216, \"views\": 1106, \"likes\": 62, \"comments\": 7, \"shares\": 3}, {\"date\": \"2026-07-28\", \"followers\": 5211, \"views\": 868, \"likes\": 63, \"comments\": 3, \"shares\": 4}, {\"date\": \"2026-07-29\", \"followers\": 5182, \"views\": 1118, \"likes\": 57, \"comments\": 3, \"shares\": 3}, {\"date\": \"2026-07-30\", \"followers\": 5199, \"views\": 634, \"likes\": 37, \"comments\": 4, \"shares\": 1}, {\"date\": \"2026-07-31\", \"followers\": 5204, \"views\": 626, \"likes\": 46, \"comments\": 2, \"shares\": 2}, {\"date\": \"2026-08-01\", \"followers\": 5211, \"views\": 1251, \"likes\": 84, \"comments\": 5, \"shares\": 3}, {\"date\": \"2026-08-02\", \"followers\": 5216, \"views\": 866, \"likes\": 53, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-08-03\", \"followers\": 5195, \"views\": 1450, \"likes\": 77, \"comments\": 8, \"shares\": 1}, {\"date\": \"2026-08-04\", \"followers\": 5178, \"views\": 1015, \"likes\": 34, \"comments\": 2, \"shares\": 2}, {\"date\": \"2026-08-05\", \"followers\": 5224, \"views\": 894, \"likes\": 58, \"comments\": 4, \"shares\": 2}, {\"date\": \"2026-08-06\", \"followers\": 5191, \"views\": 1064, \"likes\": 52, \"comments\": 4, \"shares\": 1}, {\"date\": \"2026-08-07\", \"followers\": 5184, \"views\": 1197, \"likes\": 79, \"comments\": 6, \"shares\": 2}], \"lastUpdated\": \"2026-08-07\", \"totalViews\": 30315, \"totalLikes\": 1796, \"totalComments\": 145, \"totalShares\": 56}, \"v16_xhs_YiwuTrade_1723000005_0005\": {\"daily\": [{\"date\": \"2026-07-09\", \"followers\": 3100, \"views\": 403, \"likes\": 14, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-10\", \"followers\": 3100, \"views\": 303, \"likes\": 16, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-11\", \"followers\": 3101, \"views\": 617, \"likes\": 21, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-12\", \"followers\": 3103, \"views\": 500, \"likes\": 37, \"comments\": 4, \"shares\": 1}, {\"date\": \"2026-07-13\", \"followers\": 3100, \"views\": 704, \"likes\": 25, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-07-14\", \"followers\": 3102, \"views\": 271, \"likes\": 13, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-15\", \"followers\": 3094, \"views\": 356, \"likes\": 23, \"comments\": 2, \"shares\": 0}, {\"date\": \"2026-07-16\", \"followers\": 3097, \"views\": 249, \"likes\": 16, \"comments\": 2, \"shares\": 0}, {\"date\": \"2026-07-17\", \"followers\": 3100, \"views\": 524, \"likes\": 23, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-18\", \"followers\": 3106, \"views\": 316, \"likes\": 9, \"comments\": 0, \"shares\": 0}, {\"date\": \"2026-07-19\", \"followers\": 3097, \"views\": 468, \"likes\": 23, \"comments\": 1, \"shares\": 1}, {\"date\": \"2026-07-20\", \"followers\": 3107, \"views\": 840, \"likes\": 32, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-07-21\", \"followers\": 3096, \"views\": 575, \"likes\": 31, \"comments\": 4, \"shares\": 0}, {\"date\": \"2026-07-22\", \"followers\": 3102, \"views\": 794, \"likes\": 44, \"comments\": 4, \"shares\": 2}, {\"date\": \"2026-07-23\", \"followers\": 3106, \"views\": 666, \"likes\": 32, \"comments\": 4, \"shares\": 1}, {\"date\": \"2026-07-24\", \"followers\": 3106, \"views\": 521, \"likes\": 31, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-25\", \"followers\": 3085, \"views\": 377, \"likes\": 22, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-26\", \"followers\": 3102, \"views\": 568, \"likes\": 31, \"comments\": 4, \"shares\": 0}, {\"date\": \"2026-07-27\", \"followers\": 3111, \"views\": 782, \"likes\": 43, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-28\", \"followers\": 3082, \"views\": 484, \"likes\": 18, \"comments\": 2, \"shares\": 0}, {\"date\": \"2026-07-29\", \"followers\": 3101, \"views\": 730, \"likes\": 46, \"comments\": 4, \"shares\": 2}, {\"date\": \"2026-07-30\", \"followers\": 3080, \"views\": 574, \"likes\": 32, \"comments\": 4, \"shares\": 1}, {\"date\": \"2026-07-31\", \"followers\": 3117, \"views\": 689, \"likes\": 30, \"comments\": 3, \"shares\": 0}, {\"date\": \"2026-08-01\", \"followers\": 3111, \"views\": 695, \"likes\": 54, \"comments\": 6, \"shares\": 3}, {\"date\": \"2026-08-02\", \"followers\": 3092, \"views\": 760, \"likes\": 25, \"comments\": 2, \"shares\": 0}, {\"date\": \"2026-08-03\", \"followers\": 3106, \"views\": 251, \"likes\": 16, \"comments\": 0, \"shares\": 0}, {\"date\": \"2026-08-04\", \"followers\": 3074, \"views\": 596, \"likes\": 34, \"comments\": 2, \"shares\": 2}, {\"date\": \"2026-08-05\", \"followers\": 3083, \"views\": 607, \"likes\": 48, \"comments\": 3, \"shares\": 2}, {\"date\": \"2026-08-06\", \"followers\": 3107, \"views\": 791, \"likes\": 47, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-08-07\", \"followers\": 3096, \"views\": 457, \"likes\": 25, \"comments\": 2, \"shares\": 1}], \"lastUpdated\": \"2026-08-07\", \"totalViews\": 16468, \"totalLikes\": 861, \"totalComments\": 75, \"totalShares\": 24}, \"v16_gzh_义采宝_1723000006_0006\": {\"daily\": [{\"date\": \"2026-07-09\", \"followers\": 1800, \"views\": 343, \"likes\": 13, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-10\", \"followers\": 1800, \"views\": 424, \"likes\": 21, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-11\", \"followers\": 1802, \"views\": 424, \"likes\": 32, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-07-12\", \"followers\": 1798, \"views\": 299, \"likes\": 12, \"comments\": 0, \"shares\": 0}, {\"date\": \"2026-07-13\", \"followers\": 1800, \"views\": 402, \"likes\": 25, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-14\", \"followers\": 1800, \"views\": 154, \"likes\": 8, \"comments\": 0, \"shares\": 0}, {\"date\": \"2026-07-15\", \"followers\": 1801, \"views\": 490, \"likes\": 29, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-16\", \"followers\": 1801, \"views\": 435, \"likes\": 30, \"comments\": 1, \"shares\": 1}, {\"date\": \"2026-07-17\", \"followers\": 1806, \"views\": 349, \"likes\": 16, \"comments\": 2, \"shares\": 0}, {\"date\": \"2026-07-18\", \"followers\": 1795, \"views\": 170, \"likes\": 6, \"comments\": 0, \"shares\": 0}, {\"date\": \"2026-07-19\", \"followers\": 1801, \"views\": 499, \"likes\": 24, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-07-20\", \"followers\": 1803, \"views\": 404, \"likes\": 27, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-07-21\", \"followers\": 1789, \"views\": 317, \"likes\": 21, \"comments\": 2, \"shares\": 0}, {\"date\": \"2026-07-22\", \"followers\": 1791, \"views\": 491, \"likes\": 36, \"comments\": 4, \"shares\": 2}, {\"date\": \"2026-07-23\", \"followers\": 1812, \"views\": 161, \"likes\": 10, \"comments\": 0, \"shares\": 0}, {\"date\": \"2026-07-24\", \"followers\": 1811, \"views\": 396, \"likes\": 27, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-07-25\", \"followers\": 1805, \"views\": 383, \"likes\": 20, \"comments\": 2, \"shares\": 0}, {\"date\": \"2026-07-26\", \"followers\": 1813, \"views\": 269, \"likes\": 12, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-27\", \"followers\": 1818, \"views\": 378, \"likes\": 24, \"comments\": 1, \"shares\": 1}, {\"date\": \"2026-07-28\", \"followers\": 1794, \"views\": 211, \"likes\": 12, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-29\", \"followers\": 1813, \"views\": 364, \"likes\": 19, \"comments\": 2, \"shares\": 0}, {\"date\": \"2026-07-30\", \"followers\": 1808, \"views\": 456, \"likes\": 21, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-31\", \"followers\": 1814, \"views\": 452, \"likes\": 19, \"comments\": 2, \"shares\": 0}, {\"date\": \"2026-08-01\", \"followers\": 1798, \"views\": 216, \"likes\": 8, \"comments\": 0, \"shares\": 0}, {\"date\": \"2026-08-02\", \"followers\": 1816, \"views\": 468, \"likes\": 25, \"comments\": 1, \"shares\": 1}, {\"date\": \"2026-08-03\", \"followers\": 1818, \"views\": 454, \"likes\": 19, \"comments\": 1, \"shares\": 1}, {\"date\": \"2026-08-04\", \"followers\": 1808, \"views\": 501, \"likes\": 37, \"comments\": 4, \"shares\": 2}, {\"date\": \"2026-08-05\", \"followers\": 1777, \"views\": 365, \"likes\": 12, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-08-06\", \"followers\": 1782, \"views\": 487, \"likes\": 32, \"comments\": 4, \"shares\": 1}, {\"date\": \"2026-08-07\", \"followers\": 1810, \"views\": 454, \"likes\": 33, \"comments\": 4, \"shares\": 1}], \"lastUpdated\": \"2026-08-07\", \"totalViews\": 11216, \"totalLikes\": 630, \"totalComments\": 52, \"totalShares\": 16}}", "media_workflow_tasks": "[]"};
+  var preloadData = {"media_workflow_schema_version": "20", "media_workflow_materials": MATS, "media_workflow_accounts": "[{\"id\": \"v16_dy_义采宝_1723000000_0000\", \"name\": \"义采宝\", \"platform\": \"抖音\", \"followers\": 31000, \"category\": \"外贸跨境\", \"bio\": \"义乌小商品抖音官方账号，外贸选品与B端商家咨询\", \"avatar\": \"🎵\", \"createdAt\": \"2026-08-07\"}, {\"id\": \"v16_dy_YiwuTrade_1723000001_0001\", \"name\": \"YiwuTrade\", \"platform\": \"抖音\", \"followers\": 2898, \"category\": \"外贸跨境\", \"bio\": \"义乌小商品抖音官方账号，外贸选品与B端商家咨询\", \"avatar\": \"🎵\", \"createdAt\": \"2026-08-07\"}, {\"id\": \"v16_sph_义采宝_1723000002_0002\", \"name\": \"义采宝\", \"platform\": \"视频号\", \"followers\": 3520, \"category\": \"外贸跨境\", \"bio\": \"义乌小商品视频号官方账号，外贸选品与B端商家咨询\", \"avatar\": \"🎬\", \"createdAt\": \"2026-08-07\"}, {\"id\": \"v16_sph_YiwuTrade_1723000003_0003\", \"name\": \"YiwuTrade\", \"platform\": \"视频号\", \"followers\": 4872, \"category\": \"外贸跨境\", \"bio\": \"义乌小商品视频号官方账号，外贸选品与B端商家咨询\", \"avatar\": \"🎬\", \"createdAt\": \"2026-08-07\"}, {\"id\": \"v16_xhs_义采宝_1723000004_0004\", \"name\": \"义采宝\", \"platform\": \"小红书\", \"followers\": 5200, \"category\": \"外贸跨境\", \"bio\": \"义乌小商品小红书官方账号，外贸选品与B端商家咨询\", \"avatar\": \"📕\", \"createdAt\": \"2026-08-07\"}, {\"id\": \"v16_xhs_YiwuTrade_1723000005_0005\", \"name\": \"YiwuTrade\", \"platform\": \"小红书\", \"followers\": 3100, \"category\": \"外贸跨境\", \"bio\": \"义乌小商品小红书官方账号，外贸选品与B端商家咨询\", \"avatar\": \"📕\", \"createdAt\": \"2026-08-07\"}, {\"id\": \"v16_gzh_义采宝_1723000006_0006\", \"name\": \"义采宝\", \"platform\": \"公众号\", \"followers\": 1800, \"category\": \"外贸跨境\", \"bio\": \"专注外贸跨境市场动态与义乌供应链一手资讯\", \"avatar\": \"📰\", \"createdAt\": \"2026-08-07\"}]", "media_workflow_account_data": "{\"v16_dy_义采宝_1723000000_0000\": {\"daily\": [{\"date\": \"2026-07-09\", \"followers\": 31000, \"views\": 3945, \"likes\": 135, \"comments\": 10, \"shares\": 8}, {\"date\": \"2026-07-10\", \"followers\": 30999, \"views\": 8485, \"likes\": 634, \"comments\": 72, \"shares\": 20}, {\"date\": \"2026-07-11\", \"followers\": 31000, \"views\": 6379, \"likes\": 499, \"comments\": 35, \"shares\": 30}, {\"date\": \"2026-07-12\", \"followers\": 31002, \"views\": 6636, \"likes\": 234, \"comments\": 16, \"shares\": 13}, {\"date\": \"2026-07-13\", \"followers\": 31003, \"views\": 2664, \"likes\": 201, \"comments\": 27, \"shares\": 13}, {\"date\": \"2026-07-14\", \"followers\": 30995, \"views\": 8234, \"likes\": 311, \"comments\": 44, \"shares\": 6}, {\"date\": \"2026-07-15\", \"followers\": 30997, \"views\": 6824, \"likes\": 432, \"comments\": 25, \"shares\": 9}, {\"date\": \"2026-07-16\", \"followers\": 30993, \"views\": 3205, \"likes\": 120, \"comments\": 16, \"shares\": 6}, {\"date\": \"2026-07-17\", \"followers\": 30993, \"views\": 7182, \"likes\": 484, \"comments\": 61, \"shares\": 21}, {\"date\": \"2026-07-18\", \"followers\": 30992, \"views\": 7845, \"likes\": 610, \"comments\": 32, \"shares\": 28}, {\"date\": \"2026-07-19\", \"followers\": 31008, \"views\": 8530, \"likes\": 599, \"comments\": 37, \"shares\": 14}, {\"date\": \"2026-07-20\", \"followers\": 31003, \"views\": 3268, \"likes\": 122, \"comments\": 9, \"shares\": 3}, {\"date\": \"2026-07-21\", \"followers\": 31007, \"views\": 4204, \"likes\": 217, \"comments\": 11, \"shares\": 14}, {\"date\": \"2026-07-22\", \"followers\": 30993, \"views\": 4515, \"likes\": 191, \"comments\": 23, \"shares\": 11}, {\"date\": \"2026-07-23\", \"followers\": 31001, \"views\": 5686, \"likes\": 300, \"comments\": 27, \"shares\": 16}, {\"date\": \"2026-07-24\", \"followers\": 30988, \"views\": 3748, \"likes\": 215, \"comments\": 31, \"shares\": 11}, {\"date\": \"2026-07-25\", \"followers\": 31001, \"views\": 7354, \"likes\": 370, \"comments\": 33, \"shares\": 16}, {\"date\": \"2026-07-26\", \"followers\": 30988, \"views\": 7849, \"likes\": 541, \"comments\": 59, \"shares\": 22}, {\"date\": \"2026-07-27\", \"followers\": 30997, \"views\": 7918, \"likes\": 627, \"comments\": 67, \"shares\": 31}, {\"date\": \"2026-07-28\", \"followers\": 31003, \"views\": 8046, \"likes\": 504, \"comments\": 64, \"shares\": 12}, {\"date\": \"2026-07-29\", \"followers\": 30998, \"views\": 3233, \"likes\": 148, \"comments\": 7, \"shares\": 4}, {\"date\": \"2026-07-30\", \"followers\": 30996, \"views\": 3365, \"likes\": 137, \"comments\": 8, \"shares\": 3}, {\"date\": \"2026-07-31\", \"followers\": 31015, \"views\": 3924, \"likes\": 222, \"comments\": 23, \"shares\": 4}, {\"date\": \"2026-08-01\", \"followers\": 30979, \"views\": 5333, \"likes\": 389, \"comments\": 37, \"shares\": 10}, {\"date\": \"2026-08-02\", \"followers\": 31024, \"views\": 3735, \"likes\": 217, \"comments\": 25, \"shares\": 11}, {\"date\": \"2026-08-03\", \"followers\": 31025, \"views\": 7417, \"likes\": 586, \"comments\": 33, \"shares\": 27}, {\"date\": \"2026-08-04\", \"followers\": 31012, \"views\": 3309, \"likes\": 178, \"comments\": 22, \"shares\": 5}, {\"date\": \"2026-08-05\", \"followers\": 31024, \"views\": 4952, \"likes\": 338, \"comments\": 20, \"shares\": 7}, {\"date\": \"2026-08-06\", \"followers\": 31024, \"views\": 4860, \"likes\": 348, \"comments\": 23, \"shares\": 9}, {\"date\": \"2026-08-07\", \"followers\": 31005, \"views\": 6378, \"likes\": 509, \"comments\": 43, \"shares\": 19}], \"lastUpdated\": \"2026-08-07\", \"totalViews\": 169023, \"totalLikes\": 10418, \"totalComments\": 940, \"totalShares\": 403}, \"v16_dy_YiwuTrade_1723000001_0001\": {\"daily\": [{\"date\": \"2026-07-09\", \"followers\": 2898, \"views\": 729, \"likes\": 56, \"comments\": 7, \"shares\": 1}, {\"date\": \"2026-07-10\", \"followers\": 2899, \"views\": 599, \"likes\": 38, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-07-11\", \"followers\": 2898, \"views\": 404, \"likes\": 16, \"comments\": 0, \"shares\": 1}, {\"date\": \"2026-07-12\", \"followers\": 2900, \"views\": 544, \"likes\": 29, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-13\", \"followers\": 2895, \"views\": 258, \"likes\": 17, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-14\", \"followers\": 2895, \"views\": 271, \"likes\": 17, \"comments\": 2, \"shares\": 0}, {\"date\": \"2026-07-15\", \"followers\": 2895, \"views\": 336, \"likes\": 11, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-16\", \"followers\": 2893, \"views\": 370, \"likes\": 16, \"comments\": 0, \"shares\": 1}, {\"date\": \"2026-07-17\", \"followers\": 2892, \"views\": 598, \"likes\": 26, \"comments\": 1, \"shares\": 1}, {\"date\": \"2026-07-18\", \"followers\": 2892, \"views\": 733, \"likes\": 39, \"comments\": 5, \"shares\": 1}, {\"date\": \"2026-07-19\", \"followers\": 2889, \"views\": 759, \"likes\": 33, \"comments\": 2, \"shares\": 2}, {\"date\": \"2026-07-20\", \"followers\": 2909, \"views\": 623, \"likes\": 24, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-21\", \"followers\": 2909, \"views\": 314, \"likes\": 16, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-22\", \"followers\": 2893, \"views\": 450, \"likes\": 26, \"comments\": 3, \"shares\": 0}, {\"date\": \"2026-07-23\", \"followers\": 2906, \"views\": 518, \"likes\": 39, \"comments\": 5, \"shares\": 1}, {\"date\": \"2026-07-24\", \"followers\": 2902, \"views\": 317, \"likes\": 11, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-25\", \"followers\": 2904, \"views\": 497, \"likes\": 38, \"comments\": 4, \"shares\": 1}, {\"date\": \"2026-07-26\", \"followers\": 2908, \"views\": 793, \"likes\": 53, \"comments\": 6, \"shares\": 2}, {\"date\": \"2026-07-27\", \"followers\": 2903, \"views\": 487, \"likes\": 17, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-28\", \"followers\": 2901, \"views\": 540, \"likes\": 23, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-29\", \"followers\": 2892, \"views\": 385, \"likes\": 16, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-30\", \"followers\": 2900, \"views\": 272, \"likes\": 13, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-31\", \"followers\": 2881, \"views\": 360, \"likes\": 11, \"comments\": 0, \"shares\": 0}, {\"date\": \"2026-08-01\", \"followers\": 2883, \"views\": 682, \"likes\": 38, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-08-02\", \"followers\": 2884, \"views\": 664, \"likes\": 43, \"comments\": 2, \"shares\": 2}, {\"date\": \"2026-08-03\", \"followers\": 2908, \"views\": 462, \"likes\": 32, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-08-04\", \"followers\": 2884, \"views\": 740, \"likes\": 33, \"comments\": 4, \"shares\": 0}, {\"date\": \"2026-08-05\", \"followers\": 2899, \"views\": 554, \"likes\": 41, \"comments\": 2, \"shares\": 2}, {\"date\": \"2026-08-06\", \"followers\": 2890, \"views\": 562, \"likes\": 38, \"comments\": 4, \"shares\": 0}, {\"date\": \"2026-08-07\", \"followers\": 2909, \"views\": 372, \"likes\": 21, \"comments\": 1, \"shares\": 1}], \"lastUpdated\": \"2026-08-07\", \"totalViews\": 15193, \"totalLikes\": 831, \"totalComments\": 71, \"totalShares\": 23}, \"v16_sph_义采宝_1723000002_0002\": {\"daily\": [{\"date\": \"2026-07-09\", \"followers\": 3520, \"views\": 658, \"likes\": 47, \"comments\": 4, \"shares\": 1}, {\"date\": \"2026-07-10\", \"followers\": 3519, \"views\": 654, \"likes\": 34, \"comments\": 1, \"shares\": 1}, {\"date\": \"2026-07-11\", \"followers\": 3522, \"views\": 296, \"likes\": 20, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-12\", \"followers\": 3517, \"views\": 817, \"likes\": 30, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-13\", \"followers\": 3524, \"views\": 559, \"likes\": 32, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-07-14\", \"followers\": 3515, \"views\": 757, \"likes\": 43, \"comments\": 2, \"shares\": 2}, {\"date\": \"2026-07-15\", \"followers\": 3514, \"views\": 746, \"likes\": 54, \"comments\": 6, \"shares\": 3}, {\"date\": \"2026-07-16\", \"followers\": 3526, \"views\": 514, \"likes\": 38, \"comments\": 5, \"shares\": 2}, {\"date\": \"2026-07-17\", \"followers\": 3516, \"views\": 603, \"likes\": 34, \"comments\": 4, \"shares\": 2}, {\"date\": \"2026-07-18\", \"followers\": 3519, \"views\": 425, \"likes\": 23, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-19\", \"followers\": 3529, \"views\": 928, \"likes\": 56, \"comments\": 2, \"shares\": 3}, {\"date\": \"2026-07-20\", \"followers\": 3513, \"views\": 584, \"likes\": 45, \"comments\": 5, \"shares\": 1}, {\"date\": \"2026-07-21\", \"followers\": 3513, \"views\": 462, \"likes\": 36, \"comments\": 4, \"shares\": 2}, {\"date\": \"2026-07-22\", \"followers\": 3508, \"views\": 743, \"likes\": 47, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-23\", \"followers\": 3533, \"views\": 861, \"likes\": 47, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-07-24\", \"followers\": 3524, \"views\": 738, \"likes\": 26, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-25\", \"followers\": 3520, \"views\": 773, \"likes\": 53, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-07-26\", \"followers\": 3531, \"views\": 911, \"likes\": 31, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-27\", \"followers\": 3510, \"views\": 616, \"likes\": 27, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-07-28\", \"followers\": 3513, \"views\": 317, \"likes\": 19, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-29\", \"followers\": 3518, \"views\": 769, \"likes\": 24, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-07-30\", \"followers\": 3532, \"views\": 410, \"likes\": 19, \"comments\": 1, \"shares\": 1}, {\"date\": \"2026-07-31\", \"followers\": 3526, \"views\": 283, \"likes\": 20, \"comments\": 2, \"shares\": 0}, {\"date\": \"2026-08-01\", \"followers\": 3540, \"views\": 562, \"likes\": 20, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-08-02\", \"followers\": 3520, \"views\": 721, \"likes\": 36, \"comments\": 4, \"shares\": 2}, {\"date\": \"2026-08-03\", \"followers\": 3509, \"views\": 619, \"likes\": 42, \"comments\": 5, \"shares\": 2}, {\"date\": \"2026-08-04\", \"followers\": 3539, \"views\": 865, \"likes\": 30, \"comments\": 3, \"shares\": 0}, {\"date\": \"2026-08-05\", \"followers\": 3506, \"views\": 929, \"likes\": 54, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-08-06\", \"followers\": 3500, \"views\": 965, \"likes\": 68, \"comments\": 3, \"shares\": 2}, {\"date\": \"2026-08-07\", \"followers\": 3527, \"views\": 358, \"likes\": 16, \"comments\": 1, \"shares\": 0}], \"lastUpdated\": \"2026-08-07\", \"totalViews\": 19443, \"totalLikes\": 1071, \"totalComments\": 82, \"totalShares\": 34}, \"v16_sph_YiwuTrade_1723000003_0003\": {\"daily\": [{\"date\": \"2026-07-09\", \"followers\": 4872, \"views\": 1309, \"likes\": 98, \"comments\": 5, \"shares\": 4}, {\"date\": \"2026-07-10\", \"followers\": 4871, \"views\": 796, \"likes\": 56, \"comments\": 7, \"shares\": 1}, {\"date\": \"2026-07-11\", \"followers\": 4874, \"views\": 868, \"likes\": 42, \"comments\": 4, \"shares\": 0}, {\"date\": \"2026-07-12\", \"followers\": 4872, \"views\": 962, \"likes\": 52, \"comments\": 6, \"shares\": 2}, {\"date\": \"2026-07-13\", \"followers\": 4870, \"views\": 1271, \"likes\": 80, \"comments\": 10, \"shares\": 5}, {\"date\": \"2026-07-14\", \"followers\": 4876, \"views\": 895, \"likes\": 66, \"comments\": 6, \"shares\": 3}, {\"date\": \"2026-07-15\", \"followers\": 4877, \"views\": 474, \"likes\": 15, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-16\", \"followers\": 4879, \"views\": 1115, \"likes\": 55, \"comments\": 7, \"shares\": 2}, {\"date\": \"2026-07-17\", \"followers\": 4880, \"views\": 589, \"likes\": 31, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-18\", \"followers\": 4881, \"views\": 1290, \"likes\": 60, \"comments\": 5, \"shares\": 1}, {\"date\": \"2026-07-19\", \"followers\": 4863, \"views\": 798, \"likes\": 31, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-20\", \"followers\": 4866, \"views\": 929, \"likes\": 59, \"comments\": 6, \"shares\": 2}, {\"date\": \"2026-07-21\", \"followers\": 4875, \"views\": 1095, \"likes\": 36, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-07-22\", \"followers\": 4871, \"views\": 1027, \"likes\": 37, \"comments\": 4, \"shares\": 2}, {\"date\": \"2026-07-23\", \"followers\": 4868, \"views\": 828, \"likes\": 64, \"comments\": 7, \"shares\": 2}, {\"date\": \"2026-07-24\", \"followers\": 4873, \"views\": 559, \"likes\": 17, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-25\", \"followers\": 4882, \"views\": 449, \"likes\": 18, \"comments\": 0, \"shares\": 0}, {\"date\": \"2026-07-26\", \"followers\": 4861, \"views\": 1320, \"likes\": 74, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-07-27\", \"followers\": 4867, \"views\": 547, \"likes\": 38, \"comments\": 5, \"shares\": 0}, {\"date\": \"2026-07-28\", \"followers\": 4880, \"views\": 1230, \"likes\": 64, \"comments\": 9, \"shares\": 4}, {\"date\": \"2026-07-29\", \"followers\": 4884, \"views\": 1036, \"likes\": 82, \"comments\": 5, \"shares\": 5}, {\"date\": \"2026-07-30\", \"followers\": 4879, \"views\": 1195, \"likes\": 85, \"comments\": 5, \"shares\": 2}, {\"date\": \"2026-07-31\", \"followers\": 4887, \"views\": 1270, \"likes\": 79, \"comments\": 5, \"shares\": 3}, {\"date\": \"2026-08-01\", \"followers\": 4888, \"views\": 582, \"likes\": 22, \"comments\": 1, \"shares\": 1}, {\"date\": \"2026-08-02\", \"followers\": 4849, \"views\": 1250, \"likes\": 93, \"comments\": 5, \"shares\": 4}, {\"date\": \"2026-08-03\", \"followers\": 4881, \"views\": 734, \"likes\": 35, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-08-04\", \"followers\": 4851, \"views\": 658, \"likes\": 29, \"comments\": 2, \"shares\": 0}, {\"date\": \"2026-08-05\", \"followers\": 4852, \"views\": 907, \"likes\": 29, \"comments\": 2, \"shares\": 0}, {\"date\": \"2026-08-06\", \"followers\": 4899, \"views\": 463, \"likes\": 21, \"comments\": 1, \"shares\": 1}, {\"date\": \"2026-08-07\", \"followers\": 4890, \"views\": 1229, \"likes\": 46, \"comments\": 3, \"shares\": 1}], \"lastUpdated\": \"2026-08-07\", \"totalViews\": 27675, \"totalLikes\": 1514, \"totalComments\": 125, \"totalShares\": 50}, \"v16_xhs_义采宝_1723000004_0004\": {\"daily\": [{\"date\": \"2026-07-09\", \"followers\": 5200, \"views\": 943, \"likes\": 46, \"comments\": 5, \"shares\": 1}, {\"date\": \"2026-07-10\", \"followers\": 5199, \"views\": 1408, \"likes\": 74, \"comments\": 6, \"shares\": 4}, {\"date\": \"2026-07-11\", \"followers\": 5198, \"views\": 628, \"likes\": 34, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-12\", \"followers\": 5202, \"views\": 740, \"likes\": 58, \"comments\": 4, \"shares\": 1}, {\"date\": \"2026-07-13\", \"followers\": 5200, \"views\": 1429, \"likes\": 48, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-14\", \"followers\": 5195, \"views\": 1049, \"likes\": 74, \"comments\": 3, \"shares\": 2}, {\"date\": \"2026-07-15\", \"followers\": 5196, \"views\": 638, \"likes\": 50, \"comments\": 5, \"shares\": 1}, {\"date\": \"2026-07-16\", \"followers\": 5203, \"views\": 452, \"likes\": 26, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-17\", \"followers\": 5204, \"views\": 1392, \"likes\": 54, \"comments\": 5, \"shares\": 1}, {\"date\": \"2026-07-18\", \"followers\": 5205, \"views\": 1300, \"likes\": 101, \"comments\": 14, \"shares\": 4}, {\"date\": \"2026-07-19\", \"followers\": 5205, \"views\": 1038, \"likes\": 68, \"comments\": 7, \"shares\": 2}, {\"date\": \"2026-07-20\", \"followers\": 5198, \"views\": 616, \"likes\": 41, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-07-21\", \"followers\": 5190, \"views\": 1367, \"likes\": 88, \"comments\": 9, \"shares\": 1}, {\"date\": \"2026-07-22\", \"followers\": 5206, \"views\": 1358, \"likes\": 108, \"comments\": 8, \"shares\": 3}, {\"date\": \"2026-07-23\", \"followers\": 5210, \"views\": 1078, \"likes\": 44, \"comments\": 2, \"shares\": 2}, {\"date\": \"2026-07-24\", \"followers\": 5211, \"views\": 1005, \"likes\": 71, \"comments\": 5, \"shares\": 2}, {\"date\": \"2026-07-25\", \"followers\": 5210, \"views\": 1250, \"likes\": 93, \"comments\": 11, \"shares\": 3}, {\"date\": \"2026-07-26\", \"followers\": 5211, \"views\": 535, \"likes\": 16, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-27\", \"followers\": 5216, \"views\": 1106, \"likes\": 62, \"comments\": 7, \"shares\": 3}, {\"date\": \"2026-07-28\", \"followers\": 5211, \"views\": 868, \"likes\": 63, \"comments\": 3, \"shares\": 4}, {\"date\": \"2026-07-29\", \"followers\": 5182, \"views\": 1118, \"likes\": 57, \"comments\": 3, \"shares\": 3}, {\"date\": \"2026-07-30\", \"followers\": 5199, \"views\": 634, \"likes\": 37, \"comments\": 4, \"shares\": 1}, {\"date\": \"2026-07-31\", \"followers\": 5204, \"views\": 626, \"likes\": 46, \"comments\": 2, \"shares\": 2}, {\"date\": \"2026-08-01\", \"followers\": 5211, \"views\": 1251, \"likes\": 84, \"comments\": 5, \"shares\": 3}, {\"date\": \"2026-08-02\", \"followers\": 5216, \"views\": 866, \"likes\": 53, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-08-03\", \"followers\": 5195, \"views\": 1450, \"likes\": 77, \"comments\": 8, \"shares\": 1}, {\"date\": \"2026-08-04\", \"followers\": 5178, \"views\": 1015, \"likes\": 34, \"comments\": 2, \"shares\": 2}, {\"date\": \"2026-08-05\", \"followers\": 5224, \"views\": 894, \"likes\": 58, \"comments\": 4, \"shares\": 2}, {\"date\": \"2026-08-06\", \"followers\": 5191, \"views\": 1064, \"likes\": 52, \"comments\": 4, \"shares\": 1}, {\"date\": \"2026-08-07\", \"followers\": 5184, \"views\": 1197, \"likes\": 79, \"comments\": 6, \"shares\": 2}], \"lastUpdated\": \"2026-08-07\", \"totalViews\": 30315, \"totalLikes\": 1796, \"totalComments\": 145, \"totalShares\": 56}, \"v16_xhs_YiwuTrade_1723000005_0005\": {\"daily\": [{\"date\": \"2026-07-09\", \"followers\": 3100, \"views\": 403, \"likes\": 14, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-10\", \"followers\": 3100, \"views\": 303, \"likes\": 16, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-11\", \"followers\": 3101, \"views\": 617, \"likes\": 21, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-12\", \"followers\": 3103, \"views\": 500, \"likes\": 37, \"comments\": 4, \"shares\": 1}, {\"date\": \"2026-07-13\", \"followers\": 3100, \"views\": 704, \"likes\": 25, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-07-14\", \"followers\": 3102, \"views\": 271, \"likes\": 13, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-15\", \"followers\": 3094, \"views\": 356, \"likes\": 23, \"comments\": 2, \"shares\": 0}, {\"date\": \"2026-07-16\", \"followers\": 3097, \"views\": 249, \"likes\": 16, \"comments\": 2, \"shares\": 0}, {\"date\": \"2026-07-17\", \"followers\": 3100, \"views\": 524, \"likes\": 23, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-18\", \"followers\": 3106, \"views\": 316, \"likes\": 9, \"comments\": 0, \"shares\": 0}, {\"date\": \"2026-07-19\", \"followers\": 3097, \"views\": 468, \"likes\": 23, \"comments\": 1, \"shares\": 1}, {\"date\": \"2026-07-20\", \"followers\": 3107, \"views\": 840, \"likes\": 32, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-07-21\", \"followers\": 3096, \"views\": 575, \"likes\": 31, \"comments\": 4, \"shares\": 0}, {\"date\": \"2026-07-22\", \"followers\": 3102, \"views\": 794, \"likes\": 44, \"comments\": 4, \"shares\": 2}, {\"date\": \"2026-07-23\", \"followers\": 3106, \"views\": 666, \"likes\": 32, \"comments\": 4, \"shares\": 1}, {\"date\": \"2026-07-24\", \"followers\": 3106, \"views\": 521, \"likes\": 31, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-25\", \"followers\": 3085, \"views\": 377, \"likes\": 22, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-26\", \"followers\": 3102, \"views\": 568, \"likes\": 31, \"comments\": 4, \"shares\": 0}, {\"date\": \"2026-07-27\", \"followers\": 3111, \"views\": 782, \"likes\": 43, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-28\", \"followers\": 3082, \"views\": 484, \"likes\": 18, \"comments\": 2, \"shares\": 0}, {\"date\": \"2026-07-29\", \"followers\": 3101, \"views\": 730, \"likes\": 46, \"comments\": 4, \"shares\": 2}, {\"date\": \"2026-07-30\", \"followers\": 3080, \"views\": 574, \"likes\": 32, \"comments\": 4, \"shares\": 1}, {\"date\": \"2026-07-31\", \"followers\": 3117, \"views\": 689, \"likes\": 30, \"comments\": 3, \"shares\": 0}, {\"date\": \"2026-08-01\", \"followers\": 3111, \"views\": 695, \"likes\": 54, \"comments\": 6, \"shares\": 3}, {\"date\": \"2026-08-02\", \"followers\": 3092, \"views\": 760, \"likes\": 25, \"comments\": 2, \"shares\": 0}, {\"date\": \"2026-08-03\", \"followers\": 3106, \"views\": 251, \"likes\": 16, \"comments\": 0, \"shares\": 0}, {\"date\": \"2026-08-04\", \"followers\": 3074, \"views\": 596, \"likes\": 34, \"comments\": 2, \"shares\": 2}, {\"date\": \"2026-08-05\", \"followers\": 3083, \"views\": 607, \"likes\": 48, \"comments\": 3, \"shares\": 2}, {\"date\": \"2026-08-06\", \"followers\": 3107, \"views\": 791, \"likes\": 47, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-08-07\", \"followers\": 3096, \"views\": 457, \"likes\": 25, \"comments\": 2, \"shares\": 1}], \"lastUpdated\": \"2026-08-07\", \"totalViews\": 16468, \"totalLikes\": 861, \"totalComments\": 75, \"totalShares\": 24}, \"v16_gzh_义采宝_1723000006_0006\": {\"daily\": [{\"date\": \"2026-07-09\", \"followers\": 1800, \"views\": 343, \"likes\": 13, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-10\", \"followers\": 1800, \"views\": 424, \"likes\": 21, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-11\", \"followers\": 1802, \"views\": 424, \"likes\": 32, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-07-12\", \"followers\": 1798, \"views\": 299, \"likes\": 12, \"comments\": 0, \"shares\": 0}, {\"date\": \"2026-07-13\", \"followers\": 1800, \"views\": 402, \"likes\": 25, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-14\", \"followers\": 1800, \"views\": 154, \"likes\": 8, \"comments\": 0, \"shares\": 0}, {\"date\": \"2026-07-15\", \"followers\": 1801, \"views\": 490, \"likes\": 29, \"comments\": 2, \"shares\": 1}, {\"date\": \"2026-07-16\", \"followers\": 1801, \"views\": 435, \"likes\": 30, \"comments\": 1, \"shares\": 1}, {\"date\": \"2026-07-17\", \"followers\": 1806, \"views\": 349, \"likes\": 16, \"comments\": 2, \"shares\": 0}, {\"date\": \"2026-07-18\", \"followers\": 1795, \"views\": 170, \"likes\": 6, \"comments\": 0, \"shares\": 0}, {\"date\": \"2026-07-19\", \"followers\": 1801, \"views\": 499, \"likes\": 24, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-07-20\", \"followers\": 1803, \"views\": 404, \"likes\": 27, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-07-21\", \"followers\": 1789, \"views\": 317, \"likes\": 21, \"comments\": 2, \"shares\": 0}, {\"date\": \"2026-07-22\", \"followers\": 1791, \"views\": 491, \"likes\": 36, \"comments\": 4, \"shares\": 2}, {\"date\": \"2026-07-23\", \"followers\": 1812, \"views\": 161, \"likes\": 10, \"comments\": 0, \"shares\": 0}, {\"date\": \"2026-07-24\", \"followers\": 1811, \"views\": 396, \"likes\": 27, \"comments\": 3, \"shares\": 1}, {\"date\": \"2026-07-25\", \"followers\": 1805, \"views\": 383, \"likes\": 20, \"comments\": 2, \"shares\": 0}, {\"date\": \"2026-07-26\", \"followers\": 1813, \"views\": 269, \"likes\": 12, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-27\", \"followers\": 1818, \"views\": 378, \"likes\": 24, \"comments\": 1, \"shares\": 1}, {\"date\": \"2026-07-28\", \"followers\": 1794, \"views\": 211, \"likes\": 12, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-29\", \"followers\": 1813, \"views\": 364, \"likes\": 19, \"comments\": 2, \"shares\": 0}, {\"date\": \"2026-07-30\", \"followers\": 1808, \"views\": 456, \"likes\": 21, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-07-31\", \"followers\": 1814, \"views\": 452, \"likes\": 19, \"comments\": 2, \"shares\": 0}, {\"date\": \"2026-08-01\", \"followers\": 1798, \"views\": 216, \"likes\": 8, \"comments\": 0, \"shares\": 0}, {\"date\": \"2026-08-02\", \"followers\": 1816, \"views\": 468, \"likes\": 25, \"comments\": 1, \"shares\": 1}, {\"date\": \"2026-08-03\", \"followers\": 1818, \"views\": 454, \"likes\": 19, \"comments\": 1, \"shares\": 1}, {\"date\": \"2026-08-04\", \"followers\": 1808, \"views\": 501, \"likes\": 37, \"comments\": 4, \"shares\": 2}, {\"date\": \"2026-08-05\", \"followers\": 1777, \"views\": 365, \"likes\": 12, \"comments\": 1, \"shares\": 0}, {\"date\": \"2026-08-06\", \"followers\": 1782, \"views\": 487, \"likes\": 32, \"comments\": 4, \"shares\": 1}, {\"date\": \"2026-08-07\", \"followers\": 1810, \"views\": 454, \"likes\": 33, \"comments\": 4, \"shares\": 1}], \"lastUpdated\": \"2026-08-07\", \"totalViews\": 11216, \"totalLikes\": 630, \"totalComments\": 52, \"totalShares\": 16}}", "media_workflow_tasks": "[]"};
   try {
-    var force = true; // v18 版本强制覆盖一次，确保帝王蝶素材注入
+    // v21 修复：force 只在 schema 版本升级时生效（避免每次刷新都强制覆盖，导致用户导入的素材被回滚丢失）
+    var preSchema = parseInt(localStorage.getItem('media_workflow_schema_version') || '0', 10);
+    var force = (preSchema < 21); // 仅 schema<21 时强制覆盖种子数据，之后永久保留用户本地改动
     for (var key in preloadData) {
       if (force || !localStorage.getItem(key)) { localStorage.setItem(key, preloadData[key]); }
     }
-    console.log("[v18预加载] 已预置账号=", JSON.parse(preloadData["media_workflow_accounts"]).length, " 素材=", JSON.parse(preloadData["media_workflow_materials"]).length);
-  } catch (e) { console.error("[v18预加载] 失败", e); }
+    console.log("[v21预加载] schema=", preSchema, " force覆盖=", force, " 账号=", JSON.parse(preloadData["media_workflow_accounts"]).length, " 素材=", JSON.parse(MATS).length, "（force仅在schema升级时开启，不再覆盖用户导入）");
+  } catch (e) { console.error("[v21预加载] 失败", e); }
 })();
 </script>
     <!-- iOS PWA 图标配置 -->
@@ -743,6 +828,10 @@
 
         .stat-info .value.warning {
             color: #FF9500;
+        }
+
+        .stat-info .value.danger {
+            color: #FF3B30;
         }
 
         .stat-icon {
@@ -2110,6 +2199,29 @@
 
         .task-card.low-priority {
             border-left-color: #34C759;
+        }
+
+        .task-card.task-archived {
+            opacity: 0.7;
+            background: #F2F2F7;
+        }
+
+        .task-card.task-archived .task-title {
+            text-decoration: line-through;
+            color: #8E8E93;
+        }
+
+        .task-status-badge {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 1px 6px;
+            border-radius: 8px;
+            margin-left: auto;
+        }
+
+        .task-status-badge.archived {
+            background: #94a3b820;
+            color: #64748b;
         }
 
         .task-title {
@@ -4005,7 +4117,7 @@
 
         .calendar-stat-num.completed { color: #22c55e; }
         .calendar-stat-num.in-progress { color: #f59e0b; }
-        .calendar-stat-num.pending { color: #64748b; }
+        .calendar-stat-num.pending { color: #FF3B30; }
 
         .calendar-stat-label {
             font-size: 12px;
@@ -4683,6 +4795,20 @@
             color: rgba(235, 235, 245, 0.6);
         }
 
+        body.dark-mode .task-card.task-archived {
+            background: #2C2C2E;
+            opacity: 0.75;
+        }
+
+        body.dark-mode .task-card.task-archived .task-title {
+            color: rgba(235, 235, 245, 0.4);
+        }
+
+        body.dark-mode .task-status-badge.archived {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(235, 235, 245, 0.5);
+        }
+
         body.dark-mode .task-card {
             background: #1C1C1E;
             border-color: rgba(84, 84, 88, 0.5);
@@ -5111,7 +5237,7 @@
         }
 
         body.dark-mode .calendar-stat-num.pending {
-            color: rgba(235, 235, 245, 0.6);
+            color: #FF6B6B;
         }
 
         body.dark-mode .calendar-stat-label {
@@ -7188,8 +7314,18 @@ CREATE POLICY "allow_all" ON workbench_sync
         let syncEnabled = false;
         let autoSyncEnabled = true;
         let syncDebounceTimer = null;
-        let lastSyncTime = 0;
+        // ✅ lastSyncTime 持久化到 localStorage，避免页面刷新后重置为 0
+        // 原因：原代码 lastSyncTime=0 导致每次刷新 silentPull 都触发 restoreFromCloudData
+        let lastSyncTime = parseInt(localStorage.getItem('media_workflow_last_sync_time') || '0', 10) || 0;
         let isSyncing = false;
+
+        // 设置 lastSyncTime 并持久化到 localStorage
+        function setLastSyncTime(timestamp) {
+            lastSyncTime = timestamp;
+            try {
+                localStorage.setItem('media_workflow_last_sync_time', String(timestamp));
+            } catch (e) { console.warn('[setLastSyncTime] 持久化失败:', e); }
+        }
 
         // 获取所有需要同步的数据
         function getAllSyncData() {
@@ -7217,29 +7353,92 @@ CREATE POLICY "allow_all" ON workbench_sync
             const SEED_TITLE_PATTERNS = ['帝王蝶','2026跨境最赚钱的8个品类','外贸报价比同行低15%','做东南亚跨境','2026年做外贸，这4个赛道'];
             Object.keys(cloudData).forEach(k => {
                 const val = cloudData[k];
-                // ✅ 保护 1：materials 绝对不允许被空数组 或 不含种子素材（帝王蝶/跨境）的内容覆盖本地
+                // ✅ 保护 1：materials 永远采用"本地优先合并"策略（强化版）
                 if (k === STORAGE_KEY_MATERIALS) {
                     try {
                         const localRaw = localStorage.getItem(k);
                         const localMats = localRaw ? JSON.parse(localRaw) : [];
                         const remoteMats = (typeof val === 'string') ? JSON.parse(val) : (Array.isArray(val) ? val : []);
-                        const localHasSeed = Array.isArray(localMats) && localMats.some(m => m && m.title && SEED_TITLE_PATTERNS.some(p => String(m.title).indexOf(p) !== -1));
-                        const remoteHasSeed = Array.isArray(remoteMats) && remoteMats.some(m => m && m.title && SEED_TITLE_PATTERNS.some(p => String(m.title).indexOf(p) !== -1));
-                        if (!remoteHasSeed && localHasSeed) {
-                            // 云端没有种子素材（旧数据/空），但本地有 → **拒绝云端覆盖 materials**，仅做合并（保留本地种子+云端其他用户素材）
-                            console.warn('[restoreFromCloudData] 云端 materials 不含帝王蝶等种子素材，拒绝覆盖；改为本地+云端合并模式');
-                            const seen = {};
-                            const merged = [];
-                            localMats.concat(remoteMats || []).forEach(m => {
-                                if (!m || !m.title) return;
-                                const key = String(m.title);
-                                if (!seen[key]) { seen[key] = 1; merged.push(m); }
+                        const safeLocal = Array.isArray(localMats) ? localMats : [];
+                        const safeRemote = Array.isArray(remoteMats) ? remoteMats : [];
+                        
+                        // 构建索引
+                        const localByTitle = {};
+                        const localById = {};
+                        safeLocal.forEach(m => {
+                            if (m && m.title) localByTitle[String(m.title)] = m;
+                            if (m && m.id !== undefined) localById[String(m.id)] = m;
+                        });
+                        const remoteByTitle = {};
+                        safeRemote.forEach(m => { if (m && m.title) remoteByTitle[String(m.title)] = m; });
+                        
+                        const merged = [];
+                        const processedRemoteTitles = new Set();
+                        
+                        // 1) 处理本地素材（逐条合并，used 状态采用 OR 合并）
+                        safeLocal.forEach(localMat => {
+                            if (!localMat || !localMat.title) return;
+                            const remoteMat = remoteByTitle[String(localMat.title)];
+                            if (remoteMat) {
+                                // 合并：以本地为基础，补齐云端有但本地没有的字段
+                                const mergedMat = { ...remoteMat, ...localMat };
+                                // ✅ 关键修复：used 状态采用 OR 合并（本地或云端任一为 true 则为 true）
+                                // 原因：用户标记"已使用"是不可逆操作，多设备同步时本地的旧 used=false
+                                // 不应覆盖云端的 used=true（另一设备已标记），反之亦然
+                                mergedMat.used = (localMat.used === true) || (remoteMat.used === true);
+                                merged.push(mergedMat);
+                                processedRemoteTitles.add(String(localMat.title));
+                            } else {
+                                // 本地独有的素材，完整保留
+                                merged.push({ ...localMat });
+                            }
+                        });
+                        
+                        // 2) 处理云端独有的素材（本地没有的）
+                        safeRemote.forEach(remoteMat => {
+                            if (!remoteMat || !remoteMat.title) return;
+                            if (!processedRemoteTitles.has(String(remoteMat.title))) {
+                                merged.push({ ...remoteMat });
+                            }
+                        });
+                        
+                        // ✅ 验证 + 保存（移除脆弱的长度检查，改为直接保存）
+                        const usedCountLocal = safeLocal.filter(m => m && m.used === true).length;
+                        const usedCountRemote = safeRemote.filter(m => m && m.used === true).length;
+                        const expectedUsedCount = usedCountLocal + usedCountRemote; // 期望的最大值（去重前）
+                        const usedCountAfter = merged.filter(m => m && m.used === true).length;
+                        // 合并后的 used 数量不应少于本地或云端任一方的 used 数量
+                        const lostUsed = Math.max(usedCountLocal - usedCountAfter, usedCountRemote - usedCountAfter, 0);
+                        
+                        if (lostUsed > 0) {
+                            console.error('[restoreFromCloudData] 警告：合并后丢失了', lostUsed, '条 used=true 的素材！');
+                            // 紧急恢复：本地或云端 used=true 的素材都必须在合并结果中保持 used=true
+                            const allUsedSources = [
+                                ...safeLocal.filter(m => m && m.used === true),
+                                ...safeRemote.filter(m => m && m.used === true)
+                            ];
+                            allUsedSources.forEach(usedMat => {
+                                if (!usedMat || !usedMat.title) return;
+                                const existing = merged.find(m => m && m.title === usedMat.title);
+                                if (existing) {
+                                    if (existing.used !== true) {
+                                        console.error('[restoreFromCloudData] 强制恢复 used 状态:', usedMat.title);
+                                        existing.used = true;
+                                    }
+                                } else {
+                                    console.error('[restoreFromCloudData] 补回丢失的 used 素材:', usedMat.title);
+                                    merged.push({ ...usedMat, used: true });
+                                }
                             });
-                            localStorage.setItem(k, JSON.stringify(merged));
-                            return; // 跳过直接覆盖
                         }
+                        
+                        console.log('[restoreFromCloudData] materials 合并：本地', safeLocal.length, '条 + 云端', safeRemote.length, '条 = 合并后', merged.length, '条（used: 本地', usedCountLocal, ' + 云端', usedCountRemote, ' → 合并后', usedCountAfter, '）');
+                        localStorage.setItem(k, JSON.stringify(merged));
+                        // 记录：本次合并是成功的，不需要走下面的通用覆盖逻辑
+                        return;
                     } catch (e2) {
-                        console.warn('[restoreFromCloudData] materials 保护检查失败，跳过直接覆盖该 key');
+                        console.error('[restoreFromCloudData] materials 合并异常:', e2);
+                        // 异常时不覆盖，保留本地数据
                         return;
                     }
                 }
@@ -7255,11 +7454,40 @@ CREATE POLICY "allow_all" ON workbench_sync
                         }
                     } catch (e3) { return; }
                 }
-                // ✅ 保护 3：更新数据任务永远不接受云端覆盖（因为我们已经彻底删除这类任务）
+                // ✅ 保护 3：任务采用智能合并策略（本地已完成/已归档状态优先）
                 if (k === STORAGE_KEY_TASKS) {
                     try {
                         const remoteArr = (typeof val === 'string') ? JSON.parse(val) : (Array.isArray(val) ? val : []);
-                        const cleaned = Array.isArray(remoteArr) ? remoteArr.filter(t => !(t && t.title && t.title.indexOf('更新')===0 && t.title.indexOf(')数据')!==-1)) : [];
+                        const safeRemote = Array.isArray(remoteArr) ? remoteArr : [];
+                        // 获取本地数据进行智能合并
+                        const localRaw = localStorage.getItem(k);
+                        const safeLocal = localRaw ? JSON.parse(localRaw) : [];
+                        const localById = {};
+                        safeLocal.forEach(t => { if (t && t.id) localById[String(t.id)] = t; });
+                        const remoteById = {};
+                        safeRemote.forEach(t => { if (t && t.id) remoteById[String(t.id)] = t; });
+                        
+                        // 智能合并：本地已完成/已归档的任务状态优先于云端
+                        const merged = [];
+                        safeRemote.forEach(remoteTask => {
+                            const localTask = localById[String(remoteTask.id)];
+                            if (localTask && (localTask.status === 'completed' || localTask.status === 'archived')) {
+                                // 本地有更高级的状态（已完成/已归档），保留本地
+                                merged.push(localTask);
+                            } else {
+                                // 其他情况采用云端数据
+                                merged.push(remoteTask);
+                            }
+                        });
+                        // 保留本地独有的任务（云端没有的）
+                        safeLocal.forEach(localTask => {
+                            if (localTask && !remoteById[String(localTask.id)]) {
+                                merged.push(localTask);
+                            }
+                        });
+                        // 清理自动生成的更新数据任务
+                        const cleaned = merged.filter(t => !(t && t.title && t.title.indexOf('更新')===0 && t.title.indexOf(')数据')!==-1));
+                        console.log('[restoreFromCloudData] tasks 智能合并：本地', safeLocal.length, '条 + 云端', safeRemote.length, '条 = 合并后', cleaned.length, '条');
                         localStorage.setItem(k, JSON.stringify(cleaned));
                         return;
                     } catch (e4) { return; }
@@ -7445,7 +7673,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                         updated_at: new Date().toISOString()
                     });
                 if (error) throw error;
-                lastSyncTime = Date.now();
+                setLastSyncTime(Date.now());
                 updateSyncButton('synced', '已同步');
                 showSyncToast('数据已同步到云端', 'success');
                 return true;
@@ -7465,6 +7693,23 @@ CREATE POLICY "allow_all" ON workbench_sync
             isSyncing = true;
             updateSyncButton('syncing', '拉取中...');
             showSyncToast('正在从云端拉取数据...', 'loading');
+            // ✅ 防御性保护1：拉取前保存本地 used=true 的素材列表
+            let localUsedSnapshot = null;
+            try {
+                const localMatsRaw = localStorage.getItem(STORAGE_KEY_MATERIALS);
+                if (localMatsRaw) {
+                    const localMats = JSON.parse(localMatsRaw);
+                    if (Array.isArray(localMats)) {
+                        localUsedSnapshot = {};
+                        localMats.forEach(m => {
+                            if (m && m.used === true && m.title) {
+                                localUsedSnapshot[String(m.title)] = true;
+                            }
+                        });
+                    }
+                }
+            } catch (e) { console.warn('[pullFromCloud] 保存 used 快照失败:', e); }
+
             try {
                 const { data: row, error } = await supabaseClient
                     .from(SYNC_TABLE)
@@ -7482,7 +7727,29 @@ CREATE POLICY "allow_all" ON workbench_sync
                 }
                 if (row && row.data) {
                     restoreFromCloudData(row.data);
-                    lastSyncTime = Date.now();
+                    setLastSyncTime(Date.now());
+                    // ✅ 防御性保护2：restoreFromCloudData 后，强制恢复本地 used=true 的素材
+                    if (localUsedSnapshot && Object.keys(localUsedSnapshot).length > 0) {
+                        try {
+                            const afterRaw = localStorage.getItem(STORAGE_KEY_MATERIALS);
+                            if (afterRaw) {
+                                const afterMats = JSON.parse(afterRaw);
+                                if (Array.isArray(afterMats)) {
+                                    let recovered = false;
+                                    afterMats.forEach(m => {
+                                        if (m && m.title && localUsedSnapshot[String(m.title)] && m.used !== true) {
+                                            console.warn('[pullFromCloud] 防御性恢复 used 状态:', m.title);
+                                            m.used = true;
+                                            recovered = true;
+                                        }
+                                    });
+                                    if (recovered) {
+                                        localStorage.setItem(STORAGE_KEY_MATERIALS, JSON.stringify(afterMats));
+                                    }
+                                }
+                            }
+                        } catch (e2) { console.error('[pullFromCloud] 恢复 used 状态失败:', e2); }
+                    }
                     updateSyncButton('synced', '已同步');
                     showSyncToast('数据已从云端恢复', 'success');
                     // 刷新页面数据
@@ -7713,6 +7980,24 @@ CREATE POLICY "allow_all" ON workbench_sync
         async function silentPull() {
             if (!syncEnabled || !supabaseClient || isSyncing) return;
             isSyncing = true;
+            // ✅ 防御性保护1：拉取前保存本地 used=true 的素材列表（按 title 索引）
+            // 防止 restoreFromCloudData 在边缘情况下丢失 used 状态
+            let localUsedSnapshot = null;
+            try {
+                const localMatsRaw = localStorage.getItem(STORAGE_KEY_MATERIALS);
+                if (localMatsRaw) {
+                    const localMats = JSON.parse(localMatsRaw);
+                    if (Array.isArray(localMats)) {
+                        localUsedSnapshot = {};
+                        localMats.forEach(m => {
+                            if (m && m.used === true && m.title) {
+                                localUsedSnapshot[String(m.title)] = true;
+                            }
+                        });
+                    }
+                }
+            } catch (e) { console.warn('[silentPull] 保存 used 快照失败:', e); }
+
             try {
                 const { data: row, error } = await supabaseClient
                     .from(SYNC_TABLE)
@@ -7725,7 +8010,29 @@ CREATE POLICY "allow_all" ON workbench_sync
                     // 如果云端数据比本地新，恢复云端数据
                     if (cloudTime > lastSyncTime) {
                         restoreFromCloudData(row.data);
-                        lastSyncTime = cloudTime;
+                        setLastSyncTime(cloudTime);
+                        // ✅ 防御性保护2：restoreFromCloudData 后，强制恢复本地 used=true 的素材
+                        if (localUsedSnapshot && Object.keys(localUsedSnapshot).length > 0) {
+                            try {
+                                const afterRaw = localStorage.getItem(STORAGE_KEY_MATERIALS);
+                                if (afterRaw) {
+                                    const afterMats = JSON.parse(afterRaw);
+                                    if (Array.isArray(afterMats)) {
+                                        let recovered = false;
+                                        afterMats.forEach(m => {
+                                            if (m && m.title && localUsedSnapshot[String(m.title)] && m.used !== true) {
+                                                console.warn('[silentPull] 防御性恢复 used 状态:', m.title);
+                                                m.used = true;
+                                                recovered = true;
+                                            }
+                                        });
+                                        if (recovered) {
+                                            localStorage.setItem(STORAGE_KEY_MATERIALS, JSON.stringify(afterMats));
+                                        }
+                                    }
+                                }
+                            } catch (e2) { console.error('[silentPull] 恢复 used 状态失败:', e2); }
+                        }
                         refreshPageData();
                         // ✅ 关键修复：云端同步后，必须再次执行每日任务生成逻辑
                         // 否则刚生成的今日任务会被云端的旧数据覆盖
@@ -8525,12 +8832,15 @@ CREATE POLICY "allow_all" ON workbench_sync
             { id: 5, title: '外贸报价比同行低15%，客户还是跑了？真相扎心', source: 'https://m.sohu.com/a/1035371344_122832798/', score: 8, tags: ['知乎', '深度长文', '外贸跨境'], spreadScore: 15, fitScore: 18, growthScore: 16, difficultyScore: 15, priorityScore: 17, totalScore: 81 },
             { id: 6, title: '做东南亚跨境，泰国和马来西亚根本不是一个玩法', source: 'http://caijing.chinadaily.com.cn/a/202604/28/WS69f05858a310942cc49a9d28.html', score: 8, tags: ['视频号', '地域攻略', '外贸跨境'], spreadScore: 16, fitScore: 16, growthScore: 15, difficultyScore: 16, priorityScore: 17, totalScore: 80 },
             { id: 7, title: '2026年做外贸，这4个赛道普通人也能年入百万', source: 'http://m.toutiao.com/group/7658321986296316443/', score: 8, tags: ['抖音', '创业故事', '外贸跨境'], spreadScore: 17, fitScore: 14, growthScore: 17, difficultyScore: 17, priorityScore: 15, totalScore: 80 },
-            { id: 8, title: 'TikTok爆卖万件！帝王蝶开衫成秋季流量密码', source: 'https://m.toutiao.com/group/7670098246307545638/', score: 8, tags: ['TikTok','图文/短视频','外贸跨境'], spreadScore: 18, fitScore: 17, growthScore: 16, difficultyScore: 15, priorityScore: 18, totalScore: 84 }
+            { id: 8, title: 'TikTok爆卖万件！帝王蝶开衫成秋季流量密码', source: 'https://m.toutiao.com/group/7670098246307545638/', score: 8, tags: ['TikTok','图文/短视频','外贸跨境'], spreadScore: 18, fitScore: 17, growthScore: 16, difficultyScore: 15, priorityScore: 18, totalScore: 84 },
+            { id: 9, title: '武汉卖家靠"关灯那秒的惊艳"跑通：3D蝙蝠灯TikTok美区10天卖8971件、GMV破76万', source: 'https://m.chwang.com/news/208591368643', score: 9, tags: ['TikTok Shop','跨境选品','万圣节选品','图文/案例拆解','外贸跨境'], spreadScore: 18, fitScore: 20, growthScore: 17, difficultyScore: 18, priorityScore: 19, totalScore: 92 },
+            { id: 10, title: '8秒视频播破910万，宠物洗澡折叠凳TikTok美区单周种草近千万', source: 'https://www.chwang.com/news/208844362376', score: 9, tags: ['TikTok Shop','跨境选品','宠物用品','图文/案例拆解','外贸跨境'], spreadScore: 19, fitScore: 18, growthScore: 17, difficultyScore: 18, priorityScore: 17, totalScore: 89 },
+            { id: 11, title: 'TikTok美区宠物慢食碗7天卖破2万件', source: 'https://www.chwang.com/news/208844362400', score: 9, tags: ['TikTok Shop','跨境选品','宠物用品','图文/案例拆解','外贸跨境'], spreadScore: 18, fitScore: 19, growthScore: 16, difficultyScore: 18, priorityScore: 17, totalScore: 88 }
         ];
 
         const initialAccounts = [];
 
-        const initialTags = ['抖音', '选品测评', '外贸跨境', '知乎', '深度长文', '视频号', '地域攻略', '创业故事', 'TikTok', '图文/短视频'];
+        const initialTags = ['抖音', '选品测评', '外贸跨境', '知乎', '深度长文', '视频号', '地域攻略', '创业故事', 'TikTok', '图文/短视频', 'TikTok Shop', '跨境选品', '万圣节选品', '图文/案例拆解', '宠物用品'];
 
         const initialAccountData = {};
 
@@ -8540,27 +8850,33 @@ CREATE POLICY "allow_all" ON workbench_sync
                 try {
                     const parsed = JSON.parse(stored);
                     if (key === STORAGE_KEY_MATERIALS && Array.isArray(parsed)) {
-                        // 修复：空数组 或 不含帝王蝶/跨境种子素材 的数组，都强制回退到 initialMaterials 重新注入，
-                        // 防止旧版本清空空数组后永久丢失素材
+                        // 容错检查：空数组 或 不含种子素材 的数组，都补齐初始素材
                         const MUST_HAVE_TITLES = [
                             'TikTok爆卖万件！帝王蝶开衫成秋季流量密码',
                             '2026跨境最赚钱的8个品类，最后一个90%的人不知道'
                         ];
                         const hasRequired = MUST_HAVE_TITLES.some(t => parsed.some(m => m.title === t));
-                        if (parsed.length === 0 || !hasRequired) {
-                            console.warn('[getStoredData] materials 缺少必填素材，强制重置为 initialMaterials（',
-                                '空数组:', parsed.length === 0,
-                                '/ 有帝王蝶:', parsed.some(m => m.title === MUST_HAVE_TITLES[0]),
-                                ')');
-                            // 先把用户自定义的非种子/非默认素材存起来
-                            const DEFAULT_TITLES = ['揭秘：头部博主如何在3个月涨粉100万','2024年新媒体趋势报告解读','用户情绪共鸣：让你的内容被疯狂转发'].concat(MUST_HAVE_TITLES, ['外贸报价比同行低15%，客户还是跑了？真相扎心','做东南亚跨境，泰国和马来西亚根本不是一个玩法','2026年做外贸，这4个赛道普通人也能年入百万']);
-                            const userCustom = parsed.filter(m => !DEFAULT_TITLES.includes(m.title));
-                            const merged = [...initial, ...userCustom];
+                        
+                        if (parsed.length === 0) {
+                            // 空数组：直接重置为 initialMaterials
+                            console.warn('[getStoredData] materials 为空数组，重置为初始素材库');
+                            localStorage.setItem(key, JSON.stringify(initial));
+                            return initial;
+                        }
+                        
+                        if (!hasRequired && parsed.length > 0) {
+                            // ⚠️ 缺少种子素材：补齐种子素材，但保留用户的 used 状态和自定义素材
+                            console.warn('[getStoredData] materials 缺少种子素材，补齐中...');
+                            // 把现有素材全部保留（包括已标记 used 的），只补缺失的种子
+                            const existingTitles = new Set(parsed.map(m => m.title));
+                            const missingSeeds = initial.filter(s => !existingTitles.has(s.title));
+                            const merged = [...parsed, ...missingSeeds];
                             // 去重
                             const seen = {};
                             const finalArr = [];
                             merged.forEach(m => { const k = m.title || JSON.stringify(m); if (!seen[k]) { seen[k]=1; finalArr.push(m); } });
                             localStorage.setItem(key, JSON.stringify(finalArr));
+                            console.log('[getStoredData] 补齐完成：原', parsed.length, '条 + 补', missingSeeds.length, '条 = 共', finalArr.length, '条');
                             return finalArr;
                         }
                     }
@@ -8655,7 +8971,9 @@ CREATE POLICY "allow_all" ON workbench_sync
         function updateKanbanBadge() {
             const badge = document.getElementById('navKanbanBadge');
             if (!badge) return;
-            const activeCount = tasks.filter(t => t.status === 'pending' || t.status === 'inProgress').length;
+            // 统计时过滤掉纯模板任务（日常任务模板无 dueDate，不计入待办数量）
+            const visibleTasks = tasks.filter(t => !(t.isDaily === true && !t.dueDate && t.status === 'pending'));
+            const activeCount = visibleTasks.filter(t => t.status === 'pending' || t.status === 'inProgress').length;
             if (activeCount > 0) {
                 badge.textContent = activeCount;
                 badge.style.display = '';
@@ -8733,7 +9051,8 @@ CREATE POLICY "allow_all" ON workbench_sync
             let removedCount = 0;
 
             for (const task of tasks) {
-                const key = `${task.status}|${task.title}|${task.platform}`;
+                // ✅ 去重键包含 dueDate 和 isDaily，避免模板与实例互相误删
+                const key = `${task.status}|${task.title}|${task.platform}|${task.dueDate || 'null'}|${task.isDaily ? 'daily' : 'normal'}`;
                 if (task.status === 'pending' && seen.has(key)) {
                     removedCount++;
                     continue;
@@ -8781,8 +9100,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                 }
             });
 
-            // 3. ✅ 彻底移除：不再为账号自动生成"更新X账号数据"任务；
-            //    同时再次强制清理现存的所有 autoGenerated 更新数据任务
+            // 3. ✅ 仅清理 autoGenerated === true 的任务（不再误删用户创建的任务）
             const beforeLen = tasks.length;
             tasks = tasks.filter(t => !(
                 t.autoGenerated === true &&
@@ -8790,17 +9108,85 @@ CREATE POLICY "allow_all" ON workbench_sync
                 t.title.indexOf('更新') === 0 &&
                 t.title.indexOf(')数据') !== -1
             ));
+            // 同时把标题包含"更新账号"的 autoGenerated 任务一并清理
+            tasks = tasks.filter(t => !(
+                t.autoGenerated === true &&
+                t.title &&
+                t.title.indexOf('更新账号') !== -1
+            ));
             let changed = (tasks.length !== beforeLen);
             if (changed) console.log('[每日任务] 清理 autoGenerated 更新数据任务数量:', beforeLen - tasks.length);
 
-            // 4. 只保留：为用户明确勾选为日常任务的模板生成每日待办（工作日）
+            // 4. ✅ 迁移旧日常任务：为没有模板的旧日常任务自动创建模板
+            //    旧版本日常任务没有分离模板和实例，需要迁移到新结构
+            {
+                const dailyTasks = tasks.filter(t => t.isDaily === true);
+                const titlesWithTemplate = new Set();
+                // 找出已有模板的 title（模板 = isDaily && dueDate 为空 && status 为 pending）
+                tasks.forEach(t => {
+                    if (t.isDaily === true && !t.dueDate && t.status === 'pending') {
+                        titlesWithTemplate.add(t.title);
+                    }
+                });
+                // 为没有模板的旧日常任务创建模板
+                const migratedTitles = new Set();
+                dailyTasks.forEach(t => {
+                    if (titlesWithTemplate.has(t.title) || migratedTitles.has(t.title)) return;
+                    if (!t.title) return;
+                    // 找到该 title 最近的一个实例
+                    const sameTitleTasks = dailyTasks.filter(dt => dt.title === t.title);
+                    const latest = sameTitleTasks.sort((a, b) => {
+                        const da = a.dueDate || a.completedDate || '';
+                        const db = b.dueDate || b.completedDate || '';
+                        return db.localeCompare(da);
+                    })[0];
+                    if (latest && (latest.status === 'archived' || latest.status === 'completed')) {
+                        // 已归档的旧任务：创建一个模板（dueDate=null, pending）
+                        const newTemplate = {
+                            id: generateId(),
+                            title: latest.title,
+                            priority: latest.priority || 'medium',
+                            platform: latest.platform || '',
+                            status: 'pending',
+                            isDaily: true,
+                            dueDate: null
+                        };
+                        tasks.push(newTemplate);
+                        migratedTitles.add(t.title);
+                        changed = true;
+                        console.log('[每日任务] 迁移：为旧日常任务创建模板:', t.title);
+                    } else if (latest && latest.status === 'pending' && latest.dueDate && latest.dueDate !== todayStr) {
+                        // 旧 pending 任务但 dueDate 不是今天：将其转为模板（清空 dueDate）
+                        latest.dueDate = null;
+                        migratedTitles.add(t.title);
+                        changed = true;
+                        console.log('[每日任务] 迁移：将旧任务转为模板:', t.title);
+                    }
+                });
+            }
+
+            // 5. 只保留：为用户明确勾选为日常任务的模板生成每日待办（工作日）
             const createdTasks = [];
             if (isWorkday(today)) {
-                const dailyTaskTemplates = tasks.filter(t => t.isDaily === true);
+                // ✅ 模板筛选：只取"模板级"日常任务（pending 状态、非今日 dueDate、按 title 去重）
+                const seenTemplateTitle = {};
+                const dailyTaskTemplates = tasks.filter(t => {
+                    if (t.isDaily !== true) return false;
+                    // ✅ 关键修复：只有 pending 状态的任务才能作为模板
+                    // 已完成/已归档的实例绝不能被当作模板重新生成
+                    if (t.status !== 'pending') return false;
+                    // 排除今日实例（dueDate === 今天的是实例，不是模板）
+                    const isInstance = (t.dueDate === todayStr);
+                    if (isInstance) return false;
+                    // 同标题去重
+                    if (seenTemplateTitle[t.title]) return false;
+                    seenTemplateTitle[t.title] = true;
+                    return true;
+                });
                 dailyTaskTemplates.forEach(template => {
+                    // ✅ 修复2：去重检查不再只看 pending，同日同标题且 isDaily=true 的任务（completed/archived 也）视为已存在
                     const existingTodayDailyTask = tasks.find(t =>
                         t.title === template.title &&
-                        t.status === 'pending' &&
                         t.isDaily === true &&
                         t.dueDate === todayStr
                     );
@@ -8833,6 +9219,15 @@ CREATE POLICY "allow_all" ON workbench_sync
                 saveData(STORAGE_KEY_TASKS, tasks);
                 localStorage.setItem(STORAGE_KEY_AUTO_TASK_DATE, todayStr);
                 renderTasks();
+                // ✅ 关键修复：每日任务生成后立即推送到云端
+                if (typeof pushToCloud === 'function') {
+                    pushToCloud().then(() => {}).catch(() => {});
+                }
+            } else {
+                // ✅ 关键修复：即使没有变化，也要将步骤1中的内存修改（completed→archived）持久化到 localStorage
+                // 否则用户刷新后，状态会回退为 completed，导致问题重现
+                saveData(STORAGE_KEY_TASKS, tasks);
+                localStorage.setItem(STORAGE_KEY_AUTO_TASK_DATE, todayStr);
             }
         }
 
@@ -8912,9 +9307,9 @@ CREATE POLICY "allow_all" ON workbench_sync
                     return belongDate === dateStr;
                 }).length;
                 const scheduledTasks = tasks.filter(t => t.dueDate === dateStr && t.status !== 'completed' && t.status !== 'archived');
-                // 兼容旧数据：当天没有 dueDate 的未完成任务也计入当日
+                // 兼容旧数据：当天没有 dueDate 的未完成任务也计入当日（排除纯模板）
                 const todayExtra = (dateStr === todayStr) 
-                    ? tasks.filter(t => !t.dueDate && (t.status === 'pending' || t.status === 'inProgress')) 
+                    ? tasks.filter(t => !t.dueDate && (t.status === 'pending' || t.status === 'inProgress') && !(t.isDaily === true)) 
                     : [];
                 const allUnfinished = [...scheduledTasks, ...todayExtra];
                 const inProgressCount = allUnfinished.filter(t => t.status === 'inProgress').length;
@@ -8983,7 +9378,7 @@ CREATE POLICY "allow_all" ON workbench_sync
             });
             const scheduledTasks = tasks.filter(t => t.dueDate === dateStr && t.status !== 'completed' && t.status !== 'archived');
             const todayUnfinished = (dateStr === getTodayDate()) 
-                ? tasks.filter(t => !t.dueDate && (t.status === 'pending' || t.status === 'inProgress'))
+                ? tasks.filter(t => !t.dueDate && (t.status === 'pending' || t.status === 'inProgress') && !(t.isDaily === true))
                 : [];
             const unfinishedTasks = [...scheduledTasks, ...todayUnfinished];
             
@@ -9068,26 +9463,32 @@ CREATE POLICY "allow_all" ON workbench_sync
                 html += `</div>`;
             }
 
-            // 已完成任务区域
+            // 已完成任务区域（含归档任务，归档任务灰色样式区分）
             if (completedTasks.length > 0) {
                 html += `<div class="calendar-section-title" style="margin-top: 20px;">已完成任务</div>`;
                 html += `<div class="calendar-task-list">`;
                 completedTasks.forEach(task => {
                     const priorityClass = task.priority === 'high' ? 'high' : task.priority === 'medium' ? 'medium' : 'low';
+                    const isArchived = task.status === 'archived';
+                    const titleStyle = isArchived ? 'color:#94a3b8; text-decoration: line-through;' : '';
+                    const borderColor = isArchived ? '#94a3b8' : '#22c55e';
+                    const statusText = isArchived ? '📁 已归档' : '✓ 已完成';
+                    const statusClass = isArchived ? '' : 'completed';
+                    const statusColor = isArchived ? '#94a3b8' : '';
                     html += `
-                        <div class="calendar-task-card">
-                            <div class="calendar-task-item" style="border-left-color: #22c55e;">
+                        <div class="calendar-task-card" style="${isArchived ? 'opacity:0.75;' : ''}">
+                            <div class="calendar-task-item" style="border-left-color: ${borderColor};">
                                 <div class="task-priority-dot ${priorityClass}"></div>
                                 <div class="task-info">
-                                    <div class="task-name">${escapeHtml(task.title)}</div>
+                                    <div class="task-name" style="${titleStyle}">${escapeHtml(task.title)}</div>
                                     <div class="task-meta-row">
                                         <span class="task-meta">${escapeHtml(task.platform)}</span>
-                                        <span class="task-status completed">✓ 已完成</span>
+                                        <span class="task-status ${statusClass}" ${isArchived ? 'style="color:#94a3b8; background:#94a3b815;"' : ''}>${statusText}</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="calendar-task-actions">
-                                <button class="action-btn back" onclick="moveTask('${task.id}', 'pending'); showCalendarDetail('${dateStr}');">重做</button>
+                                <button class="action-btn back" onclick="moveTask('${task.id}', 'pending'); showCalendarDetail('${dateStr}');">${isArchived ? '解档' : '重做'}</button>
                                 <button class="action-btn edit" onclick="openEditTaskModal('${task.id}')">编辑</button>
                                 <button class="action-btn delete" onclick="deleteCalendarTask('${task.id}', '${dateStr}');">删除</button>
                             </div>
@@ -9116,7 +9517,7 @@ CREATE POLICY "allow_all" ON workbench_sync
 
             const title = titleInput.value.trim();
             if (!title) {
-                alert('请输入任务标题');
+                showToast('请输入任务标题', 'error');
                 return;
             }
 
@@ -9128,7 +9529,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                 t.dueDate === dateStr
             );
             if (isDuplicate) {
-                alert('已存在相同的待处理任务，请勿重复添加');
+                showToast('已存在相同的待处理任务，请勿重复添加', 'error');
                 return;
             }
 
@@ -9145,7 +9546,13 @@ CREATE POLICY "allow_all" ON workbench_sync
             tasks.push(newTask);
             saveData(STORAGE_KEY_TASKS, tasks);
             renderCalendar();
+            renderTasks();
+            // ✅ 关键修复：立即推送到云端
+            if (typeof pushToCloud === 'function') {
+                pushToCloud().then(() => {}).catch(() => {});
+            }
             showCalendarDetail(dateStr);
+            showToast('日历任务已创建', 'success');
         }
 
         async function deleteCalendarTask(taskId, dateStr) {
@@ -9156,6 +9563,10 @@ CREATE POLICY "allow_all" ON workbench_sync
             renderCalendar();
             renderTasks();
             showCalendarDetail(dateStr);
+            // ✅ 关键修复：立即推送到云端
+            if (typeof pushToCloud === 'function') {
+                pushToCloud().then(() => {}).catch(() => {});
+            }
         }
 
         // 自动数据更新相关
@@ -9562,17 +9973,22 @@ CREATE POLICY "allow_all" ON workbench_sync
 
             if (!pendingList) return;
 
-            // ✅ 终极兜底：每次渲染前强制清理所有"更新X(X平台)数据"任务（含 autoGenerated 及早期注入遗留）
+            // ✅ 终极兜底：每次渲染前仅清理 autoGenerated === true 的"更新数据"任务（不再误删用户任务）
             (function purgeUpdateTasks() {
                 const totalBefore = tasks.length;
                 tasks = tasks.filter(t => !(
-                    t && t.title &&
+                    t && t.autoGenerated === true && t.title &&
                     (t.title.indexOf('更新') === 0) &&
                     (t.title.indexOf(')数据') !== -1)
                 ));
+                // 同时清理 autoGenerated 且包含"更新账号"的任务
+                tasks = tasks.filter(t => !(
+                    t && t.autoGenerated === true && t.title &&
+                    t.title.indexOf('更新账号') !== -1
+                ));
                 if (tasks.length !== totalBefore) {
                     saveData(STORAGE_KEY_TASKS, tasks);
-                    console.log('[renderTasks 兜底清理] 删除 ', totalBefore - tasks.length, ' 条更新数据任务');
+                    console.log('[renderTasks 兜底清理] 删除 ', totalBefore - tasks.length, ' 条 autoGenerated 更新数据任务');
                 }
             })();
 
@@ -9580,9 +9996,17 @@ CREATE POLICY "allow_all" ON workbench_sync
             inProgressList.innerHTML = '';
             completedList.innerHTML = '';
 
-            const pendingTasks = tasks.filter(t => t.status === 'pending');
-            const inProgressTasks = tasks.filter(t => t.status === 'inProgress');
-            const completedTasks = tasks.filter(t => t.status === 'completed');
+            const todayStr = getTodayDate();
+
+            // ✅ 过滤掉纯模板任务（日常任务模板无 dueDate，仅作为生成实例的蓝图，不展示）
+            const visibleTasks = tasks.filter(t => !(t.isDaily === true && !t.dueDate && t.status === 'pending'));
+            
+            const pendingTasks = visibleTasks.filter(t => t.status === 'pending');
+            const inProgressTasks = visibleTasks.filter(t => t.status === 'inProgress');
+            const completedTasks = visibleTasks.filter(t => t.status === 'completed');
+            // 当日看板已完成列：只显示今天的已完成+已归档任务，历史归档任务在日历中查看
+            const todayArchivedTasks = visibleTasks.filter(t => t.status === 'archived' && (t.dueDate === todayStr || t.completedDate === todayStr));
+            const doneTasks = [...completedTasks, ...todayArchivedTasks];
 
             const pendingCount = document.getElementById('pendingCount');
             const inProgressCount = document.getElementById('inProgressCount');
@@ -9590,7 +10014,7 @@ CREATE POLICY "allow_all" ON workbench_sync
 
             if (pendingCount) pendingCount.textContent = pendingTasks.length;
             if (inProgressCount) inProgressCount.textContent = inProgressTasks.length;
-            if (completedCount) completedCount.textContent = completedTasks.length;
+            if (completedCount) completedCount.textContent = doneTasks.length;
 
             updateKanbanBadge();
 
@@ -9602,7 +10026,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                 inProgressList.appendChild(createTaskCard(task));
             });
 
-            completedTasks.forEach(task => {
+            doneTasks.forEach(task => {
                 completedList.appendChild(createTaskCard(task));
             });
 
@@ -9611,7 +10035,7 @@ CREATE POLICY "allow_all" ON workbench_sync
 
         function createTaskCard(task) {
             const card = document.createElement('div');
-            card.className = `task-card ${task.priority}-priority`;
+            card.className = `task-card ${task.priority}-priority${task.status === 'archived' ? ' task-archived' : ''}`;
             card.dataset.id = task.id;
 
             const priorityLabels = { high: '高', medium: '中', low: '低' };
@@ -9632,6 +10056,11 @@ CREATE POLICY "allow_all" ON workbench_sync
                     <button class="action-btn back" onclick="moveTask('${task.id}', 'pending')">退回</button>
                     <button class="action-btn delete" onclick="deleteTask('${task.id}')">删除</button>
                 `;
+            } else if (task.status === 'archived') {
+                actionButtons = `
+                    <button class="action-btn back" onclick="moveTask('${task.id}', 'pending')">解档</button>
+                    <button class="action-btn delete" onclick="deleteTask('${task.id}')">删除</button>
+                `;
             } else {
                 actionButtons = `
                     <button class="action-btn edit" onclick="openEditTaskModal('${task.id}')">编辑</button>
@@ -9642,6 +10071,7 @@ CREATE POLICY "allow_all" ON workbench_sync
 
             const dailyBadge = task.isDaily ? '<span class="daily-badge">日常</span>' : '';
             const dateBadge = task.dueDate ? `<span class="date-badge">📅 ${task.dueDate}</span>` : '';
+            const statusBadge = task.status === 'archived' ? '<span class="task-status-badge archived">已归档</span>' : '';
             
             card.innerHTML = `
                 <div class="task-title">${escapeHtml(task.title)}</div>
@@ -9650,6 +10080,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                     <span class="platform-badge">${escapeHtml(task.platform)}</span>
                     ${dailyBadge}
                     ${dateBadge}
+                    ${statusBadge}
                 </div>
                 <div class="task-actions">
                     ${actionButtons}
@@ -9676,6 +10107,10 @@ CREATE POLICY "allow_all" ON workbench_sync
                 saveData(STORAGE_KEY_TASKS, tasks);
                 renderTasks();
                 renderCalendar();
+                // ✅ 关键修复：立即推送到云端（不等3秒防抖），防止用户刷新时任务状态丢失
+                if (typeof pushToCloud === 'function') {
+                    pushToCloud().then(() => {}).catch(() => {});
+                }
             }
         }
 
@@ -9686,6 +10121,10 @@ CREATE POLICY "allow_all" ON workbench_sync
             saveData(STORAGE_KEY_TASKS, tasks);
             renderTasks();
             renderCalendar();
+            // ✅ 立即推送到云端，防止刷新后任务又出现
+            if (typeof pushToCloud === 'function') {
+                pushToCloud().then(() => {}).catch(() => {});
+            }
         }
 
         function openEditTaskModal(taskId) {
@@ -9717,21 +10156,52 @@ CREATE POLICY "allow_all" ON workbench_sync
             const dueDate = document.getElementById('editTaskDueDate').value;
 
             if (!title) {
-                alert('请输入任务标题');
+                showToast('请输入任务标题', 'error');
                 return;
             }
 
             const task = tasks.find(t => t.id === id || String(t.id) === String(id));
             if (task) {
+                const wasDaily = task.isDaily === true;
                 task.title = title;
                 task.priority = priority;
                 task.platform = platform;
                 task.isDaily = isDaily;
-                // 如果用户清空了日期，则保留原有的日期归属或使用今天
-                task.dueDate = dueDate || task.dueDate || getTodayDate();
+                
+                // ✅ 日常任务模板/实例一致性处理
+                if (isDaily && !wasDaily) {
+                    // 转为日常任务：将当前任务转为模板（清空 dueDate），并生成今日实例
+                    task.dueDate = null;
+                    // 生成今日实例
+                    const todayInstance = {
+                        id: generateId(),
+                        title: title,
+                        priority: priority,
+                        platform: platform,
+                        status: 'pending',
+                        isDaily: true,
+                        autoGenerated: false,
+                        dueDate: getTodayDate()
+                    };
+                    tasks.push(todayInstance);
+                } else if (!isDaily && wasDaily) {
+                    // 取消日常任务：删除同标题的模板
+                    tasks = tasks.filter(t => !(t.isDaily === true && !t.dueDate && t.status === 'pending' && t.title === title));
+                    // 同时确保当前实例不再是 daily
+                    task.isDaily = false;
+                    task.dueDate = dueDate || getTodayDate();
+                } else {
+                    // 未改变 daily 状态，保持原有 dueDate 逻辑
+                    task.dueDate = dueDate || task.dueDate || getTodayDate();
+                }
+                
                 saveData(STORAGE_KEY_TASKS, tasks);
                 renderTasks();
                 renderCalendar();
+                // ✅ 关键修复：立即推送到云端
+                if (typeof pushToCloud === 'function') {
+                    pushToCloud().then(() => {}).catch(() => {});
+                }
                 
                 const calendarDetail = document.getElementById('calendarDetail');
                 if (calendarDetail && calendarDetail.style.display !== 'none') {
@@ -9743,6 +10213,7 @@ CREATE POLICY "allow_all" ON workbench_sync
             }
 
             closeEditTaskModal();
+            showToast('任务已更新', 'success');
         }
 
         function addTask(dueDate) {
@@ -9754,11 +10225,12 @@ CREATE POLICY "allow_all" ON workbench_sync
 
             const title = titleInput.value.trim();
             if (!title) {
-                alert('请输入任务标题');
+                showToast('请输入任务标题', 'error');
                 return;
             }
 
             const finalDueDate = dueDate || (dueDateInput ? dueDateInput.value : null) || getTodayDate();
+            const isDailyTask = dailyInput ? dailyInput.checked : false;
 
             // 检查是否已存在相同的待处理任务（去重）
             const isDuplicate = tasks.some(t =>
@@ -9767,24 +10239,58 @@ CREATE POLICY "allow_all" ON workbench_sync
                 t.platform === platformInput.value
             );
             if (isDuplicate) {
-                alert('已存在相同的待处理任务，请勿重复添加');
+                showToast('已存在相同的待处理任务，请勿重复添加', 'error');
                 return;
             }
 
-            const newTask = {
-                id: generateId(),
-                title: title,
-                priority: priorityInput.value,
-                platform: platformInput.value,
-                status: 'pending',
-                isDaily: dailyInput ? dailyInput.checked : false,
-                dueDate: finalDueDate
-            };
+            if (isDailyTask) {
+                // ✅ 日常任务：模板本身不设 dueDate（作为模板），同时立即生成今日实例
+                const templateTask = {
+                    id: generateId(),
+                    title: title,
+                    priority: priorityInput.value,
+                    platform: platformInput.value,
+                    status: 'pending',
+                    isDaily: true,
+                    dueDate: null  // 模板无日期，由 generateDailyAccountTasks 生成每日实例
+                };
+                tasks.push(templateTask);
+                
+                // 立即为今天生成一个实例，让用户能看到
+                const todayInstance = {
+                    id: generateId(),
+                    title: title,
+                    priority: priorityInput.value,
+                    platform: platformInput.value,
+                    status: 'pending',
+                    isDaily: true,
+                    autoGenerated: false,
+                    dueDate: getTodayDate()
+                };
+                tasks.push(todayInstance);
+            } else {
+                // 非日常任务：保持原有行为
+                const newTask = {
+                    id: generateId(),
+                    title: title,
+                    priority: priorityInput.value,
+                    platform: platformInput.value,
+                    status: 'pending',
+                    isDaily: false,
+                    dueDate: finalDueDate
+                };
+                tasks.push(newTask);
+            }
 
-            tasks.push(newTask);
             saveData(STORAGE_KEY_TASKS, tasks);
             renderTasks();
+            renderCalendar();
+            // ✅ 关键修复：立即推送到云端，防止刷新后任务丢失
+            if (typeof pushToCloud === 'function') {
+                pushToCloud().then(() => {}).catch(() => {});
+            }
 
+            showToast('任务已创建', 'success');
             titleInput.value = '';
             priorityInput.value = 'medium';
             if (dueDateInput) dueDateInput.value = '';
@@ -9961,35 +10467,44 @@ CREATE POLICY "allow_all" ON workbench_sync
 
         function addMaterialToTodo(materialId) {
             const material = materials.find(m => m.id === materialId || String(m.id) === String(materialId));
-            if (material) {
-                const taskTitle = `处理素材：${material.title}`;
-
-                // 检查是否已存在相同的待处理任务（去重）
-                const isDuplicate = tasks.some(t =>
-                    t.status === 'pending' &&
-                    t.title === taskTitle &&
-                    t.platform === '素材处理'
-                );
-                if (isDuplicate) {
-                    alert('该素材已添加到待办，请勿重复添加');
-                    return;
-                }
-
-                const newTask = {
-                    id: generateId(),
-                    title: taskTitle,
-                    priority: material.score >= 7 ? 'high' : material.score >= 4 ? 'medium' : 'low',
-                    platform: '素材处理',
-                    status: 'pending'
-                };
-
-                tasks.push(newTask);
-                saveData(STORAGE_KEY_TASKS, tasks);
-                renderTasks();
-                renderMaterials();
-
-                alert('已成功添加到今日待办！');
+            if (!material) {
+                showToast('未找到该素材', 'error');
+                return;
             }
+            const taskTitle = `处理素材：${material.title}`;
+
+            // 检查是否已存在相同的待处理任务（去重）
+            const isDuplicate = tasks.some(t =>
+                t.status === 'pending' &&
+                t.title === taskTitle &&
+                t.platform === '素材处理'
+            );
+            if (isDuplicate) {
+                showToast('该素材已添加到待办，请勿重复添加', 'error');
+                return;
+            }
+
+            const newTask = {
+                id: generateId(),
+                title: taskTitle,
+                priority: material.score >= 7 ? 'high' : material.score >= 4 ? 'medium' : 'low',
+                platform: '素材处理',
+                status: 'pending',
+                dueDate: getTodayDate(),
+                autoGenerated: false
+            };
+
+            tasks.push(newTask);
+            saveData(STORAGE_KEY_TASKS, tasks);
+            renderTasks();
+            renderMaterials();
+            renderCalendar();
+            // ✅ 关键修复：立即推送到云端
+            if (typeof pushToCloud === 'function') {
+                pushToCloud().then(() => {}).catch(() => {});
+            }
+
+            showToast('已成功添加到今日待办！', 'success');
         }
 
         let confirmResolve = null;
@@ -10018,13 +10533,56 @@ CREATE POLICY "allow_all" ON workbench_sync
             materials = materials.filter(m => m.id !== materialId && String(m.id) !== String(materialId));
             saveData(STORAGE_KEY_MATERIALS, materials);
             renderMaterials();
+            // ✅ 关键修复：立即推送到云端
+            if (typeof pushToCloud === 'function') {
+                pushToCloud().then(() => {}).catch(() => {});
+            }
         }
 
         function toggleMaterialUsed(materialId) {
             const material = materials.find(m => m.id === materialId || String(m.id) === String(materialId));
-            if (!material) return;
+            if (!material) {
+                console.warn('[toggleMaterialUsed] 未找到素材 ID:', materialId, '已有素材数:', materials.length);
+                return;
+            }
+            const oldVal = material.used;
             material.used = !material.used;
+            const newVal = material.used;
+            
+            // 保存到 localStorage
             saveData(STORAGE_KEY_MATERIALS, materials);
+            
+            // ✅ 关键修复1: 保存后立即验证，确保 used 状态已正确写入 localStorage
+            try {
+                const verifyRaw = localStorage.getItem(STORAGE_KEY_MATERIALS);
+                if (verifyRaw) {
+                    const verifyArr = JSON.parse(verifyRaw);
+                    const verifyMat = verifyArr.find(m => m.id === materialId || String(m.id) === String(materialId));
+                    if (verifyMat && verifyMat.used !== newVal) {
+                        console.error('[toggleMaterialUsed] 验证失败！used 状态不一致，重新保存。期望:', newVal, '实际:', verifyMat.used);
+                        // 强制重新保存
+                        materials.forEach(m => {
+                            if (m.id === materialId || String(m.id) === String(materialId)) {
+                                m.used = newVal;
+                            }
+                        });
+                        localStorage.setItem(STORAGE_KEY_MATERIALS, JSON.stringify(materials));
+                    }
+                }
+            } catch (verifyErr) {
+                console.error('[toggleMaterialUsed] 验证异常:', verifyErr);
+            }
+            
+            // ✅ 关键修复2: 立即推送到云端（不等3秒防抖），防止用户刷新时数据还没同步
+            if (typeof pushToCloud === 'function') {
+                pushToCloud().then(success => {
+                    console.log('[toggleMaterialUsed] 云推送完成:', success ? '成功' : '失败', '素材:', material.title, 'used:', newVal);
+                }).catch(e => {
+                    console.warn('[toggleMaterialUsed] 云推送异常:', e.message);
+                });
+            }
+            
+            console.log('[toggleMaterialUsed] 素材:', material.title, 'used:', oldVal, '→', newVal);
             renderMaterials();
             if (currentDetailMaterialId === materialId || String(currentDetailMaterialId) === String(materialId)) {
                 openMaterialDetail(material.id);
@@ -10626,7 +11184,10 @@ CREATE POLICY "allow_all" ON workbench_sync
 
         function addMaterialToTodoFromDetail(materialId) {
             const material = materials.find(m => m.id === materialId || String(m.id) === String(materialId));
-            if (!material) return;
+            if (!material) {
+                showToast('未找到该素材', 'error');
+                return;
+            }
             const taskTitle = `处理素材：${material.title}`;
 
             // 检查是否已存在相同的待处理任务（去重）
@@ -10636,7 +11197,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                 t.platform === '素材处理'
             );
             if (isDuplicate) {
-                alert('该素材已添加到待办，请勿重复添加');
+                showToast('该素材已添加到待办，请勿重复添加', 'error');
                 return;
             }
 
@@ -10645,14 +11206,21 @@ CREATE POLICY "allow_all" ON workbench_sync
                 title: taskTitle,
                 priority: material.score >= 7 ? 'high' : material.score >= 4 ? 'medium' : 'low',
                 platform: '素材处理',
-                status: 'pending'
+                status: 'pending',
+                dueDate: getTodayDate(),
+                autoGenerated: false
             };
             tasks.push(newTask);
             saveData(STORAGE_KEY_TASKS, tasks);
             renderTasks();
             renderMaterials();
+            renderCalendar();
             closeMaterialDetailModal();
-            alert('已成功添加到今日待办！');
+            // ✅ 关键修复：立即推送到云端
+            if (typeof pushToCloud === 'function') {
+                pushToCloud().then(() => {}).catch(() => {});
+            }
+            showToast('已成功添加到今日待办！', 'success');
         }
 
         async function deleteMaterialFromDetail(materialId) {
@@ -10662,6 +11230,10 @@ CREATE POLICY "allow_all" ON workbench_sync
             saveData(STORAGE_KEY_MATERIALS, materials);
             renderMaterials();
             closeMaterialDetailModal();
+            // ✅ 关键修复：立即推送到云端
+            if (typeof pushToCloud === 'function') {
+                pushToCloud().then(() => {}).catch(() => {});
+            }
         }
 
         function openSourceLink(event, url) {
@@ -10736,7 +11308,7 @@ CREATE POLICY "allow_all" ON workbench_sync
             const score = parseInt(document.getElementById('materialScore').value) || 5;
 
             if (!title) {
-                alert('请输入素材标题');
+                showToast('请输入素材标题', 'error');
                 return;
             }
 
@@ -10777,6 +11349,11 @@ CREATE POLICY "allow_all" ON workbench_sync
             updateMaterialsBadge();
             renderMaterials();
             closeAddMaterialModal();
+            // ✅ 关键修复：立即推送到云端
+            if (typeof pushToCloud === 'function') {
+                pushToCloud().then(() => {}).catch(() => {});
+            }
+            showToast('素材已添加', 'success');
         }
 
         let parsedImportData = [];
@@ -10968,6 +11545,16 @@ CREATE POLICY "allow_all" ON workbench_sync
             renderMaterials();
             updateTagFilterSelect();
             closeImportMaterialsModal();
+
+            // 立即强制推送到云端（不等3秒防抖），防止页面刷新/静默拉取时丢失用户刚导入的素材
+            if (syncEnabled && autoSyncEnabled) {
+                try {
+                    clearTimeout(syncDebounceTimer);
+                    pushToCloud();
+                } catch (e) {
+                    console.warn('[confirmImportMaterials] 立即推送失败，将在下次自动同步时重试', e);
+                }
+            }
 
             alert('成功导入 ' + selected.length + ' 条素材！');
         }
@@ -11257,9 +11844,11 @@ CREATE POLICY "allow_all" ON workbench_sync
         }
 
         function updateDashboardStats() {
-            const pendingTasks = tasks.filter(t => t.status === 'pending');
-            const inProgressTasks = tasks.filter(t => t.status === 'inProgress');
-            const completedTasks = tasks.filter(t => t.status === 'completed');
+            // 过滤掉纯模板任务（日常任务模板无 dueDate，仅蓝图，不计入统计）
+            const visibleTasks = tasks.filter(t => !(t.isDaily === true && !t.dueDate && t.status === 'pending'));
+            const pendingTasks = visibleTasks.filter(t => t.status === 'pending');
+            const inProgressTasks = visibleTasks.filter(t => t.status === 'inProgress');
+            const completedTasks = visibleTasks.filter(t => t.status === 'completed' || t.status === 'archived');
 
             const pendingStat = document.getElementById('pendingStat');
             const inProgressStat = document.getElementById('inProgressStat');
