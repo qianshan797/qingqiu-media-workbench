@@ -381,7 +381,7 @@
     // 其他数据：仅在 schema<22 时 force 覆盖，之后只在不存在时填充
     var preSchema = parseInt(localStorage.getItem('media_workflow_schema_version') || '0', 10);
     var force = (preSchema < 22);
-    var seedMaterials = MATS; // 种子素材数组
+    var seedMaterials = (typeof MATS === 'string') ? JSON.parse(MATS) : MATS; // 种子素材数组（MATS是JSON字符串，需解析）
     for (var key in preloadData) {
       if (key === 'media_workflow_materials') {
         // 素材特殊处理：始终合并（只增不删，保留用户所有本地数据）
