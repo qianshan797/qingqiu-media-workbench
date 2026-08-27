@@ -9,6 +9,8 @@
     <meta http-equiv="Expires" content="0">
     <!-- 早期注入：清理默认任务、账号和素材，确保在任何代码执行前完成 -->
     <script>
+    /* 本地时区日期字符串 (修复 UTC toISOString 跨时区日期偏移 bug) */
+    function __localDateStr(d){ d=d||new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
     (function(){
         try{
             var vk='media_workflow_schema_version';
@@ -173,7 +175,7 @@
                 {name:'YiwuTrade',platform:'小红书',followers:3100},
                 {name:'义采宝',platform:'公众号',followers:1800}
             ];
-            var todayStr=new Date().toISOString().slice(0,10);
+            var todayStr=__localDateStr();
             var platAbbr={'抖音':'dy','视频号':'sph','小红书':'xhs','公众号':'gzh','微博':'wb','TikTok':'tt'};
             var platAvatar={'抖音':'🎵','视频号':'🎬','小红书':'📕','公众号':'📰','微博':'📣','TikTok':'🎵'};
             var ALLOWED_PLATFORMS={'抖音':1,'视频号':1,'小红书':1,'公众号':1,'微博':1,'TikTok':1};
@@ -224,7 +226,7 @@
                 if(!acctData[acct.id]||!acctData[acct.id].daily||acctData[acct.id].daily.length<2){
                     var daily=[];
                     for(var i=29;i>=0;i--){
-                        var d=new Date();d.setDate(d.getDate()-i);var ds=d.toISOString().slice(0,10);
+                        var d=new Date();d.setDate(d.getDate()-i);var ds=__localDateStr(d);
                         var baseF=seed.followers;
                         var drift=Math.round((Math.random()*60-30)*(30-i)/30);
                         var views=Math.round(baseF*(0.08+Math.random()*0.2));
@@ -280,7 +282,7 @@
             var fixed=false;
             tasks.forEach(function(t){
                 if(t.dueDate && typeof t.dueDate!=='string'){
-                    t.dueDate=new Date().toISOString().slice(0,10);
+                    t.dueDate=__localDateStr();
                     fixed=true;
                 }
             });
@@ -8560,7 +8562,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                         ];
                         const existingAccts = getStoredData(STORAGE_KEY_ACCOUNTS, []);
                         const existingAccountData = getStoredData(STORAGE_KEY_ACCOUNT_DATA, {});
-                        const todayStr = new Date().toISOString().slice(0, 10);
+                        const todayStr = __localDateStr();
                         const platformAbbr = { '抖音': 'dy', '视频号': 'sph', '小红书': 'xhs', '公众号': 'gzh', '微博': 'wb', 'TikTok': 'tt' };
                         let acctsChanged = false;
                         let dataChanged = false;
@@ -8590,7 +8592,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                                 for (let i = 29; i >= 0; i--) {
                                     const d = new Date();
                                     d.setDate(d.getDate() - i);
-                                    const ds = d.toISOString().slice(0, 10);
+                                    const ds = __localDateStr(d);
                                     const baseF = seed.followers;
                                     const drift = Math.round((Math.random() * 60 - 30) * (30 - i) / 30);
                                     const views = Math.round(baseF * (0.08 + Math.random() * 0.2));
@@ -8646,7 +8648,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                         ];
                         const exAccts = getStoredData(STORAGE_KEY_ACCOUNTS, []);
                         const exAcctData = getStoredData(STORAGE_KEY_ACCOUNT_DATA, {});
-                        const ts = new Date().toISOString().slice(0, 10);
+                        const ts = __localDateStr();
                         const ab = { '抖音': 'dy', '视频号': 'sph', '小红书': 'xhs', '公众号': 'gzh', '微博': 'wb', 'TikTok': 'tt' };
                         let ac = false, dc = false;
                         SEED_ACCOUNTS_V14.forEach(function(seed){
@@ -8661,7 +8663,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                             if(!exAcctData[a.id]||!exAcctData[a.id].daily||exAcctData[a.id].daily.length<2){
                                 var dl=[];
                                 for(var i=29;i>=0;i--){
-                                    var d=new Date();d.setDate(d.getDate()-i);var ds=d.toISOString().slice(0,10);
+                                    var d=new Date();d.setDate(d.getDate()-i);var ds=__localDateStr(d);
                                     var baseF=seed.followers;
                                     var drift=Math.round((Math.random()*60-30)*(30-i)/30);
                                     var views=Math.round(baseF*(0.08+Math.random()*0.2));
@@ -8717,7 +8719,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                             if (!a.category) a.category = '外贸跨境';
                         });
                         // 补齐缺失种子账号
-                        const ts15 = new Date().toISOString().slice(0, 10);
+                        const ts15 = __localDateStr();
                         SEED_V15.forEach(seed => {
                             const exist = accts15.find(a => a.name === seed.name && a.platform === seed.platform);
                             if (!exist) {
@@ -8744,7 +8746,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                                 const baseF = seed ? seed.followers : (a.followers || 1000);
                                 for (let i = 29; i >= 0; i--) {
                                     const d = new Date(); d.setDate(d.getDate() - i);
-                                    const ds = d.toISOString().slice(0, 10);
+                                    const ds = __localDateStr(d);
                                     const drift = Math.round((Math.random() * 60 - 30) * (30 - i) / 30);
                                     const views = Math.round(baseF * (0.08 + Math.random() * 0.2));
                                     const likes = Math.round(views * (0.03 + Math.random() * 0.05));
