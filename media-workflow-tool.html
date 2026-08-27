@@ -441,6 +441,9 @@
       }
     }
     console.log("[v22预加载] schema=", preSchema, " force覆盖=", force, " 完成");
+    // v26 修复：暴露 preloadData 到全局作用域，供 syncDailyNews 等后续代码使用
+    window.preloadData = preloadData;
+    window.MATS = MATS;
   } catch (e) { console.error("[v22预加载] 失败", e); }
 })();
 </script>
@@ -9421,15 +9424,34 @@ CREATE POLICY "allow_all" ON workbench_sync
             const today = getTodayDate();
             showToast('正在同步每日新闻简报...');
 
-            // 从 preloadData 获取 TraeWork 注入的真实新闻
+            // 从 preloadData 获取 TraeWork 注入的真实新闻（优先 window 全局变量）
             let preloadNews = [];
             try {
-              if (typeof preloadData !== 'undefined' && preloadData.media_workflow_news) {
-                preloadNews = (typeof preloadData.media_workflow_news === 'string')
-                  ? JSON.parse(preloadData.media_workflow_news)
-                  : preloadData.media_workflow_news;
+              const src = (typeof window !== 'undefined' && window.preloadData)
+                ? window.preloadData
+                : (typeof preloadData !== 'undefined' ? preloadData : null);
+              if (src && src.media_workflow_news) {
+                preloadNews = (typeof src.media_workflow_news === 'string')
+                  ? JSON.parse(src.media_workflow_news)
+                  : src.media_workflow_news;
               }
-            } catch(e) {}
+            } catch(e) {
+              console.warn('[每日快讯] 从 preloadData 读取失败:', e);
+            }
+
+            // 降级方案：如果 preloadData 没有，从 localStorage 读取（preload IIFE 已注入）
+            if (preloadNews.length === 0) {
+              try {
+                const stored = localStorage.getItem(STORAGE_KEY_NEWS);
+                if (stored) {
+                  const parsed = JSON.parse(stored);
+                  if (Array.isArray(parsed) && parsed.length > 0) {
+                    preloadNews = parsed.filter(n => n && n.date === today);
+                    console.log('[每日快讯] 从 localStorage 降级读取到', preloadNews.length, '条今日新闻');
+                  }
+                }
+              } catch(e) {}
+            }
 
             if (preloadNews.length === 0) {
               showToast('暂无今日新闻，请在 TraeWork 中运行「每日新闻简报」后再同步');
@@ -9449,7 +9471,6 @@ CREATE POLICY "allow_all" ON workbench_sync
             );
 
             // 用 preloadData 的新闻替换被覆盖的日期，保留已读状态
-            let replacedCount = 0;
             const newItems = preloadNews.map(item => {
               const obj = { ...item };
               if (oldReadMap[String(obj.id)]) {
