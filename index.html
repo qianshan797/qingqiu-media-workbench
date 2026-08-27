@@ -3435,9 +3435,8 @@
                 grid-template-rows: repeat(3, auto);
             }
 
-            .kanban-column .task-list {
-                grid-template-columns: 1fr;
-            }
+            /* v23 修复：不再强制 task-list 变单列，保持网格布局一致性 */
+            /* .kanban-column .task-list { grid-template-columns: 1fr; } */
         }
 
         .mobile-header {
