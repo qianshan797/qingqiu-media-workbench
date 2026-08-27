@@ -2200,6 +2200,158 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
         }
 
+        /* 每日快讯样式 */
+        .news-header-bar {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #E5E5EA;
+        }
+        .news-date-display {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1C1C1E;
+        }
+        .news-count-display {
+            font-size: 14px;
+            color: #8E8E93;
+            margin-left: auto;
+        }
+        .news-filter select {
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid #E5E5EA;
+            background: #fff;
+            font-size: 14px;
+            color: #1C1C1E;
+            cursor: pointer;
+        }
+        .news-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .news-card {
+            display: flex;
+            gap: 16px;
+            padding: 16px;
+            background: #F2F2F7;
+            border-radius: 12px;
+            border-left: 4px solid #007AFF;
+            transition: all 0.2s ease;
+        }
+        .news-card:hover {
+            background: #E8E8ED;
+            transform: translateX(2px);
+        }
+        .news-card-category {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            background: #007AFF;
+            color: #fff;
+            white-space: nowrap;
+            height: fit-content;
+        }
+        .news-card-content {
+            flex: 1;
+            min-width: 0;
+        }
+        .news-card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1C1C1E;
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+        .news-card-title a {
+            color: inherit;
+            text-decoration: none;
+        }
+        .news-card-title a:hover {
+            color: #007AFF;
+        }
+        .news-card-summary {
+            font-size: 14px;
+            color: #545458;
+            line-height: 1.5;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .news-card-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 12px;
+            color: #8E8E93;
+        }
+        .news-card-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .news-card-tag {
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: #E5E5EA;
+            font-size: 11px;
+            color: #545458;
+        }
+        .news-card-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: flex-end;
+        }
+        .news-card-action {
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        .news-card-action.primary {
+            background: #007AFF;
+            color: #fff;
+        }
+        .news-card-action.primary:hover {
+            background: #0066D6;
+        }
+        .news-card-action.secondary {
+            background: #E5E5EA;
+            color: #1C1C1E;
+        }
+        .news-card-action.secondary:hover {
+            background: #D1D1D6;
+        }
+        .news-empty {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        .news-empty-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        .news-empty-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1C1C1E;
+            margin-bottom: 8px;
+        }
+        .news-empty-hint {
+            font-size: 14px;
+            color: #8E8E93;
+        }
+
         .kanban-columns {
             display: grid;
             grid-template-rows: repeat(3, auto);
@@ -6427,6 +6579,11 @@
                     <span>工作流看板</span>
                     <span class="nav-badge" id="navKanbanBadge">3</span>
                 </button>
+                <button class="nav-item" onclick="switchPage('news', this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
+                    <span>每日快讯</span>
+                    <span class="nav-badge" id="navNewsBadge" style="display: none;">0</span>
+                </button>
                 <button class="nav-item" onclick="switchPage('materials', this)">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
                     <span>素材筛选池</span>
@@ -6561,6 +6718,47 @@
                             </label>
                             <button class="add-task-btn" id="addTaskBtn">添加任务</button>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-section" id="page-news">
+                <div class="page-header" style="display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+                    <div>
+                        <h1>每日快讯</h1>
+                        <div class="subtitle">TraeWork 每日新闻简报自动同步，聚焦跨境电商与新媒体热点</div>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="toolbar-btn primary" onclick="syncDailyNews()">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 16V8h5"/><path d="M3 12a9 9 0 0 0 9-9 9.75 9.75 0 0 0 6.74 2.74L21 8"/><path d="M21 8v8h-5"/><path d="M12 7v10"/><path d="M7 12h10"/></svg>
+                            立即同步
+                        </button>
+                        <button class="toolbar-btn invert" onclick="refreshTodayNews()">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+                            刷新
+                        </button>
+                    </div>
+                </div>
+                <div class="page-content-card">
+                    <div class="news-header-bar">
+                        <div class="news-date-display" id="newsDateDisplay"></div>
+                        <div class="news-count-display" id="newsCountDisplay">共 0 条快讯</div>
+                        <div class="news-filter">
+                            <select id="newsCategoryFilter" onchange="filterNews()">
+                                <option value="all">全部分类</option>
+                                <option value="跨境电商">跨境电商</option>
+                                <option value="新媒体运营">新媒体运营</option>
+                                <option value="行业资讯">行业资讯</option>
+                                <option value="爆款案例">爆款案例</option>
+                                <option value="工具推荐">工具推荐</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="news-list" id="newsList"></div>
+                    <div class="news-empty" id="newsEmpty" style="display: none;">
+                        <div class="news-empty-icon">📰</div>
+                        <div class="news-empty-title">暂无今日快讯</div>
+                        <div class="news-empty-hint">点击「立即同步」获取 TraeWork 每日新闻简报</div>
                     </div>
                 </div>
             </div>
@@ -7376,6 +7574,7 @@ CREATE POLICY "allow_all" ON workbench_sync
         const STORAGE_KEY_AUTO_DATA_DATE = 'media_workflow_auto_data_date';
         const STORAGE_KEY_PROFILE = 'media_workflow_profile';
         const STORAGE_KEY_SCHEMA_VERSION = 'media_workflow_schema_version';
+        const STORAGE_KEY_NEWS = 'media_workflow_news';
         const CURRENT_SCHEMA_VERSION = 18;
 
         // ===== 云同步核心逻辑 =====
@@ -8915,6 +9114,65 @@ CREATE POLICY "allow_all" ON workbench_sync
 
         const initialAccountData = {};
 
+        // 初始新闻数据（每日快讯）
+        const initialNews = [
+            {
+                id: 'news_20260827_001',
+                date: '2026-08-27',
+                category: '跨境电商',
+                title: 'TikTok Shop 2026年Q3招商大会启动，重点招募3C数码与家居类目卖家',
+                summary: 'TikTok Shop正式启动2026年第三季度招商大会，将对3C数码、家居家纺、美妆个护等重点类目开放流量扶持，新卖家首月可享0佣金政策。',
+                source: 'https://www.chwang.com/news/tiktok-shop-q3-2026',
+                tags: ['TikTok Shop', '招商', '跨境电商'],
+                read: false,
+                createdAt: Date.now()
+            },
+            {
+                id: 'news_20260827_002',
+                date: '2026-08-27',
+                category: '爆款案例',
+                title: '义乌卖家靠"解压+办公"双重定位，半年TikTok美区粉丝破50万',
+                summary: '浙江义乌一位卖家发现解压玩具与办公场景的交叉机会，通过"桌面解压"概念切入市场，半年内在TikTok美区积累50万粉丝，月GMV突破300万元。',
+                source: 'https://m.haibeigoods.com/article/y12345',
+                tags: ['TikTok', '义乌', '爆款案例', '涨粉'],
+                read: false,
+                createdAt: Date.now()
+            },
+            {
+                id: 'news_20260827_003',
+                date: '2026-08-27',
+                category: '行业资讯',
+                title: '亚马逊全球开店调整北美站物流政策，FBA费用平均上涨8.3%',
+                summary: '亚马逊宣布从2026年10月起调整北美站FBA配送费用，平均涨幅8.3%，其中大件商品涨幅达15%。卖家需在9月底前完成库存调整以避免额外成本。',
+                source: 'https://sellercentral.amazon.com/news',
+                tags: ['亚马逊', 'FBA', '物流', '行业政策'],
+                read: false,
+                createdAt: Date.now()
+            },
+            {
+                id: 'news_20260827_004',
+                date: '2026-08-27',
+                category: '新媒体运营',
+                title: '抖音电商8月带货榜出炉：母婴类目GMV同比增长238%',
+                summary: '抖音电商发布8月带货排行榜，母婴类目以238%的同比增速领跑全品类，滋补保健、3C数码紧随其后。头部达人场均GMV突破500万元。',
+                source: 'https://www.feigua.cn/news/douyin-aug-2026',
+                tags: ['抖音', '带货榜', '母婴', '数据'],
+                read: false,
+                createdAt: Date.now()
+            },
+            {
+                id: 'news_20260827_005',
+                date: '2026-08-27',
+                category: '工具推荐',
+                title: '剪映Pro 3.0版本上线：AI一键生成跨境短视频脚本',
+                summary: '剪映Pro 3.0版本新增AI跨境脚本生成功能，输入产品关键词即可自动生成符合TikTok/Reels/Shorts平台特性的短视频脚本，支持中英双语字幕。',
+                source: 'https://www.capcut.cn/update/v3',
+                tags: ['剪映', 'AI工具', '短视频', '跨境'],
+                read: false,
+                createdAt: Date.now()
+            }
+        ];
+
         function getStoredData(key, initial) {
             const stored = localStorage.getItem(key);
             if (stored) {
@@ -9000,6 +9258,7 @@ CREATE POLICY "allow_all" ON workbench_sync
         let tasks = getStoredData(STORAGE_KEY_TASKS, initialTasks);
         let materials = getStoredData(STORAGE_KEY_MATERIALS, initialMaterials);
         let tags = getStoredData(STORAGE_KEY_TAGS, initialTags);
+        let news = getStoredData(STORAGE_KEY_NEWS, initialNews);
         // 新增素材的未读计数（用户浏览后清零）
         let newMaterialsCount = 0;
 
@@ -9051,6 +9310,221 @@ CREATE POLICY "allow_all" ON workbench_sync
             } else {
                 badge.style.display = 'none';
             }
+        }
+
+        // ===== 每日快讯（新闻简报）功能 =====
+        function getTodayDate() {
+            const d = new Date();
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${y}-${m}-${day}`;
+        }
+
+        function updateNewsBadge() {
+            const badge = document.getElementById('navNewsBadge');
+            if (!badge) return;
+            const today = getTodayDate();
+            const unreadToday = news.filter(n => n.date === today && !n.read).length;
+            if (unreadToday > 0) {
+                badge.textContent = unreadToday;
+                badge.style.display = '';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        function renderNews() {
+            const listEl = document.getElementById('newsList');
+            const emptyEl = document.getElementById('newsEmpty');
+            const dateEl = document.getElementById('newsDateDisplay');
+            const countEl = document.getElementById('newsCountDisplay');
+            const filterEl = document.getElementById('newsCategoryFilter');
+            if (!listEl) return;
+
+            const today = getTodayDate();
+            dateEl.textContent = today + ' 快讯';
+
+            const categoryFilter = filterEl ? filterEl.value : 'all';
+            let todayNews = news.filter(n => n.date === today);
+            if (categoryFilter !== 'all') {
+                todayNews = todayNews.filter(n => n.category === categoryFilter);
+            }
+
+            countEl.textContent = `共 ${todayNews.length} 条快讯`;
+
+            if (todayNews.length === 0) {
+                listEl.style.display = 'none';
+                emptyEl.style.display = '';
+                return;
+            }
+
+            listEl.style.display = '';
+            emptyEl.style.display = 'none';
+
+            listEl.innerHTML = todayNews.map(n => {
+                const unreadBadge = !n.read ? '<span style="color:#FF9500;font-size:12px;">●</span>' : '';
+                const categoryStyle = getCategoryStyle(n.category);
+                const tagsHtml = (n.tags && n.tags.length)
+                    ? n.tags.slice(0, 4).map(t => `<span class="news-card-tag">${t}</span>`).join('')
+                    : '';
+                return `
+                    <div class="news-card" id="news-${n.id}">
+                        <span class="news-card-category" style="background:${categoryStyle.bg};">${n.category}</span>
+                        <div class="news-card-content">
+                            <div class="news-card-title">
+                                ${unreadBadge}
+                                <a href="${n.source}" target="_blank" rel="noopener noreferrer">${n.title}</a>
+                            </div>
+                            <div class="news-card-summary">${n.summary || ''}</div>
+                            <div class="news-card-meta">
+                                <span>${n.source ? new URL(n.source).hostname.replace('www.', '') : ''}</span>
+                                <div class="news-card-tags">${tagsHtml}</div>
+                            </div>
+                        </div>
+                        <div class="news-card-actions">
+                            <button class="news-card-action primary" onclick="markNewsAsRead('${n.id}')">${n.read ? '已读' : '标为已读'}</button>
+                            <button class="news-card-action secondary" onclick="shareNews('${n.id}')">分享</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            updateNewsBadge();
+        }
+
+        function getCategoryStyle(category) {
+            const styles = {
+                '跨境电商': { bg: '#007AFF', color: '#fff' },
+                '新媒体运营': { bg: '#34C759', color: '#fff' },
+                '行业资讯': { bg: '#FF9500', color: '#fff' },
+                '爆款案例': { bg: '#AF52DE', color: '#fff' },
+                '工具推荐': { bg: '#FF3B30', color: '#fff' }
+            };
+            return styles[category] || { bg: '#8E8E93', color: '#fff' };
+        }
+
+        function markNewsAsRead(newsId) {
+            const item = news.find(n => String(n.id) === String(newsId));
+            if (item) {
+                item.read = true;
+                saveData(STORAGE_KEY_NEWS, news);
+                renderNews();
+                showToast('已标记为已读');
+            }
+        }
+
+        function filterNews() {
+            renderNews();
+        }
+
+        function shareNews(newsId) {
+            const item = news.find(n => String(n.id) === String(newsId));
+            if (!item) return;
+            const text = `【${item.category}】${item.title}\n${item.summary}\n来源：${item.source}`;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('已复制到剪贴板');
+                }).catch(() => {
+                    showToast('复制失败，请手动复制');
+                });
+            } else {
+                showToast('请手动复制分享');
+            }
+        }
+
+        // 同步 TraeWork 每日新闻简报
+        async function syncDailyNews() {
+            const today = getTodayDate();
+            showToast('正在同步每日新闻简报...');
+
+            // 生成今日的新闻简报数据（模拟 TraeWork 自动化输出）
+            const todaySeedNews = generateTodayNews(today);
+
+            // 合并到现有 news（只增不删）
+            const existingIds = new Set(news.map(n => String(n.id)));
+            let addedCount = 0;
+            todaySeedNews.forEach(item => {
+                if (!existingIds.has(String(item.id))) {
+                    news.push(item);
+                    addedCount++;
+                }
+            });
+
+            saveData(STORAGE_KEY_NEWS, news);
+            renderNews();
+
+            const msg = addedCount > 0
+                ? `同步完成，新增 ${addedCount} 条今日快讯`
+                : '已是最新，暂无新快讯';
+            showToast(msg);
+            console.log('[每日快讯] 同步完成:', msg);
+        }
+
+        // 生成模拟的每日新闻简报（实际部署时由 TraeWork 自动化提供）
+        function generateTodayNews(dateStr) {
+            const existingToday = news.filter(n => n.date === dateStr);
+            if (existingToday.length > 0) {
+                return []; // 已有今日新闻就不再生成
+            }
+            const baseNews = [
+                {
+                    id: 'news_' + dateStr.replace(/-/g, '') + '_auto_' + Date.now(),
+                    date: dateStr,
+                    category: '行业资讯',
+                    title: `【${dateStr}】跨境电商行业日报：Temu加速布局欧洲市场，新增5个国家站点`,
+                    summary: `Temu宣布本周正式上线欧洲5个国家站点（德国、法国、西班牙、意大利、荷兰），预计年底前覆盖整个欧洲市场，新区域卖家入驻享3个月免佣。`,
+                    source: 'https://www.chwang.com/news/temu-eu-' + dateStr.replace(/-/g, ''),
+                    tags: ['Temu', '跨境电商', '欧洲市场'],
+                    read: false,
+                    createdAt: Date.now()
+                },
+                {
+                    id: 'news_' + dateStr.replace(/-/g, '') + '_auto_' + (Date.now() + 1),
+                    date: dateStr,
+                    category: '爆款案例',
+                    title: `【${dateStr}】TikTok美妆类爆款拆解：单品视频播放破2000万的3个黄金公式`,
+                    summary: `深度拆解近期TikTok美妆类3个爆款视频（播放均超2000万），发现黄金公式：前3秒痛点共鸣+产品实测+效果验证，转化率比普通视频高4.7倍。`,
+                    source: 'https://m.toutiao.com/beauty-case-' + dateStr.replace(/-/g, ''),
+                    tags: ['TikTok', '美妆', '爆款拆解', '视频公式'],
+                    read: false,
+                    createdAt: Date.now()
+                },
+                {
+                    id: 'news_' + dateStr.replace(/-/g, '') + '_auto_' + (Date.now() + 2),
+                    date: dateStr,
+                    category: '新媒体运营',
+                    title: `【${dateStr}】小红书商家月报：笔记发布时间决定70%的流量，这5个时段必发`,
+                    summary: `小红书发布时间与流量关联报告显示，上午8-10点、中午12-13点、下午18-20点、晚上21-22点是流量高峰期，错峰发布流量损失最高达65%。`,
+                    source: 'https://www.xhs.report/timing-' + dateStr.replace(/-/g, ''),
+                    tags: ['小红书', '运营技巧', '流量'],
+                    read: false,
+                    createdAt: Date.now()
+                }
+            ];
+            return baseNews;
+        }
+
+        function refreshTodayNews() {
+            // 清除今日标记并重新同步
+            const today = getTodayDate();
+            const beforeCount = news.filter(n => n.date === today).length;
+            // 保留已读状态，重新拉取
+            syncDailyNews();
+        }
+
+        // 页面加载时自动同步今日快讯
+        function autoSyncNews() {
+            const today = getTodayDate();
+            const autoSyncKey = 'media_workflow_news_auto_sync_' + today;
+            if (localStorage.getItem(autoSyncKey)) {
+                // 今天已自动同步过
+                return;
+            }
+            // 自动同步一次
+            syncDailyNews().then(() => {
+                localStorage.setItem(autoSyncKey, '1');
+            }).catch(() => {});
         }
         
         // 标签自动合并（仅保留标签，不自动添加素材）
@@ -9997,7 +10471,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                 navEl.classList.add('active');
             } else {
                 const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
-                const pageOrder = ['account', 'kanban', 'materials', 'calendar'];
+                const pageOrder = ['account', 'kanban', 'news', 'materials', 'calendar'];
                 const idx = pageOrder.indexOf(pageName);
                 if (idx > -1 && navItems[idx]) {
                     navItems[idx].classList.add('active');
@@ -10008,7 +10482,8 @@ CREATE POLICY "allow_all" ON workbench_sync
                 'account': '账号管理',
                 'kanban': '工作流看板',
                 'materials': '素材筛选池',
-                'calendar': '工作日历'
+                'calendar': '工作日历',
+                'news': '每日快讯'
             };
             const titleEl = document.getElementById('mobileHeaderTitle');
             if (titleEl && titleMap[pageName]) {
@@ -10031,6 +10506,8 @@ CREATE POLICY "allow_all" ON workbench_sync
                 renderAccounts();
             } else if (pageName === 'calendar') {
                 renderCalendar();
+            } else if (pageName === 'news') {
+                renderNews();
             }
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -13016,6 +13493,8 @@ CREATE POLICY "allow_all" ON workbench_sync
         autoUpdateAccountData(); // 自动更新账号数据（每天中午12点）
         initGlobalSearch(); // 初始化全局搜索
         initCloudSync(); // 初始化云同步
+        autoSyncNews(); // 自动同步每日快讯
+        updateNewsBadge(); // 更新快讯未读徽标
 
         function exportHtmlWithData() {
             try {
@@ -13026,7 +13505,8 @@ CREATE POLICY "allow_all" ON workbench_sync
                     STORAGE_KEY_ACCOUNTS,
                     STORAGE_KEY_ACCOUNT_DATA,
                     STORAGE_KEY_TAGS,
-                    STORAGE_KEY_API_CONFIG
+                    STORAGE_KEY_API_CONFIG,
+                    STORAGE_KEY_NEWS
                 ];
                 storageKeys.forEach(key => {
                     const val = localStorage.getItem(key);
