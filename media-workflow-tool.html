@@ -9369,7 +9369,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                             </div>
                         </div>
                         <div class="news-card-actions">
-                            <button class="news-card-action primary" onclick="markNewsAsRead('${n.id}')">${n.read ? '已读' : '标为已读'}</button>
+                            <button class="news-card-action primary" onclick="addNewsToMaterials('${n.id}')">${n.addedToPool ? '已加入' : '加入素材池'}</button>
                             <button class="news-card-action secondary" onclick="shareNews('${n.id}')">分享</button>
                         </div>
                     </div>
@@ -9390,14 +9390,47 @@ CREATE POLICY "allow_all" ON workbench_sync
             return styles[category] || { bg: '#8E8E93', color: '#fff' };
         }
 
-        function markNewsAsRead(newsId) {
+        function addNewsToMaterials(newsId) {
             const item = news.find(n => String(n.id) === String(newsId));
-            if (item) {
-                item.read = true;
+            if (!item) return;
+
+            // 检查是否已加入素材池（按标题去重）
+            const exists = materials.some(m => m.title === item.title);
+            if (exists || item.addedToPool) {
+                item.addedToPool = true;
                 saveData(STORAGE_KEY_NEWS, news);
                 renderNews();
-                showToast('已标记为已读');
+                showToast('该新闻已在素材池中');
+                return;
             }
+
+            // 将新闻转换为素材格式
+            const newMaterial = {
+                id: generateId(),
+                title: item.title,
+                source: item.source || '',
+                score: 7,
+                tags: (item.tags && item.tags.length > 0) ? [...item.tags] : [item.category, '每日快讯'],
+                spreadScore: 14,
+                fitScore: 14,
+                growthScore: 12,
+                difficultyScore: 16,
+                priorityScore: 15,
+                totalScore: 71,
+                used: false
+            };
+
+            materials.push(newMaterial);
+            saveData(STORAGE_KEY_MATERIALS, materials);
+
+            // 标记新闻已加入素材池
+            item.addedToPool = true;
+            saveData(STORAGE_KEY_NEWS, news);
+
+            updateMaterialsBadge();
+            renderMaterials();
+            renderNews();
+            showToast('已加入素材池: ' + item.title.substring(0, 20) + '...', 'success');
         }
 
         function filterNews() {
