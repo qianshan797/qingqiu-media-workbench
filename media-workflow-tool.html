@@ -2700,6 +2700,36 @@
             min-width: 120px;
         }
 
+        /* 平台多选 checkbox 组 */
+        .platform-checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+        }
+        .platform-checkbox-group label {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            background: #F2F2F7;
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
+        }
+        .platform-checkbox-group input[type="checkbox"] {
+            margin: 0;
+            width: 14px;
+            height: 14px;
+            cursor: pointer;
+        }
+        .calendar-add-task .platform-checkbox-group label {
+            font-size: 11px;
+            padding: 3px 6px;
+        }
+
         .add-task-section-title {
             font-size: 16px;
         }
@@ -6778,14 +6808,14 @@
                                 <option value="medium" selected>中优先级</option>
                                 <option value="low">低优先级</option>
                             </select>
-                            <select id="newTaskPlatform">
-                                <option value="公众号">公众号</option>
-                                <option value="抖音">抖音</option>
-                                <option value="小红书">小红书</option>
-                                <option value="微博">微博</option>
-                                <option value="视频号">视频号</option>
-                                <option value="媒体发稿">媒体发稿</option>
-                            </select>
+                            <div class="platform-checkbox-group" id="newTaskPlatform">
+                                <label><input type="checkbox" value="公众号">公众号</label>
+                                <label><input type="checkbox" value="抖音">抖音</label>
+                                <label><input type="checkbox" value="小红书">小红书</label>
+                                <label><input type="checkbox" value="微博">微博</label>
+                                <label><input type="checkbox" value="视频号">视频号</label>
+                                <label><input type="checkbox" value="媒体发稿">媒体发稿</label>
+                            </div>
                             <input type="date" id="newTaskDueDate" class="add-task-date">
                             <label class="daily-task-checkbox">
                                 <input type="checkbox" id="newTaskDaily">
@@ -7233,13 +7263,14 @@
                 </div>
                 <div style="margin-bottom: 16px;">
                     <label style="display: block; margin-bottom: 6px; font-size: 13px; color: #64748b;">平台</label>
-                    <select id="editTaskPlatform" style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px;">
-                        <option value="公众号">公众号</option>
-                        <option value="抖音">抖音</option>
-                        <option value="小红书">小红书</option>
-                        <option value="微博">微博</option>
-                        <option value="视频号">视频号</option>
-                    </select>
+                    <div class="platform-checkbox-group" id="editTaskPlatform" style="padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px;">
+                        <label><input type="checkbox" value="公众号">公众号</label>
+                        <label><input type="checkbox" value="抖音">抖音</label>
+                        <label><input type="checkbox" value="小红书">小红书</label>
+                        <label><input type="checkbox" value="微博">微博</label>
+                        <label><input type="checkbox" value="视频号">视频号</label>
+                        <label><input type="checkbox" value="媒体发稿">媒体发稿</label>
+                    </div>
                 </div>
                 <div style="margin-bottom: 16px;">
                     <label style="display: block; margin-bottom: 6px; font-size: 13px; color: #64748b;">计划日期（可选）</label>
@@ -10270,14 +10301,14 @@ CREATE POLICY "allow_all" ON workbench_sync
                         <option value="medium" selected>中</option>
                         <option value="low">低</option>
                     </select>
-                    <select id="calendarNewTaskPlatform">
-                        <option value="公众号">公众号</option>
-                        <option value="抖音">抖音</option>
-                        <option value="小红书">小红书</option>
-                        <option value="微博">微博</option>
-                        <option value="视频号">视频号</option>
-                        <option value="媒体发稿">媒体发稿</option>
-                    </select>
+                    <div class="platform-checkbox-group" id="calendarNewTaskPlatform">
+                        <label><input type="checkbox" value="公众号">公众号</label>
+                        <label><input type="checkbox" value="抖音">抖音</label>
+                        <label><input type="checkbox" value="小红书">小红书</label>
+                        <label><input type="checkbox" value="微博">微博</label>
+                        <label><input type="checkbox" value="视频号">视频号</label>
+                        <label><input type="checkbox" value="媒体发稿">媒体发稿</label>
+                    </div>
                     <button onclick="addCalendarTask('${dateStr}')">添加</button>
                 </div>
             `;
@@ -10308,7 +10339,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                                 <div class="task-info">
                                     <div class="task-name">${escapeHtml(task.title)}</div>
                                     <div class="task-meta-row">
-                                        <span class="task-meta">${escapeHtml(task.platform)}</span>
+                                        ${(task.platform||'').split(',').filter(p=>p).map(p=>`<span class="task-meta">${escapeHtml(p)}</span>`).join(' ')}
                                         <span class="task-status ${statusClass}" style="color: ${statusColor}; background: ${statusColor}15;">${statusText}</span>
                                     </div>
                                 </div>
@@ -10339,7 +10370,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                                 <div class="task-info">
                                     <div class="task-name" style="${titleStyle}">${escapeHtml(task.title)}</div>
                                     <div class="task-meta-row">
-                                        <span class="task-meta">${escapeHtml(task.platform)}</span>
+                                        ${(task.platform||'').split(',').filter(p=>p).map(p=>`<span class="task-meta">${escapeHtml(p)}</span>`).join(' ')}
                                         <span class="task-status ${statusClass}" ${isArchived ? 'style="color:#94a3b8; background:#94a3b815;"' : ''}>${statusText}</span>
                                     </div>
                                 </div>
@@ -10378,11 +10409,17 @@ CREATE POLICY "allow_all" ON workbench_sync
                 return;
             }
 
+            const platform = getSelectedPlatforms('calendarNewTaskPlatform');
+            if (!platform) {
+                showToast('请至少选择一个平台', 'error');
+                return;
+            }
+
             // 检查是否已存在相同的待处理任务（去重）
             const isDuplicate = tasks.some(t =>
                 t.status === 'pending' &&
                 t.title === title &&
-                t.platform === platformInput.value &&
+                t.platform === platform &&
                 t.dueDate === dateStr
             );
             if (isDuplicate) {
@@ -10394,7 +10431,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                 id: generateId(),
                 title: title,
                 priority: priorityInput.value,
-                platform: platformInput.value,
+                platform: platform,
                 status: 'pending',
                 isDaily: false,
                 dueDate: dateStr
@@ -10921,7 +10958,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                 <div class="task-title">${escapeHtml(task.title)}</div>
                 <div class="task-meta">
                     <span class="priority-badge ${task.priority}">${priorityLabels[task.priority]}</span>
-                    <span class="platform-badge">${escapeHtml(task.platform)}</span>
+                    ${(task.platform || '').split(',').filter(p => p).map(p => `<span class="platform-badge">${escapeHtml(p)}</span>`).join('')}
                     ${dailyBadge}
                     ${dateBadge}
                     ${statusBadge}
@@ -10978,7 +11015,7 @@ CREATE POLICY "allow_all" ON workbench_sync
             document.getElementById('editTaskId').value = task.id;
             document.getElementById('editTaskTitle').value = task.title;
             document.getElementById('editTaskPriority').value = task.priority;
-            document.getElementById('editTaskPlatform').value = task.platform;
+            setSelectedPlatforms('editTaskPlatform', task.platform);
             document.getElementById('editTaskDaily').checked = task.isDaily === true;
             document.getElementById('editTaskDueDate').value = task.dueDate || '';
 
@@ -10995,7 +11032,7 @@ CREATE POLICY "allow_all" ON workbench_sync
             const id = parseInt(document.getElementById('editTaskId').value);
             const title = document.getElementById('editTaskTitle').value.trim();
             const priority = document.getElementById('editTaskPriority').value;
-            const platform = document.getElementById('editTaskPlatform').value;
+            const platform = getSelectedPlatforms('editTaskPlatform');
             const isDaily = document.getElementById('editTaskDaily').checked;
             const dueDate = document.getElementById('editTaskDueDate').value;
 
@@ -11060,6 +11097,18 @@ CREATE POLICY "allow_all" ON workbench_sync
             showToast('任务已更新', 'success');
         }
 
+        function getSelectedPlatforms(containerId) {
+            var c = document.getElementById(containerId);
+            if (!c) return '';
+            return Array.from(c.querySelectorAll('input[type="checkbox"]:checked')).map(function(cb){return cb.value;}).join(',');
+        }
+        function setSelectedPlatforms(containerId, value) {
+            var c = document.getElementById(containerId);
+            if (!c) return;
+            var sel = (value || '').split(',');
+            c.querySelectorAll('input[type="checkbox"]').forEach(function(cb){cb.checked = sel.indexOf(cb.value) > -1;});
+        }
+
         function addTask(dueDate) {
             const titleInput = document.getElementById('newTaskTitle');
             const priorityInput = document.getElementById('newTaskPriority');
@@ -11073,6 +11122,12 @@ CREATE POLICY "allow_all" ON workbench_sync
                 return;
             }
 
+            const platform = getSelectedPlatforms('newTaskPlatform');
+            if (!platform) {
+                showToast('请至少选择一个平台', 'error');
+                return;
+            }
+
             const finalDueDate = dueDate || (dueDateInput ? dueDateInput.value : null) || getTodayDate();
             const isDailyTask = dailyInput ? dailyInput.checked : false;
 
@@ -11080,7 +11135,7 @@ CREATE POLICY "allow_all" ON workbench_sync
             const isDuplicate = tasks.some(t =>
                 t.status === 'pending' &&
                 t.title === title &&
-                t.platform === platformInput.value
+                t.platform === platform
             );
             if (isDuplicate) {
                 showToast('已存在相同的待处理任务，请勿重复添加', 'error');
@@ -11093,7 +11148,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                     id: generateId(),
                     title: title,
                     priority: priorityInput.value,
-                    platform: platformInput.value,
+                    platform: platform,
                     status: 'pending',
                     isDaily: true,
                     dueDate: null  // 模板无日期，由 generateDailyAccountTasks 生成每日实例
@@ -11105,7 +11160,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                     id: generateId(),
                     title: title,
                     priority: priorityInput.value,
-                    platform: platformInput.value,
+                    platform: platform,
                     status: 'pending',
                     isDaily: true,
                     autoGenerated: false,
@@ -11118,7 +11173,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                     id: generateId(),
                     title: title,
                     priority: priorityInput.value,
-                    platform: platformInput.value,
+                    platform: platform,
                     status: 'pending',
                     isDaily: false,
                     dueDate: finalDueDate
