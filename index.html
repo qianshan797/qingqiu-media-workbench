@@ -2491,14 +2491,17 @@
 
         .task-card.high-priority {
             border-left-color: #FF3B30;
+            border-left-width: 6px;
         }
 
         .task-card.medium-priority {
             border-left-color: #FF9500;
+            border-left-width: 5px;
         }
 
         .task-card.low-priority {
             border-left-color: #34C759;
+            border-left-width: 4px;
         }
 
         .task-card.task-archived {
@@ -4478,11 +4481,12 @@
         }
 
         .task-priority-dot {
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             flex-shrink: 0;
-            margin-top: 6px;
+            margin-top: 5px;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.6);
         }
 
         .task-priority-dot.high { background: #FF3B30; }
@@ -9352,9 +9356,13 @@ CREATE POLICY "allow_all" ON workbench_sync
         function updateKanbanBadge() {
             const badge = document.getElementById('navKanbanBadge');
             if (!badge) return;
+            const todayStr = getTodayDate();
             // 统计时过滤掉纯模板任务（日常任务模板无 dueDate，不计入待办数量）
             const visibleTasks = tasks.filter(t => !(t.isDaily === true && !t.dueDate && t.status === 'pending'));
-            const activeCount = visibleTasks.filter(t => t.status === 'pending' || t.status === 'inProgress').length;
+            // ✅ 待处理只算今天及以前，未来任务到当日才计入；进行中任务全算
+            const activeCount = visibleTasks.filter(t =>
+                (t.status === 'pending' && (!t.dueDate || t.dueDate <= todayStr)) || t.status === 'inProgress'
+            ).length;
             if (activeCount > 0) {
                 badge.textContent = activeCount;
                 badge.style.display = '';
@@ -10317,13 +10325,16 @@ CREATE POLICY "allow_all" ON workbench_sync
             if (unfinishedTasks.length > 0) {
                 html += `<div class="calendar-section-title">未完成任务</div>`;
                 html += `<div class="calendar-task-list">`;
+                const priorityBorderMap = { high: '#FF3B30', medium: '#FF9500', low: '#34C759' };
+                const priorityLabelMap = { high: '高', medium: '中', low: '低' };
                 unfinishedTasks.forEach(task => {
                     const priorityClass = task.priority === 'high' ? 'high' : task.priority === 'medium' ? 'medium' : 'low';
+                    const priorityColor = priorityBorderMap[task.priority] || '#34C759';
+                    const priorityLabel = priorityLabelMap[task.priority] || '低';
                     const statusClass = task.status === 'inProgress' ? 'in-progress' : 'pending';
                     const statusText = task.status === 'inProgress' ? '进行中' : '待处理';
                     const statusColor = task.status === 'inProgress' ? '#f59e0b' : '#64748b';
-                    const borderColor = task.status === 'inProgress' ? '#f59e0b' : '#94a3b8';
-                    const actionButtons = task.status === 'pending' 
+                    const actionButtons = task.status === 'pending'
                         ? `<button class="action-btn move" onclick="moveTask('${task.id}', 'inProgress'); showCalendarDetail('${dateStr}');">开始</button>
                            <button class="action-btn complete" onclick="moveTask('${task.id}', 'completed'); showCalendarDetail('${dateStr}');">完成</button>
                            <button class="action-btn edit" onclick="openEditTaskModal('${task.id}')">编辑</button>
@@ -10334,11 +10345,12 @@ CREATE POLICY "allow_all" ON workbench_sync
                            <button class="action-btn delete" onclick="deleteCalendarTask('${task.id}', '${dateStr}');">删除</button>`;
                     html += `
                         <div class="calendar-task-card">
-                            <div class="calendar-task-item" style="border-left-color: ${borderColor};">
+                            <div class="calendar-task-item" style="border-left-color: ${priorityColor}; border-left-width: 6px;">
                                 <div class="task-priority-dot ${priorityClass}"></div>
                                 <div class="task-info">
                                     <div class="task-name">${escapeHtml(task.title)}</div>
                                     <div class="task-meta-row">
+                                        <span class="priority-badge ${priorityClass}" style="font-size: 10px; padding: 1px 6px;">${priorityLabel}优先</span>
                                         ${(task.platform||'').split(',').filter(p=>p).map(p=>`<span class="task-meta">${escapeHtml(p)}</span>`).join(' ')}
                                         <span class="task-status ${statusClass}" style="color: ${statusColor}; background: ${statusColor}15;">${statusText}</span>
                                     </div>
@@ -10881,8 +10893,9 @@ CREATE POLICY "allow_all" ON workbench_sync
 
             // ✅ 过滤掉纯模板任务（日常任务模板无 dueDate，仅作为生成实例的蓝图，不展示）
             const visibleTasks = tasks.filter(t => !(t.isDaily === true && !t.dueDate && t.status === 'pending'));
-            
-            const pendingTasks = visibleTasks.filter(t => t.status === 'pending');
+
+            // ✅ 待处理列只显示今天及以前的任务；未来任务（dueDate > today）暂不展示，到任务当日才显示
+            const pendingTasks = visibleTasks.filter(t => t.status === 'pending' && (!t.dueDate || t.dueDate <= todayStr));
             const inProgressTasks = visibleTasks.filter(t => t.status === 'inProgress');
             const completedTasks = visibleTasks.filter(t => t.status === 'completed');
             // 当日看板已完成列：只显示今天的已完成+已归档任务，历史归档任务在日历中查看
@@ -12743,9 +12756,11 @@ CREATE POLICY "allow_all" ON workbench_sync
         }
 
         function updateDashboardStats() {
+            const todayStr = getTodayDate();
             // 过滤掉纯模板任务（日常任务模板无 dueDate，仅蓝图，不计入统计）
             const visibleTasks = tasks.filter(t => !(t.isDaily === true && !t.dueDate && t.status === 'pending'));
-            const pendingTasks = visibleTasks.filter(t => t.status === 'pending');
+            // ✅ 仪表盘待处理统计同样只算今天及以前的任务，与看板保持一致
+            const pendingTasks = visibleTasks.filter(t => t.status === 'pending' && (!t.dueDate || t.dueDate <= todayStr));
             const inProgressTasks = visibleTasks.filter(t => t.status === 'inProgress');
             const completedTasks = visibleTasks.filter(t => t.status === 'completed' || t.status === 'archived');
 
