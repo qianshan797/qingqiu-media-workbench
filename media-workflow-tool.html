@@ -2455,7 +2455,7 @@
         }
 
         .column-header h3 {
-            font-size: 14px;
+            font-size: clamp(13px, 1.5vw, 15px);
             font-weight: 700;
             color: #1C1C1E;
         }
@@ -2463,9 +2463,9 @@
         .column-count {
             background: #E5E5EA;
             color: #3C3C43;
-            font-size: 12px;
+            font-size: clamp(10px, 1.2vw, 12px);
             font-weight: 600;
-            padding: 2px 8px;
+            padding: clamp(1px, 0.4vw, 2px) clamp(6px, 1vw, 8px);
             border-radius: 10px;
         }
 
@@ -2475,13 +2475,15 @@
 
         .task-card {
             background: #FFFFFF;
-            border-radius: 12px;
-            padding: 16px;
+            border-radius: clamp(10px, 1.5vw, 14px);
+            padding: clamp(10px, 2vw, 16px);
             margin-bottom: 12px;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             border-left: 4px solid transparent;
+            min-width: 0;
+            overflow: hidden;
         }
 
         .task-card:hover {
@@ -2515,9 +2517,9 @@
         }
 
         .task-status-badge {
-            font-size: 10px;
+            font-size: clamp(9px, 1.1vw, 11px);
             font-weight: 600;
-            padding: 1px 6px;
+            padding: clamp(1px, 0.3vw, 2px) clamp(4px, 1vw, 6px);
             border-radius: 8px;
             margin-left: auto;
         }
@@ -2528,7 +2530,7 @@
         }
 
         .task-title {
-            font-size: 14px;
+            font-size: clamp(13px, 1.6vw, 15px);
             font-weight: 600;
             color: #1C1C1E;
             margin-bottom: 8px;
@@ -2544,9 +2546,9 @@
         }
 
         .priority-badge {
-            font-size: 11px;
+            font-size: clamp(10px, 1.2vw, 11px);
             font-weight: 600;
-            padding: 2px 8px;
+            padding: clamp(1px, 0.4vw, 2px) clamp(5px, 1vw, 8px);
             border-radius: 6px;
             text-transform: uppercase;
         }
@@ -2567,18 +2569,18 @@
         }
 
         .platform-badge {
-            font-size: 11px;
+            font-size: clamp(10px, 1.2vw, 11px);
             font-weight: 500;
-            padding: 2px 8px;
+            padding: clamp(1px, 0.4vw, 2px) clamp(5px, 1vw, 8px);
             border-radius: 6px;
             background: rgba(175, 82, 222, 0.12);
             color: #AF52DE;
         }
 
         .daily-badge {
-            font-size: 11px;
+            font-size: clamp(10px, 1.2vw, 11px);
             font-weight: 600;
-            padding: 2px 8px;
+            padding: clamp(1px, 0.4vw, 2px) clamp(5px, 1vw, 8px);
             border-radius: 6px;
             background: linear-gradient(135deg, #34C759, #30D158);
             color: #fff;
@@ -2703,34 +2705,59 @@
             min-width: 120px;
         }
 
-        /* 平台多选 checkbox 组 */
+        /* 平台多选 checkbox 组：合并为一个卡片容器，内含多个勾选框 */
         .platform-checkbox-group {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
+            gap: 6px 10px;
             align-items: center;
+            align-self: center;
+            flex: 0 1 auto;
+            min-width: 0;
+            max-width: 100%;
+            background: #F2F2F7;
+            padding: 6px 10px;
+            border-radius: 8px;
+        }
+        /* flex 换行符：强制后续元素换到新行 */
+        .flex-line-break {
+            flex-basis: 100%;
+            height: 0;
+            min-height: 0;
+            padding: 0;
+            margin: 0;
         }
         .platform-checkbox-group label {
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
             font-size: 12px;
-            padding: 4px 8px;
-            border-radius: 6px;
-            background: #F2F2F7;
+            padding: 2px 4px;
+            border-radius: 4px;
+            background: transparent;
             cursor: pointer;
             user-select: none;
             white-space: nowrap;
+            flex-shrink: 0;
+            line-height: 1.2;
+        }
+        .platform-checkbox-group label:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        body.dark-mode .platform-checkbox-group label {
+            background: transparent;
+        }
+        body.dark-mode .platform-checkbox-group label:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        body.dark-mode .platform-checkbox-group {
+            background: #3A3A3C;
         }
         .platform-checkbox-group input[type="checkbox"] {
             margin: 0;
-            width: 14px;
-            height: 14px;
+            width: 13px;
+            height: 13px;
             cursor: pointer;
-        }
-        .calendar-add-task .platform-checkbox-group label {
-            font-size: 11px;
-            padding: 3px 6px;
         }
 
         .add-task-section-title {
@@ -2887,8 +2914,8 @@
 
         .material-card {
             background: #FFFFFF;
-            border-radius: 16px;
-            padding: 18px;
+            border-radius: clamp(12px, 1.8vw, 16px);
+            padding: clamp(12px, 2vw, 18px);
             margin-bottom: 12px;
             transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             display: flex;
@@ -2896,6 +2923,8 @@
             align-items: flex-start;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
             border: 1px solid rgba(0, 0, 0, 0.04);
+            min-width: 0;
+            gap: 12px;
         }
 
         .material-card:hover {
@@ -4313,9 +4342,9 @@
         }
 
         .day-badge {
-            font-size: 10px;
+            font-size: clamp(9px, 1vw, 10px);
             font-weight: 700;
-            padding: 1px 5px;
+            padding: clamp(1px, 0.3vw, 2px) clamp(4px, 0.8vw, 5px);
             border-radius: 10px;
             color: #fff;
             line-height: 1.3;
@@ -4465,7 +4494,7 @@
 
         .calendar-task-card {
             background: #FFFFFF;
-            border-radius: 14px;
+            border-radius: clamp(10px, 1.5vw, 14px);
             margin-bottom: 12px;
             overflow: hidden;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
@@ -4475,14 +4504,15 @@
         .calendar-task-item {
             display: flex;
             align-items: flex-start;
-            gap: 12px;
-            padding: 12px 16px;
+            gap: clamp(8px, 1.5vw, 12px);
+            padding: clamp(8px, 1.5vw, 12px) clamp(10px, 2vw, 16px);
             border-left: 4px solid #34C759;
+            min-width: 0;
         }
 
         .task-priority-dot {
-            width: 10px;
-            height: 10px;
+            width: clamp(8px, 1vw, 10px);
+            height: clamp(8px, 1vw, 10px);
             border-radius: 50%;
             flex-shrink: 0;
             margin-top: 5px;
@@ -4502,10 +4532,10 @@
         }
 
         .task-name {
-            font-size: 14px;
+            font-size: clamp(13px, 1.6vw, 15px);
             font-weight: 600;
             color: #1C1C1E;
-            word-break: break-all;
+            word-break: break-word;
             line-height: 1.4;
         }
 
@@ -6685,8 +6715,12 @@
                 </button>
                 <button class="nav-item" onclick="switchPage('kanban', this)">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="5" height="18" rx="1"/><rect x="9.5" y="3" width="5" height="12" rx="1"/><rect x="16" y="3" width="5" height="8" rx="1"/></svg>
-                    <span>工作流看板</span>
+                    <span>工作任务</span>
                     <span class="nav-badge" id="navKanbanBadge">3</span>
+                </button>
+                <button class="nav-item" onclick="switchPage('workflow', this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                    <span>工作流看板</span>
                 </button>
                 <button class="nav-item" onclick="switchPage('news', this)">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
@@ -6769,7 +6803,7 @@
             <div class="page-section" id="page-kanban">
                 <div class="page-header" style="display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
                     <div>
-                        <h1>工作流看板</h1>
+                        <h1>工作任务</h1>
                         <div class="subtitle">管理每日任务进度，追踪内容发布状态</div>
                     </div>
                     <button class="toolbar-btn primary" onclick="regenerateTodayTasks()" title="为所有账号生成今日数据更新任务">
@@ -6829,6 +6863,20 @@
                             <button class="add-task-btn" id="addTaskBtn">添加任务</button>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div class="page-section" id="page-workflow">
+                <div class="page-header">
+                    <div>
+                        <h1>工作流看板</h1>
+                        <div class="subtitle">按内容生产流程阶段可视化追踪（建设中）</div>
+                    </div>
+                </div>
+                <div class="page-content-card" style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height: 320px; text-align:center; color:#8E8E93; gap:12px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:56px;height:56px;opacity:0.5;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                    <div style="font-size:15px; font-weight:600; color:#64748b;">工作流看板 · 内容建设中</div>
+                    <div style="font-size:13px; max-width:420px;">该页面将按内容生产工作流阶段（选题 → 创作 → 审核 → 发布 → 复盘）可视化展示任务流转，敬请期待。</div>
                 </div>
             </div>
 
@@ -10309,6 +10357,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                         <option value="medium" selected>中</option>
                         <option value="low">低</option>
                     </select>
+                    <div class="flex-line-break"></div>
                     <div class="platform-checkbox-group" id="calendarNewTaskPlatform">
                         <label><input type="checkbox" value="公众号">公众号</label>
                         <label><input type="checkbox" value="抖音">抖音</label>
@@ -10833,7 +10882,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                 navEl.classList.add('active');
             } else {
                 const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
-                const pageOrder = ['account', 'kanban', 'news', 'materials', 'calendar'];
+                const pageOrder = ['account', 'kanban', 'workflow', 'news', 'materials', 'calendar'];
                 const idx = pageOrder.indexOf(pageName);
                 if (idx > -1 && navItems[idx]) {
                     navItems[idx].classList.add('active');
@@ -10842,7 +10891,8 @@ CREATE POLICY "allow_all" ON workbench_sync
 
             const titleMap = {
                 'account': '账号管理',
-                'kanban': '工作流看板',
+                'kanban': '工作任务',
+                'workflow': '工作流看板',
                 'materials': '素材筛选池',
                 'calendar': '工作日历',
                 'news': '每日快讯'
