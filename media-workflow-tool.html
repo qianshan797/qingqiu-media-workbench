@@ -10999,6 +10999,13 @@ CREATE POLICY "allow_all" ON workbench_sync
             const todayArchivedTasks = visibleTasks.filter(t => t.status === 'archived' && (t.dueDate === todayStr || t.completedDate === todayStr));
             const doneTasks = [...completedTasks, ...todayArchivedTasks];
 
+            // v29：看板三列均按优先级降序排列（high>medium>low）
+            var priorityRank = function(p) { return p === 'high' ? 3 : p === 'medium' ? 2 : p === 'low' ? 1 : 0; };
+            var sortByPriorityDesc = function(a, b) { return priorityRank(b.priority) - priorityRank(a.priority); };
+            pendingTasks.sort(sortByPriorityDesc);
+            inProgressTasks.sort(sortByPriorityDesc);
+            doneTasks.sort(sortByPriorityDesc);
+
             const pendingCount = document.getElementById('pendingCount');
             const inProgressCount = document.getElementById('inProgressCount');
             const completedCount = document.getElementById('completedCount');
