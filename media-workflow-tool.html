@@ -10356,11 +10356,21 @@ CREATE POLICY "allow_all" ON workbench_sync
                 const belongDate = t.dueDate || t.completedDate;
                 return belongDate === dateStr;
             });
+            // v29：已完成任务同样按优先级降序
+            completedTasks.sort(function(a, b) {
+                var rank = function(p) { return p === 'high' ? 3 : p === 'medium' ? 2 : p === 'low' ? 1 : 0; };
+                return rank(b.priority) - rank(a.priority);
+            });
             const scheduledTasks = tasks.filter(t => t.dueDate === dateStr && t.status !== 'completed' && t.status !== 'archived');
             const todayUnfinished = (dateStr === getTodayDate()) 
                 ? tasks.filter(t => !t.dueDate && (t.status === 'pending' || t.status === 'inProgress') && !(t.isDaily === true))
                 : [];
             const unfinishedTasks = [...scheduledTasks, ...todayUnfinished];
+            // v29：工作日历任务按优先级降序排列（high>medium>low）
+            unfinishedTasks.sort(function(a, b) {
+                var rank = function(p) { return p === 'high' ? 3 : p === 'medium' ? 2 : p === 'low' ? 1 : 0; };
+                return rank(b.priority) - rank(a.priority);
+            });
             
             const inProgressTasks = unfinishedTasks.filter(t => t.status === 'inProgress');
             const pendingTasksList = unfinishedTasks.filter(t => t.status === 'pending');
