@@ -7959,17 +7959,53 @@ CREATE POLICY "allow_all" ON workbench_sync
                         return;
                     }
                 }
-                // ✅ 保护 2：账号绝对不允许被空覆盖
+                // ✅ 保护 2：账号采用智能合并策略（本地 followers 优先，不被云端覆盖）
                 if (k === STORAGE_KEY_ACCOUNTS) {
                     try {
                         const localRaw = localStorage.getItem(k);
                         const localAccts = localRaw ? JSON.parse(localRaw) : [];
                         const remoteAccts = (typeof val === 'string') ? JSON.parse(val) : (Array.isArray(val) ? val : []);
-                        if (localAccts && localAccts.length >= 5 && (!remoteAccts || remoteAccts.length < localAccts.length)) {
-                            console.warn('[restoreFromCloudData] 云端账号少于本地，拒绝覆盖');
-                            return;
-                        }
-                    } catch (e3) { return; }
+                        const safeLocal = Array.isArray(localAccts) ? localAccts : [];
+                        const safeRemote = Array.isArray(remoteAccts) ? remoteAccts : [];
+
+                        // 按 name|platform 构建索引
+                        const localByKey = {};
+                        safeLocal.forEach(a => { if (a && a.name && a.platform) localByKey[a.name + '|' + a.platform] = a; });
+                        const remoteByKey = {};
+                        safeRemote.forEach(a => { if (a && a.name && a.platform) remoteByKey[a.name + '|' + a.platform] = a; });
+
+                        // v30 修复：智能合并，本地 followers 优先（用户手动修改不被云端覆盖）
+                        const merged = [];
+                        const processedKeys = new Set();
+                        safeLocal.forEach(localAcct => {
+                            if (!localAcct || !localAcct.name || !localAcct.platform) { if (localAcct) merged.push({ ...localAcct }); return; }
+                            const key = localAcct.name + '|' + localAcct.platform;
+                            const remoteAcct = remoteByKey[key];
+                            if (remoteAcct) {
+                                const mergedAcct = { ...remoteAcct, ...localAcct };
+                                mergedAcct.followers = localAcct.followers; // 本地 followers 优先
+                                merged.push(mergedAcct);
+                                processedKeys.add(key);
+                            } else {
+                                merged.push({ ...localAcct });
+                            }
+                        });
+                        // 云端独有的账号
+                        safeRemote.forEach(remoteAcct => {
+                            if (!remoteAcct || !remoteAcct.name || !remoteAcct.platform) { if (remoteAcct) merged.push({ ...remoteAcct }); return; }
+                            const key = remoteAcct.name + '|' + remoteAcct.platform;
+                            if (!processedKeys.has(key)) {
+                                merged.push({ ...remoteAcct });
+                            }
+                        });
+
+                        console.log('[restoreFromCloudData] accounts 智能合并：本地', safeLocal.length, '条 + 云端', safeRemote.length, '条 = 合并后', merged.length, '条（本地 followers 优先）');
+                        localStorage.setItem(k, JSON.stringify(merged));
+                        return;
+                    } catch (e3) {
+                        console.error('[restoreFromCloudData] accounts 合并异常:', e3);
+                        return;
+                    }
                 }
                 // ✅ 保护 3：任务采用智能合并策略（本地已完成/已归档状态优先）
                 if (k === STORAGE_KEY_TASKS) {
