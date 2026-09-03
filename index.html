@@ -218,11 +218,19 @@
                     acct={id:uid,name:seed.name,platform:seed.platform,followers:seed.followers,category:'外贸跨境',bio:seed.platform==='公众号'?'专注外贸跨境市场动态与义乌供应链一手资讯':'义乌小商品'+seed.platform+'官方账号，外贸选品与B端商家咨询',avatar:ava,createdAt:todayStr};
                     accts.push(acct);acctChanged=true;
                 }else{
-                    if(acct.followers!==seed.followers){acct.followers=seed.followers;acctChanged=true;}
+                    // v30 修复：保留用户手动修改的粉丝数，不再强制同步回种子值
+                    // 仅在 followers 字段缺失或非法时才用种子值填充
+                    if(acct.followers===undefined||acct.followers===null||isNaN(acct.followers)){acct.followers=seed.followers;acctChanged=true;}
                     if(!acct.avatar||acct.avatar==='👤'){acct.avatar=platAvatar[seed.platform]||'📱';acctChanged=true;}
                     if(!acct.category){acct.category='外贸跨境';acctChanged=true;}
                 }
-                if(!acctData[acct.id]||!acctData[acct.id].daily||acctData[acct.id].daily.length<2){
+                // v30 修复：仅在账号完全没有数据时生成种子趋势数据，避免覆盖用户手动添加的历史记录
+                // 兼容两种数据结构：{daily:[]} 对象（种子注入）和直接数组（用户手动录入）
+                var hasAcctData = !!acctData[acct.id] && (
+                    (Array.isArray(acctData[acct.id]) && acctData[acct.id].length > 0) ||
+                    (acctData[acct.id].daily && acctData[acct.id].daily.length > 0)
+                );
+                if(!hasAcctData){
                     var daily=[];
                     for(var i=29;i>=0;i--){
                         var d=new Date();d.setDate(d.getDate()-i);var ds=__localDateStr(d);
