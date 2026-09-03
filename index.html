@@ -13748,7 +13748,9 @@ CREATE POLICY "allow_all" ON workbench_sync
         }
 
         function renderDetailStats(accountId) {
-            const data = accountData[accountId] || [];
+            // v30 修复：兼容两种数据结构（直接数组 / {daily:[]} 对象）
+            const raw = accountData[accountId];
+            const data = Array.isArray(raw) ? raw : (raw && Array.isArray(raw.daily) ? raw.daily : []);
             const statsGrid = document.getElementById('detailStatsGrid');
 
             const totalFollowersChange = data.reduce((sum, d) => sum + (d.followersChange || 0), 0);
@@ -13780,7 +13782,9 @@ CREATE POLICY "allow_all" ON workbench_sync
         }
 
         function renderDetailHistory(accountId) {
-            const data = accountData[accountId] || [];
+            // v30 修复：兼容两种数据结构（直接数组 / {daily:[]} 对象）
+            const raw = accountData[accountId];
+            const data = Array.isArray(raw) ? raw : (raw && Array.isArray(raw.daily) ? raw.daily : []);
             const list = document.getElementById('detailHistoryList');
 
             if (data.length === 0) {
@@ -13835,8 +13839,14 @@ CREATE POLICY "allow_all" ON workbench_sync
             const views = parseInt(viewsInput) || 0;
             const likes = parseInt(likesInput) || 0;
 
+            // v30 修复：规范化数据结构，兼容 {daily:[]} 对象（来自 preloadData 注入）
+            // 统一转为直接数组，避免 findIndex/push 报错
             if (!accountData[currentDetailAccountId]) {
                 accountData[currentDetailAccountId] = [];
+            } else if (!Array.isArray(accountData[currentDetailAccountId])) {
+                // 是对象（{daily:[...]} 结构），提取 daily 数组规范化为直接数组
+                const obj = accountData[currentDetailAccountId];
+                accountData[currentDetailAccountId] = Array.isArray(obj.daily) ? obj.daily : [];
             }
 
             // 查找是否有同一天的数据
@@ -13893,9 +13903,15 @@ CREATE POLICY "allow_all" ON workbench_sync
             if (!confirmed) return;
 
             if (accountData[currentDetailAccountId]) {
-                const record = accountData[currentDetailAccountId].find(d => d.date === date);
+                // v30 修复：规范化数据结构，兼容 {daily:[]} 对象
+                if (!Array.isArray(accountData[currentDetailAccountId])) {
+                    const obj = accountData[currentDetailAccountId];
+                    accountData[currentDetailAccountId] = Array.isArray(obj.daily) ? obj.daily : [];
+                }
+                const arr = accountData[currentDetailAccountId];
+                const record = arr.find(d => d.date === date);
                 const followersChange = record ? (record.followersChange || 0) : 0;
-                accountData[currentDetailAccountId] = accountData[currentDetailAccountId].filter(d => d.date !== date);
+                accountData[currentDetailAccountId] = arr.filter(d => d.date !== date);
                 const account = accounts.find(a => a.id === currentDetailAccountId || String(a.id) === String(currentDetailAccountId));
                 if (account) {
                     account.followers = (account.followers || 0) - followersChange;
