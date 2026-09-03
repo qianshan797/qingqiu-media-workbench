@@ -7984,6 +7984,12 @@ CREATE POLICY "allow_all" ON workbench_sync
                             if (remoteAcct) {
                                 const mergedAcct = { ...remoteAcct, ...localAcct };
                                 mergedAcct.followers = localAcct.followers; // 本地 followers 优先
+                                // v30 修复：avatar 图片优先同步，避免本地默认 emoji 覆盖云端用户上传的图片
+                                const localIsImg = localAcct.avatar && localAcct.avatar.startsWith('data:image/');
+                                const remoteIsImg = remoteAcct.avatar && remoteAcct.avatar.startsWith('data:image/');
+                                if (remoteIsImg && !localIsImg) {
+                                    mergedAcct.avatar = remoteAcct.avatar;
+                                }
                                 merged.push(mergedAcct);
                                 processedKeys.add(key);
                             } else {
@@ -13132,6 +13138,8 @@ CREATE POLICY "allow_all" ON workbench_sync
             let avatarContent;
             if (account.avatar && account.avatar.startsWith('data:image/')) {
                 avatarContent = `<img src="${account.avatar}" alt="头像">`;
+            } else if (account.avatar && (account.avatar.startsWith('http://') || account.avatar.startsWith('https://'))) {
+                avatarContent = `<img src="${escapeHtml(account.avatar)}" alt="头像" referrerpolicy="no-referrer" onerror="this.parentElement.textContent='${getPlatformInitial(account.platform)}'">`;
             } else {
                 const initial = account.avatar ? escapeHtml(account.avatar) : getPlatformInitial(account.platform);
                 avatarContent = initial;
@@ -13713,6 +13721,8 @@ CREATE POLICY "allow_all" ON workbench_sync
             let avatarContent;
             if (account.avatar && account.avatar.startsWith('data:image/')) {
                 avatarContent = `<img src="${account.avatar}" alt="头像">`;
+            } else if (account.avatar && (account.avatar.startsWith('http://') || account.avatar.startsWith('https://'))) {
+                avatarContent = `<img src="${escapeHtml(account.avatar)}" alt="头像" referrerpolicy="no-referrer" onerror="this.parentElement.textContent='${getPlatformInitial(account.platform)}'">`;
             } else {
                 const initial = account.avatar ? escapeHtml(account.avatar) : getPlatformInitial(account.platform);
                 avatarContent = initial;
