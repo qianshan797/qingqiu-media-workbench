@@ -2445,6 +2445,37 @@
         .news-card-action.secondary:hover {
             background: #D1D1D6;
         }
+        /* 深色模式：每日快讯卡片适配 */
+        body.dark-mode .news-card {
+            background: #2C2C2E;
+            border-left-color: #0A84FF;
+        }
+        body.dark-mode .news-card:hover {
+            background: #3A3A3C;
+        }
+        body.dark-mode .news-card-title {
+            color: #F5F5F7;
+        }
+        body.dark-mode .news-card-title a:hover {
+            color: #0A84FF;
+        }
+        body.dark-mode .news-card-summary {
+            color: #AEAEB2;
+        }
+        body.dark-mode .news-card-meta {
+            color: #8E8E93;
+        }
+        body.dark-mode .news-card-tag {
+            background: #3A3A3C;
+            color: #AEAEB2;
+        }
+        body.dark-mode .news-card-action.secondary {
+            background: #3A3A3C;
+            color: #F5F5F7;
+        }
+        body.dark-mode .news-card-action.secondary:hover {
+            background: #48484A;
+        }
         .news-empty {
             text-align: center;
             padding: 60px 20px;
@@ -2462,6 +2493,12 @@
         .news-empty-hint {
             font-size: 14px;
             color: #8E8E93;
+        }
+        body.dark-mode .news-empty-title {
+            color: #F5F5F7;
+        }
+        body.dark-mode .news-empty-hint {
+            color: #AEAEB2;
         }
 
         .kanban-columns {
