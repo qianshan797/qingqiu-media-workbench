@@ -209,7 +209,12 @@
             console.log('[早期注入] v24保护: 保留所有任务,不随账号过滤删除');
 
             // 3) 补齐种子账号 + 强制对齐粉丝数（按种子覆盖）
+            // v30 修复：读取用户主动删除的种子账号组合，补齐时跳过，避免删除后刷新又出现
+            var DELETED_SEEDS_KEY='media_workflow_deleted_seeds';
+            var deletedSeeds={};
+            try{var dsRaw=localStorage.getItem(DELETED_SEEDS_KEY);if(dsRaw)deletedSeeds=JSON.parse(dsRaw);}catch(e){deletedSeeds={};}
             SEED_ACCOUNTS.forEach(function(seed){
+                if(deletedSeeds[seed.name+'|'+seed.platform])return; // 跳过用户已删除的组合
                 var acct=accts.find(function(a){return a.name===seed.name&&a.platform===seed.platform;});
                 if(!acct){
                     var ab=platAbbr[seed.platform]||seed.platform;
@@ -13540,6 +13545,16 @@ CREATE POLICY "allow_all" ON workbench_sync
                 };
 
                 accounts.push(newAccount);
+                // v30 修复：如果手动添加了之前被删除的种子组合，从删除记录中移除，允许后续恢复自动补齐
+                try {
+                    const dk = 'media_workflow_deleted_seeds';
+                    const r = localStorage.getItem(dk);
+                    if (r) {
+                        const dList = JSON.parse(r);
+                        delete dList[name + '|' + platform];
+                        localStorage.setItem(dk, JSON.stringify(dList));
+                    }
+                } catch(e) {}
                 saveData(STORAGE_KEY_ACCOUNTS, accounts);
                 renderAccounts();
                 closeAddAccountModal();
@@ -13553,6 +13568,15 @@ CREATE POLICY "allow_all" ON workbench_sync
             if (!confirm(`确定要删除账号"${account.name}"吗？`)) {
                 return;
             }
+
+            // v30 修复：记录被删除的种子账号组合，防止刷新后早期注入又自动补齐
+            try {
+                const dk = 'media_workflow_deleted_seeds';
+                let dList = {};
+                try { const r = localStorage.getItem(dk); if (r) dList = JSON.parse(r); } catch(e) {}
+                dList[account.name + '|' + account.platform] = true;
+                localStorage.setItem(dk, JSON.stringify(dList));
+            } catch(e) {}
 
             accounts = accounts.filter(a => a.id !== accountId && String(a.id) !== String(accountId));
             selectedAccountIds = selectedAccountIds.filter(id => id !== accountId && String(id) !== String(accountId));
@@ -13580,6 +13604,18 @@ CREATE POLICY "allow_all" ON workbench_sync
             if (!confirm(`确定要删除选中的 ${count} 个账号吗？`)) {
                 return;
             }
+
+            // v30 修复：记录被删除的种子账号组合，防止刷新后早期注入又自动补齐
+            try {
+                const dk = 'media_workflow_deleted_seeds';
+                let dList = {};
+                try { const r = localStorage.getItem(dk); if (r) dList = JSON.parse(r); } catch(e) {}
+                selectedAccountIds.forEach(id => {
+                    const acct = accounts.find(a => String(a.id) === String(id));
+                    if (acct) dList[acct.name + '|' + acct.platform] = true;
+                });
+                localStorage.setItem(dk, JSON.stringify(dList));
+            } catch(e) {}
 
             accounts = accounts.filter(a => !selectedAccountIds.some(id => String(id) === String(a.id)));
             selectedAccountIds.forEach(id => {
