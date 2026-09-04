@@ -2871,7 +2871,7 @@
             background: #FFFFFF;
         }
 
-        .add-task-form input {
+        .add-task-form input:not([type="checkbox"]) {
             flex: 1;
             min-width: 200px;
         }
@@ -2935,6 +2935,8 @@
             margin: 0;
             width: 14px;
             height: 14px;
+            min-width: 0;
+            flex: none;
             cursor: pointer;
             flex-shrink: 0;
             vertical-align: middle;
@@ -4030,7 +4032,7 @@
                 flex-direction: column;
             }
 
-            .add-task-form input,
+            .add-task-form input:not([type="checkbox"]),
             .add-task-form select {
                 width: 100%;
             }
@@ -4987,14 +4989,14 @@
                 gap: 10px;
             }
 
-            .add-task-form input,
+            .add-task-form input:not([type="checkbox"]),
             .add-task-form select {
                 width: 100%;
                 min-width: 0;
                 font-size: 15px;
             }
 
-            .add-task-form input {
+            .add-task-form input:not([type="checkbox"]) {
                 flex: none;
             }
 
