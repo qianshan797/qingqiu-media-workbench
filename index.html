@@ -7894,7 +7894,8 @@ CREATE POLICY "allow_all" ON workbench_sync
                 STORAGE_KEY_TAGS,
                 STORAGE_KEY_PROFILE,
                 STORAGE_KEY_API_CONFIG,
-                STORAGE_KEY_SCHEMA_VERSION
+                STORAGE_KEY_SCHEMA_VERSION,
+                'media_workflow_deleted_seeds' // v30 修复：删除记录也同步，避免新设备/刷新后被删账号被云端或种子补回
             ];
             const data = {};
             keys.forEach(k => {
@@ -8008,6 +8009,15 @@ CREATE POLICY "allow_all" ON workbench_sync
                         const safeLocal = Array.isArray(localAccts) ? localAccts : [];
                         const safeRemote = Array.isArray(remoteAccts) ? remoteAccts : [];
 
+                        // v30 修复：读取本地删除记录，过滤被删账号，避免云端拉回已被删除的种子账号
+                        var localDelRaw = localStorage.getItem('media_workflow_deleted_seeds');
+                        var localDeleted = {};
+                        if (localDelRaw) { try { localDeleted = JSON.parse(localDelRaw); } catch(e) { localDeleted = {}; } }
+                        var isDeleted = function(name, platform) {
+                            if (!name || !platform) return false;
+                            return !!localDeleted[name + '|' + platform];
+                        };
+
                         // 按 name|platform 构建索引
                         const localByKey = {};
                         safeLocal.forEach(a => { if (a && a.name && a.platform) localByKey[a.name + '|' + a.platform] = a; });
@@ -8017,9 +8027,12 @@ CREATE POLICY "allow_all" ON workbench_sync
                         // v30 修复：智能合并，本地 followers 优先（用户手动修改不被云端覆盖）
                         const merged = [];
                         const processedKeys = new Set();
+                        var skippedByDelete = 0;
                         safeLocal.forEach(localAcct => {
                             if (!localAcct || !localAcct.name || !localAcct.platform) { if (localAcct) merged.push({ ...localAcct }); return; }
                             const key = localAcct.name + '|' + localAcct.platform;
+                            // 跳过已被删除的组合（保险：本地不应有，但万一存在也剔除）
+                            if (isDeleted(localAcct.name, localAcct.platform)) { skippedByDelete++; return; }
                             const remoteAcct = remoteByKey[key];
                             if (remoteAcct) {
                                 const mergedAcct = { ...remoteAcct, ...localAcct };
@@ -8037,15 +8050,18 @@ CREATE POLICY "allow_all" ON workbench_sync
                             }
                         });
                         // 云端独有的账号
+                        var cloudOnlyRestored = 0;
                         safeRemote.forEach(remoteAcct => {
                             if (!remoteAcct || !remoteAcct.name || !remoteAcct.platform) { if (remoteAcct) merged.push({ ...remoteAcct }); return; }
                             const key = remoteAcct.name + '|' + remoteAcct.platform;
-                            if (!processedKeys.has(key)) {
-                                merged.push({ ...remoteAcct });
-                            }
+                            if (processedKeys.has(key)) return;
+                            // v30 修复：云端独有的账号如果已被本地删除，则不再拉回
+                            if (isDeleted(remoteAcct.name, remoteAcct.platform)) { skippedByDelete++; return; }
+                            merged.push({ ...remoteAcct });
+                            cloudOnlyRestored++;
                         });
 
-                        console.log('[restoreFromCloudData] accounts 智能合并：本地', safeLocal.length, '条 + 云端', safeRemote.length, '条 = 合并后', merged.length, '条（本地 followers 优先）');
+                        console.log('[restoreFromCloudData] accounts 智能合并：本地', safeLocal.length, '条 + 云端', safeRemote.length, '条 = 合并后', merged.length, '条（本地 followers 优先，跳过已删账号', skippedByDelete, '个，云端独有补回', cloudOnlyRestored, '个）');
                         localStorage.setItem(k, JSON.stringify(merged));
                         return;
                     } catch (e3) {
@@ -8090,6 +8106,22 @@ CREATE POLICY "allow_all" ON workbench_sync
                         localStorage.setItem(k, JSON.stringify(cleaned));
                         return;
                     } catch (e4) { return; }
+                }
+                // ✅ 保护 3.5：删除记录采用并集合并（多设备删除都保留），绝不被云端覆盖
+                if (k === 'media_workflow_deleted_seeds') {
+                    try {
+                        var localDel = {};
+                        var localDelStr = localStorage.getItem(k);
+                        if (localDelStr) { try { localDel = JSON.parse(localDelStr); } catch(e) { localDel = {}; } }
+                        var remoteDel = (typeof val === 'string') ? JSON.parse(val) : (val && typeof val === 'object' ? val : {});
+                        var mergedDel = Object.assign({}, localDel, remoteDel); // 并集：任一设备删除过的都保留
+                        localStorage.setItem(k, JSON.stringify(mergedDel));
+                        console.log('[restoreFromCloudData] deleted_seeds 并集合并：本地', Object.keys(localDel).length, '个 + 云端', Object.keys(remoteDel).length, '个 = 合并后', Object.keys(mergedDel).length, '个');
+                        return;
+                    } catch (eDel) {
+                        console.error('[restoreFromCloudData] deleted_seeds 合并异常:', eDel);
+                        return;
+                    }
                 }
                 localStorage.setItem(k, val);
             });
