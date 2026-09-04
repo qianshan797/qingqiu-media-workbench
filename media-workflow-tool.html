@@ -2880,18 +2880,17 @@
             min-width: 120px;
         }
 
-        /* 平台多选 checkbox 组：使用 CSS Grid 保证换行后勾选框上下对齐 */
+        /* 平台多选 checkbox 组：flex + 固定宽度 label，换行后勾选框上下对齐且不溢出 */
         .platform-checkbox-group {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(82px, max-content));
-            column-gap: 10px;
-            row-gap: 6px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 10px;
             align-items: center;
             align-self: center;
-            justify-content: start;
             flex: 0 1 auto;
             min-width: 0;
             max-width: 100%;
+            overflow: hidden;
             background: #F2F2F7;
             padding: 6px 10px;
             border-radius: 8px;
@@ -2916,6 +2915,7 @@
             cursor: pointer;
             user-select: none;
             white-space: nowrap;
+            flex: 0 0 80px;
             line-height: 24px;
             height: 24px;
         }
