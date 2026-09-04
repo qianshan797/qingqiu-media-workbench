@@ -2893,6 +2893,7 @@
             background: #F2F2F7;
             padding: 6px 10px;
             border-radius: 8px;
+            font-size: 0; /* 消除 label 间空白字符对 flex 对齐的影响 */
         }
         /* flex 换行符：强制后续元素换到新行 */
         .flex-line-break {
@@ -2905,6 +2906,7 @@
         .platform-checkbox-group label {
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 3px;
             font-size: 12px;
             padding: 0 4px;
@@ -2914,8 +2916,8 @@
             user-select: none;
             white-space: nowrap;
             flex-shrink: 0;
-            line-height: 1.2;
-            height: 22px;
+            line-height: 24px;
+            height: 24px;
         }
         .platform-checkbox-group label:hover {
             background: rgba(0, 0, 0, 0.05);
@@ -2931,9 +2933,11 @@
         }
         .platform-checkbox-group input[type="checkbox"] {
             margin: 0;
-            width: 13px;
-            height: 13px;
+            width: 14px;
+            height: 14px;
             cursor: pointer;
+            flex-shrink: 0;
+            vertical-align: middle;
         }
 
         .add-task-section-title {
