@@ -526,10 +526,17 @@
           // 构建本地 name|platform 索引
           var localByKey2 = {};
           localAccts2.forEach(function(a) { if (a && a.name && a.platform) localByKey2[a.name + '|' + a.platform] = a; });
+          // v30 修复：读取删除记录，补齐种子账号时跳过已删组合
+          var delSeedsRaw = localStorage.getItem('media_workflow_deleted_seeds');
+          var delSeedsMap = {};
+          if (delSeedsRaw) { try { delSeedsMap = JSON.parse(delSeedsRaw); } catch(e) { delSeedsMap = {}; } }
           var addedAccts2 = 0;
+          var skippedDeleted2 = 0;
           preloadAccts.forEach(function(pa) {
             if (!pa || !pa.name || !pa.platform) return;
             var k2 = pa.name + '|' + pa.platform;
+            // v30 修复：跳过用户已删除的种子账号组合
+            if (delSeedsMap[k2]) { skippedDeleted2++; return; }
             if (!localByKey2[k2]) {
               // 本地没有的种子账号：补齐
               localAccts2.push(pa);
@@ -538,9 +545,9 @@
             }
             // 本地已有：绝不覆盖（包括 followers / avatar / category / bio / url 等用户修改值）
           });
-          if (addedAccts2 > 0 || !localAcctRaw) {
+          if (addedAccts2 > 0 || skippedDeleted2 > 0 || !localAcctRaw) {
             localStorage.setItem(key, JSON.stringify(localAccts2));
-            console.log('[v30预加载] 账号合并: 补充', addedAccts2, '个缺失种子账号(共', localAccts2.length, '个，用户粉丝数/头像完全保留)');
+            console.log('[v30预加载] 账号合并: 补充', addedAccts2, '个缺失种子账号, 跳过', skippedDeleted2, '个已删账号(共', localAccts2.length, '个，用户粉丝数/头像完全保留)');
           } else {
             console.log('[v30预加载] 账号合并: 种子账号齐全(共', localAccts2.length, '个，用户粉丝数/头像完全保留)');
           }
