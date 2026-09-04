@@ -570,6 +570,47 @@
   } catch (e) { console.error("[v22预加载] 失败", e); }
 })();
 </script>
+<script>
+// v30 自动快讯：异步加载外部 news-data.json（定时任务每天通过 GitHub API 更新此文件）
+// 如果 news-data.json 的日期比 preloadData/localStorage 更新，自动覆盖并重新渲染
+(function() {
+  function applyRemoteNews(newsArr) {
+    if (!Array.isArray(newsArr) || newsArr.length === 0) return false;
+    var latestRemote = '';
+    newsArr.forEach(function(n) { if (n && n.date && n.date > latestRemote) latestRemote = n.date; });
+    var stored = localStorage.getItem('media_workflow_news');
+    var latestLocal = '';
+    if (stored) {
+      try {
+        var parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+          parsed.forEach(function(n) { if (n && n.date && n.date > latestLocal) latestLocal = n.date; });
+        }
+      } catch(e) {}
+    }
+    if (latestRemote && latestRemote >= latestLocal) {
+      localStorage.setItem('media_workflow_news', JSON.stringify(newsArr));
+      console.log('[v30自动快讯] 已从 news-data.json 更新新闻，日期:', latestRemote, '共', newsArr.length, '条');
+      if (typeof renderNews === 'function') {
+        try { renderNews(); } catch(e) { console.warn('[v30自动快讯] renderNews 失败', e); }
+      }
+      return true;
+    }
+    console.log('[v30自动快讯] news-data.json 日期不比本地新，跳过 (remote:', latestRemote, ' local:', latestLocal, ')');
+    return false;
+  }
+
+  fetch('news-data.json', { cache: 'no-store' })
+    .then(function(r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
+    .then(function(data) { applyRemoteNews(data); })
+    .catch(function(e) {
+      console.log('[v30自动快讯] news-data.json 加载失败，使用 preloadData 兜底:', e.message);
+    });
+})();
+</script>
     <!-- iOS PWA 图标配置 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
