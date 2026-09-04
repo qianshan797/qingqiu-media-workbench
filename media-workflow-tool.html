@@ -513,6 +513,46 @@
             console.log('[v27预加载] 新闻更新: 清理过期' + cleanedCount + '条,替换同日期' + replacedCount + '条,注入' + preloadNews.length + '条,总计' + result.length + '条');
           }
         } catch(e) { console.error('[v27预加载] 新闻替换失败', e); }
+      } else if (key === 'media_workflow_accounts') {
+        // v30 修复：账号按 name|platform 智能合并，绝不覆盖现有账号的 followers/avatar/category 等用户修改值
+        // 无论 force=true/false 都不能整包覆盖，避免用户修改的粉丝数被种子值回退
+        try {
+          var localAcctRaw = localStorage.getItem(key);
+          var localAccts2 = [];
+          if (localAcctRaw) { try { localAccts2 = JSON.parse(localAcctRaw); } catch(e) { localAccts2 = []; } }
+          if (!Array.isArray(localAccts2)) localAccts2 = [];
+          var preloadAccts = (typeof preloadData[key] === 'string') ? JSON.parse(preloadData[key]) : preloadData[key];
+          if (!Array.isArray(preloadAccts)) preloadAccts = [];
+          // 构建本地 name|platform 索引
+          var localByKey2 = {};
+          localAccts2.forEach(function(a) { if (a && a.name && a.platform) localByKey2[a.name + '|' + a.platform] = a; });
+          var addedAccts2 = 0;
+          preloadAccts.forEach(function(pa) {
+            if (!pa || !pa.name || !pa.platform) return;
+            var k2 = pa.name + '|' + pa.platform;
+            if (!localByKey2[k2]) {
+              // 本地没有的种子账号：补齐
+              localAccts2.push(pa);
+              localByKey2[k2] = pa;
+              addedAccts2++;
+            }
+            // 本地已有：绝不覆盖（包括 followers / avatar / category / bio / url 等用户修改值）
+          });
+          if (addedAccts2 > 0 || !localAcctRaw) {
+            localStorage.setItem(key, JSON.stringify(localAccts2));
+            console.log('[v30预加载] 账号合并: 补充', addedAccts2, '个缺失种子账号(共', localAccts2.length, '个，用户粉丝数/头像完全保留)');
+          } else {
+            console.log('[v30预加载] 账号合并: 种子账号齐全(共', localAccts2.length, '个，用户粉丝数/头像完全保留)');
+          }
+        } catch(e) { console.error('[v30预加载] 账号合并失败', e); }
+      } else if (key === 'media_workflow_account_data') {
+        // v30 修复：account_data 绝不 force 覆盖，仅在本地缺失时用 preloadData 填充
+        try {
+          if (!localStorage.getItem(key)) {
+            localStorage.setItem(key, preloadData[key]);
+            console.log('[v30预加载] 账号趋势数据: 首次注入(保留用户后续录入不受覆盖)');
+          }
+        } catch(e) { console.error('[v30预加载] 账号趋势数据注入失败', e); }
       } else if (key === 'media_workflow_schema_version') {
         // schema 版本直接覆盖
         localStorage.setItem(key, preloadData[key]);
