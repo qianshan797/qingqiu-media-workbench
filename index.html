@@ -13480,11 +13480,22 @@ CREATE POLICY "allow_all" ON workbench_sync
                 preview.innerHTML = `<img src="${value}" alt="头像">`;
                 input.value = '';
                 clearBtn.style.display = 'block';
+                // v30 修复：回填原图片到隐藏字段，避免编辑时只改粉丝数导致头像丢失
+                if (!document.getElementById('avatarImageData')) {
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.id = 'avatarImageData';
+                    document.querySelector('.avatar-picker').appendChild(hiddenInput);
+                }
+                document.getElementById('avatarImageData').value = value;
             } else {
                 currentAvatarType = 'text';
                 input.value = value || '';
                 preview.textContent = value || '运';
                 clearBtn.style.display = 'none';
+                // v30 修复：文字模式清空残留图片数据，避免图片优先级覆盖文字
+                const hiddenImg = document.getElementById('avatarImageData');
+                if (hiddenImg) hiddenImg.value = '';
             }
 
             // 绑定输入事件
@@ -13495,6 +13506,9 @@ CREATE POLICY "allow_all" ON workbench_sync
                 preview.innerHTML = '';
                 preview.textContent = val || '运';
                 clearBtn.style.display = 'none';
+                // v30 修复：输入文字时清空残留图片数据，确保文字优先
+                const hiddenImg2 = document.getElementById('avatarImageData');
+                if (hiddenImg2) hiddenImg2.value = '';
                 document.querySelectorAll('.avatar-emoji-btn').forEach(btn => {
                     btn.classList.toggle('selected', btn.textContent === val);
                 });
@@ -13513,6 +13527,9 @@ CREATE POLICY "allow_all" ON workbench_sync
                     preview.innerHTML = '';
                     preview.textContent = emoji;
                     clearBtn.style.display = 'none';
+                    // v30 修复：选emoji时清空残留图片数据，确保emoji优先
+                    const hiddenImg3 = document.getElementById('avatarImageData');
+                    if (hiddenImg3) hiddenImg3.value = '';
                     document.querySelectorAll('.avatar-emoji-btn').forEach(b => b.classList.remove('selected'));
                     btn.classList.add('selected');
                 };
