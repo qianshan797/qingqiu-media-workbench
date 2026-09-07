@@ -598,7 +598,11 @@
     if (latestRemote && latestRemote >= latestLocal) {
       localStorage.setItem('media_workflow_news', JSON.stringify(newsArr));
       console.log('[v30自动快讯] 已从 news-data.json 更新新闻，日期:', latestRemote, '共', newsArr.length, '条');
-      if (typeof renderNews === 'function') {
+      // v31 修复：调用 syncDailyNews 重新从 localStorage 读取并更新内存 news 变量 + 渲染
+      // 避免仅更新 localStorage 但内存 news 变量仍是旧数据导致页面不刷新
+      if (typeof syncDailyNews === 'function') {
+        try { syncDailyNews(false); } catch(e) { console.warn('[v30自动快讯] syncDailyNews 失败', e); }
+      } else if (typeof renderNews === 'function') {
         try { renderNews(); } catch(e) { console.warn('[v30自动快讯] renderNews 失败', e); }
       }
       return true;
@@ -10084,6 +10088,28 @@ CREATE POLICY "allow_all" ON workbench_sync
               }
             } catch(e) {
               console.warn('[每日快讯] 从 preloadData 读取失败:', e);
+            }
+
+            // v31 修复：比较 preloadData 与 localStorage 的最新日期，使用更新的数据源
+            // 避免内嵌的旧 preloadData 覆盖 news-data.json 已更新的最新数据
+            let storedNews = [];
+            try {
+              const storedRaw = localStorage.getItem(STORAGE_KEY_NEWS);
+              if (storedRaw) {
+                const parsed = JSON.parse(storedRaw);
+                if (Array.isArray(parsed)) storedNews = parsed;
+              }
+            } catch(e) {}
+            function __latestDate(arr) {
+              let d = '';
+              arr.forEach(n => { if (n && n.date && String(n.date) > d) d = String(n.date); });
+              return d;
+            }
+            const __preloadLatest = __latestDate(preloadNews);
+            const __storedLatest = __latestDate(storedNews);
+            if (__storedLatest && __storedLatest > __preloadLatest) {
+              preloadNews = storedNews;
+              console.log('[每日快讯] localStorage 数据比 preloadData 新，使用 localStorage:', __storedLatest, '>', __preloadLatest);
             }
 
             if (preloadNews.length === 0) {
