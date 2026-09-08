@@ -401,7 +401,7 @@
           }
         } catch(e) { console.error('[v22预加载] 素材合并失败', e); }
       } else if (key === 'media_workflow_tasks') {
-        // v28：义采宝排期等种子任务按 id 合并注入（只增不删，保留用户所有本地任务）
+        // v31：种子任务按 id 合并注入，跳过用户已删除的任务，保留用户所有本地任务
         try {
           var localTaskRaw = localStorage.getItem(key);
           var localTasks = [];
@@ -411,10 +411,17 @@
           if (!Array.isArray(preloadTasks)) preloadTasks = [];
           var localTaskIds = {};
           localTasks.forEach(function(t) { if (t && t.id) localTaskIds[String(t.id)] = 1; });
+          // v31 修复：读取已删除的任务ID，合并时跳过，避免刷新后被 preloadData 重新注入
+          var delTasksRaw = localStorage.getItem('media_workflow_deleted_tasks');
+          var delTasksMap = {};
+          if (delTasksRaw) { try { delTasksMap = JSON.parse(delTasksRaw); } catch(e) { delTasksMap = {}; } }
           var addedTasks = 0;
           var updatedTasks = 0;
+          var skippedDeleted = 0;
           preloadTasks.forEach(function(t) {
             if (t && t.id) {
+              // v31 修复：跳过用户已删除的任务
+              if (delTasksMap[String(t.id)]) { skippedDeleted++; return; }
               if (!localTaskIds[String(t.id)]) {
                 localTasks.push(t);
                 localTaskIds[String(t.id)] = 1;
@@ -433,13 +440,17 @@
               }
             }
           });
-          if (addedTasks > 0 || updatedTasks > 0) {
+          // v31 修复：同时清理本地 tasks 中已被删除的任务（防止本地残留）
+          var beforeClean = localTasks.length;
+          localTasks = localTasks.filter(function(t) { return t && t.id && !delTasksMap[String(t.id)]; });
+          var cleanedTasks = beforeClean - localTasks.length;
+          if (addedTasks > 0 || updatedTasks > 0 || cleanedTasks > 0 || skippedDeleted > 0) {
             localStorage.setItem(key, JSON.stringify(localTasks));
-            console.log('[v28预加载] 任务合并: 补充', addedTasks, '条, 更新', updatedTasks, '条优先级(共', localTasks.length, '条，保留用户数据)');
+            console.log('[v31预加载] 任务合并: 补充', addedTasks, '条, 更新', updatedTasks, '条优先级, 跳过', skippedDeleted, '个已删任务, 清理', cleanedTasks, '条本地残留(共', localTasks.length, '条)');
           } else {
-            console.log('[v28预加载] 任务合并: 义采宝排期已齐全(共', localTasks.length, '条，保留用户数据)');
+            console.log('[v31预加载] 任务合并: 种子任务已齐全(共', localTasks.length, '条，保留用户数据)');
           }
-        } catch(e) { console.error('[v28预加载] 任务合并失败', e); }
+        } catch(e) { console.error('[v31预加载] 任务合并失败', e); }
       } else if (key === 'media_workflow_news') {
         // v27 修复：按日期替换 + 清理7天前的过期历史新闻，避免旧数据（如08-23）干扰智能显示
         try {
@@ -7950,7 +7961,8 @@ CREATE POLICY "allow_all" ON workbench_sync
                 STORAGE_KEY_PROFILE,
                 STORAGE_KEY_API_CONFIG,
                 STORAGE_KEY_SCHEMA_VERSION,
-                'media_workflow_deleted_seeds' // v30 修复：删除记录也同步，避免新设备/刷新后被删账号被云端或种子补回
+                'media_workflow_deleted_seeds', // v30 修复：删除记录也同步，避免新设备/刷新后被删账号被云端或种子补回
+                'media_workflow_deleted_tasks' // v31 修复：任务删除记录也同步，避免刷新后被删任务被重新注入
             ];
             const data = {};
             keys.forEach(k => {
@@ -8132,14 +8144,23 @@ CREATE POLICY "allow_all" ON workbench_sync
                         // 获取本地数据进行智能合并
                         const localRaw = localStorage.getItem(k);
                         const safeLocal = localRaw ? JSON.parse(localRaw) : [];
+                        // v31 修复：读取已删除任务记录，合并时跳过
+                        var delTasksRaw2 = localStorage.getItem('media_workflow_deleted_tasks');
+                        var delTasksMap2 = {};
+                        if (delTasksRaw2) { try { delTasksMap2 = JSON.parse(delTasksRaw2); } catch(e) { delTasksMap2 = {}; } }
+                        var isTaskDeleted = function(id) { return id && !!delTasksMap2[String(id)]; };
                         const localById = {};
                         safeLocal.forEach(t => { if (t && t.id) localById[String(t.id)] = t; });
                         const remoteById = {};
                         safeRemote.forEach(t => { if (t && t.id) remoteById[String(t.id)] = t; });
-                        
+                        var skippedDelTasks = 0;
+
                         // 智能合并：本地已完成/已归档的任务状态优先于云端
                         const merged = [];
                         safeRemote.forEach(remoteTask => {
+                            if (!remoteTask || !remoteTask.id) { if (remoteTask) merged.push(remoteTask); return; }
+                            // v31 修复：跳过已删除的任务
+                            if (isTaskDeleted(remoteTask.id)) { skippedDelTasks++; return; }
                             const localTask = localById[String(remoteTask.id)];
                             if (localTask && (localTask.status === 'completed' || localTask.status === 'archived')) {
                                 // 本地有更高级的状态（已完成/已归档），保留本地
@@ -8151,13 +8172,15 @@ CREATE POLICY "allow_all" ON workbench_sync
                         });
                         // 保留本地独有的任务（云端没有的）
                         safeLocal.forEach(localTask => {
-                            if (localTask && !remoteById[String(localTask.id)]) {
+                            if (!localTask || !localTask.id) { if (localTask) merged.push(localTask); return; }
+                            if (isTaskDeleted(localTask.id)) { skippedDelTasks++; return; }
+                            if (!remoteById[String(localTask.id)]) {
                                 merged.push(localTask);
                             }
                         });
                         // 清理自动生成的更新数据任务
                         const cleaned = merged.filter(t => !(t && t.title && t.title.indexOf('更新')===0 && t.title.indexOf(')数据')!==-1));
-                        console.log('[restoreFromCloudData] tasks 智能合并：本地', safeLocal.length, '条 + 云端', safeRemote.length, '条 = 合并后', cleaned.length, '条');
+                        console.log('[restoreFromCloudData] tasks 智能合并：本地', safeLocal.length, '条 + 云端', safeRemote.length, '条 = 合并后', cleaned.length, '条（跳过已删任务', skippedDelTasks, '个）');
                         localStorage.setItem(k, JSON.stringify(cleaned));
                         return;
                     } catch (e4) { return; }
@@ -8175,6 +8198,22 @@ CREATE POLICY "allow_all" ON workbench_sync
                         return;
                     } catch (eDel) {
                         console.error('[restoreFromCloudData] deleted_seeds 合并异常:', eDel);
+                        return;
+                    }
+                }
+                // v31 修复：任务删除记录也采用并集合并，防止云端拉回已被删除的任务
+                if (k === 'media_workflow_deleted_tasks') {
+                    try {
+                        var localDelT = {};
+                        var localDelTStr = localStorage.getItem(k);
+                        if (localDelTStr) { try { localDelT = JSON.parse(localDelTStr); } catch(e) { localDelT = {}; } }
+                        var remoteDelT = (typeof val === 'string') ? JSON.parse(val) : (val && typeof val === 'object' ? val : {});
+                        var mergedDelT = Object.assign({}, localDelT, remoteDelT);
+                        localStorage.setItem(k, JSON.stringify(mergedDelT));
+                        console.log('[restoreFromCloudData] deleted_tasks 并集合并：本地', Object.keys(localDelT).length, '个 + 云端', Object.keys(remoteDelT).length, '个 = 合并后', Object.keys(mergedDelT).length, '个');
+                        return;
+                    } catch (eDelT) {
+                        console.error('[restoreFromCloudData] deleted_tasks 合并异常:', eDelT);
                         return;
                     }
                 }
@@ -11336,6 +11375,14 @@ CREATE POLICY "allow_all" ON workbench_sync
             if (!confirmed) return;
             tasks = tasks.filter(t => t.id !== taskId && String(t.id) !== String(taskId));
             saveData(STORAGE_KEY_TASKS, tasks);
+            // v31 修复：记录已删除的任务ID，防止刷新后被 preloadData 重新注入
+            try {
+                var delRaw = localStorage.getItem('media_workflow_deleted_tasks');
+                var delMap = delRaw ? JSON.parse(delRaw) : {};
+                if (!delMap || typeof delMap !== 'object') delMap = {};
+                delMap[String(taskId)] = Date.now();
+                localStorage.setItem('media_workflow_deleted_tasks', JSON.stringify(delMap));
+            } catch(e) { console.error('[v31] 记录删除任务失败', e); }
             renderTasks();
             renderCalendar();
             // ✅ 立即推送到云端，防止刷新后任务又出现
