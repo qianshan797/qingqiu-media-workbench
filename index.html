@@ -5386,7 +5386,7 @@
             color: rgba(235, 235, 245, 0.6);
         }
 
-        /* ===== 工作流看板 · 任务徽章暗色 ===== */
+        /* ===== 数据看板 · 任务徽章暗色 ===== */
         body.dark-mode .priority-badge.high {
             background: rgba(255, 69, 58, 0.2);
             color: #FF453A;
@@ -5417,7 +5417,7 @@
             color: #0A84FF;
         }
 
-        /* ===== 工作流看板 · 任务动作按钮暗色 ===== */
+        /* ===== 数据看板 · 任务动作按钮暗色 ===== */
         body.dark-mode .task-actions .action-btn {
             background: #2C2C2E;
             color: rgba(235, 235, 245, 0.85);
@@ -5477,7 +5477,7 @@
             color: #FFFFFF;
         }
 
-        /* ===== 工作流看板 · 添加任务区暗色 ===== */
+        /* ===== 数据看板 · 添加任务区暗色 ===== */
         body.dark-mode .add-task-section {
             border-top-color: rgba(84, 84, 88, 0.5);
         }
@@ -6913,7 +6913,7 @@
                 </button>
                 <button class="nav-item" onclick="switchPage('workflow', this)">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-                    <span>工作流看板</span>
+                    <span>数据看板</span>
                 </button>
                 <button class="nav-item" onclick="switchPage('materials', this)">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
@@ -7062,13 +7062,13 @@
             <div class="page-section" id="page-workflow">
                 <div class="page-header">
                     <div>
-                        <h1>工作流看板</h1>
+                        <h1>数据看板</h1>
                         <div class="subtitle">按内容生产流程阶段可视化追踪（建设中）</div>
                     </div>
                 </div>
                 <div class="page-content-card" style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height: 320px; text-align:center; color:#8E8E93; gap:12px;">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:56px;height:56px;opacity:0.5;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-                    <div style="font-size:15px; font-weight:600; color:#64748b;">工作流看板 · 内容建设中</div>
+                    <div style="font-size:15px; font-weight:600; color:#64748b;">数据看板 · 内容建设中</div>
                     <div style="font-size:13px; max-width:420px;">该页面将按内容生产工作流阶段（选题 → 创作 → 审核 → 发布 → 复盘）可视化展示任务流转，敬请期待。</div>
                 </div>
             </div>
@@ -11197,7 +11197,7 @@ CREATE POLICY "allow_all" ON workbench_sync
             const titleMap = {
                 'account': '账号管理',
                 'kanban': '工作任务',
-                'workflow': '工作流看板',
+                'workflow': '数据看板',
                 'materials': '素材筛选池',
                 'calendar': '工作日历',
                 'news': '每日快讯'
