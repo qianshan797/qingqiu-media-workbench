@@ -4218,6 +4218,9 @@
             font-weight: 700;
             color: #1C1C1E;
             letter-spacing: -0.02em;
+            min-width: 0;
+            flex: 1 1 auto;
+            text-align: center;
         }
 
         .calendar-nav-btn {
@@ -4262,7 +4265,7 @@
 
         .calendar-weekdays {
             display: grid;
-            grid-template-columns: repeat(7, 1fr);
+            grid-template-columns: repeat(7, minmax(0, 1fr));
             gap: 8px;
             margin-bottom: 12px;
         }
@@ -4469,6 +4472,8 @@
             height: fit-content;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
             border: 1px solid rgba(0, 0, 0, 0.04);
+            min-width: 0;
+            width: 100%;
         }
 
         .calendar-detail-header h3 {
@@ -4731,6 +4736,29 @@
             margin-bottom: 12px;
             padding-bottom: 8px;
             border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        @media (max-width: 600px) {
+            /* 工作日历标题行换行：标题占满第一行，导航按钮第二行 */
+            .calendar-header {
+                flex-wrap: wrap;
+                row-gap: 8px;
+                column-gap: 6px;
+            }
+            .calendar-title {
+                flex: 1 1 100%;
+                order: 1;
+                text-align: center;
+                font-size: 16px;
+            }
+            .calendar-nav-btn:first-of-type { order: 2; }
+            .calendar-nav-btn:last-of-type { order: 3; }
+            .calendar-today-btn {
+                order: 4;
+                margin-left: auto;
+                padding: 6px 12px;
+                font-size: 12px;
+            }
         }
 
         @media (max-width: 768px) {
@@ -5038,6 +5066,111 @@
 
             .calendar-add-task select {
                 font-size: 13px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            /* 极窄屏：工作日历进一步压缩，避免 7 列挤不下而溢出 */
+            .page-content-card {
+                padding: 10px;
+                border-radius: 12px;
+            }
+
+            .calendar-header {
+                margin-bottom: 6px;
+                padding-bottom: 6px;
+                row-gap: 6px;
+            }
+
+            .calendar-title {
+                font-size: 14px;
+            }
+
+            .calendar-nav-btn {
+                width: 28px;
+                height: 28px;
+            }
+
+            .calendar-nav-btn svg {
+                width: 12px;
+                height: 12px;
+            }
+
+            .calendar-today-btn {
+                padding: 4px 9px;
+                font-size: 11px;
+                border-radius: 7px;
+            }
+
+            .calendar-weekdays {
+                gap: 2px;
+                margin-bottom: 3px;
+            }
+
+            .calendar-weekday {
+                font-size: 9px;
+                padding: 2px 0;
+            }
+
+            .calendar-grid {
+                gap: 2px;
+            }
+
+            .calendar-day {
+                border-radius: 6px;
+                border-width: 1.5px;
+                min-width: 0;
+                overflow: hidden;
+            }
+
+            .day-number {
+                font-size: 11px;
+            }
+
+            /* 极窄屏隐藏日格里的徽章，避免 7 列挤不下导致溢出 */
+            .day-badges {
+                display: none;
+            }
+
+            .calendar-detail {
+                padding: 10px;
+                border-radius: 12px;
+            }
+
+            .calendar-detail-header h3 {
+                font-size: 13px;
+                margin-bottom: 6px;
+            }
+
+            /* 添加任务表单极窄屏竖排 */
+            .calendar-add-task {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 8px;
+                gap: 6px;
+            }
+
+            .calendar-add-task input[type="text"],
+            .calendar-add-task select,
+            .calendar-add-task button {
+                width: 100%;
+                min-width: 0;
+            }
+
+            /* 任务项允许换行，避免长内容溢出 */
+            .calendar-task-item {
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+
+            .calendar-task-actions {
+                flex-wrap: wrap;
+                padding: 0 10px 10px 24px;
+                gap: 4px;
+            }
+
+            .calendar-task-actions .action-btn {
+                flex: 1 1 auto;
             }
         }
 
