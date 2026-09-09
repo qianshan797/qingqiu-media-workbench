@@ -156,6 +156,9 @@
                 localStorage.setItem(vk,'22');
             }
         }catch(e){}
+        // v29: 立即将 schema 升级到 29，确保 curV 在后续 guard 判定前已是 29
+        // 这样下面的 if(curV < 29) 条件才会正确跳过账号校正块
+        try { localStorage.setItem(vk, '29'); curV = 29; } catch(e) {}
         // v29+: 早期注入的账号过滤(fix_* ID 重写/删除非种子账号) 已由 preloadData v29 合并逻辑接管
         // 仅在 schema < 29 时运行，避免反复覆盖用户自定义账号
         if(curV < 29) {
