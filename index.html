@@ -549,11 +549,8 @@
               addedAcc++;
             }
           });
-          // DEBUG: write marker to see if v29 merge branch actually ran
-          try { localStorage.setItem('__DEBUG_V29_ACCOUNTS_RAN__', '1'); localStorage.setItem('__DEBUG_V29_ACCOUNTS_COUNT__', String(localAccs.length)); localStorage.setItem('__DEBUG_V29_ADDED__', String(addedAcc)); } catch(e) {}
           if (localAccs.length === 0 || addedAcc > 0) {
             localStorage.setItem(key, JSON.stringify(localAccs));
-            try { localStorage.setItem('__DEBUG_V29_WROTE__', '1'); } catch(e) {}
           }
           console.log('[v29预加载] 账号合并: 补充', addedAcc, '条种子账号(共', localAccs.length, '条，保留用户数据)');
         } catch(e) { console.error('[v29预加载] 账号合并失败', e); }
@@ -589,16 +586,7 @@
     // v26 修复：暴露 preloadData 到全局作用域，供 syncDailyNews 等后续代码使用
     window.preloadData = preloadData;
     window.MATS = MATS;
-  }
-        // DEBUG: final check right after preloadData for loop
-        (function(){
-          try {
-            var finalAccs = JSON.parse(localStorage.getItem('media_workflow_accounts') || '[]');
-            localStorage.setItem('__DEBUG_PRELOAD_END_COUNT__', String(finalAccs.length));
-            localStorage.setItem('__DEBUG_PRELOAD_END_IDS__', finalAccs.map(function(a){ return a.id; }).join(','));
-          } catch(e) {}
-        })();
- catch (e) { console.error("[v22预加载] 失败", e); }
+  } catch (e) { console.error("[v22预加载] 失败", e); }
 })();
 </script>
     <!-- iOS PWA 图标配置 -->
