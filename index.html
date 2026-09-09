@@ -156,6 +156,9 @@
                 localStorage.setItem(vk,'22');
             }
         }catch(e){}
+        // v29+: 早期注入的账号过滤(fix_* ID 重写/删除非种子账号) 已由 preloadData v29 合并逻辑接管
+        // 仅在 schema < 29 时运行，避免反复覆盖用户自定义账号
+        if(curV < 29) {
         try{
             var ak='media_workflow_accounts';
             var adk='media_workflow_account_data';
@@ -261,6 +264,7 @@
             // v24 修复：不再自动删除任何任务，完全保留用户数据
             console.log('[早期注入] v24保护: 跳过自动生成任务清理,保留所有任务');
         }catch(e){console.error('[早期注入] 账号校正失败',e);}
+        } // end of if(curV < 29) — v29+ 跳过早期注入账号校正
         try{
             var k='media_workflow_materials';
             var raw=localStorage.getItem(k);
