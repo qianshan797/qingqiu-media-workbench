@@ -207,6 +207,22 @@
                 accts=dedupedAccts;acctChanged=true;
             }
 
+            // v31 修复：主动清理本地 localStorage 中已被用户删除的种子账号组合
+            var DELETED_SEEDS_KEY='media_workflow_deleted_seeds';
+            var deletedSeeds={};
+            try{var dsRaw=localStorage.getItem(DELETED_SEEDS_KEY);if(dsRaw)deletedSeeds=JSON.parse(dsRaw);}catch(e){deletedSeeds={};}
+            if (Object.keys(deletedSeeds).length > 0) {
+                var beforeClean = accts.length;
+                accts = accts.filter(function(a) {
+                    var k = (a.name||'') + '|' + (a.platform||'');
+                    return !deletedSeeds[k]; // 删除已记录的组合
+                });
+                if (accts.length !== beforeClean) {
+                    acctChanged = true;
+                    console.log('[早期注入] v31清理: 删除', beforeClean - accts.length, '个已删种子账号组合');
+                }
+            }
+
             // 2) 同步删除被过滤账号关联的数据（v24：不再级联删除任务）
             var keepIds={};
             accts.forEach(function(a){keepIds[a.id]=1;});
@@ -219,10 +235,6 @@
             console.log('[早期注入] v24保护: 保留所有任务,不随账号过滤删除');
 
             // 3) 补齐种子账号 + 强制对齐粉丝数（按种子覆盖）
-            // v30 修复：读取用户主动删除的种子账号组合，补齐时跳过，避免删除后刷新又出现
-            var DELETED_SEEDS_KEY='media_workflow_deleted_seeds';
-            var deletedSeeds={};
-            try{var dsRaw=localStorage.getItem(DELETED_SEEDS_KEY);if(dsRaw)deletedSeeds=JSON.parse(dsRaw);}catch(e){deletedSeeds={};}
             SEED_ACCOUNTS.forEach(function(seed){
                 if(deletedSeeds[seed.name+'|'+seed.platform])return; // 跳过用户已删除的组合
                 var acct=accts.find(function(a){return a.name===seed.name&&a.platform===seed.platform;});
