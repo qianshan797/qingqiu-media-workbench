@@ -171,7 +171,6 @@
                 {name:'YiwuTrade',platform:'抖音',followers:2898},
                 {name:'义采宝',platform:'视频号',followers:3520},
                 {name:'YiwuTrade',platform:'视频号',followers:4872},
-                {name:'义采宝',platform:'小红书',followers:5200},
                 {name:'YiwuTrade',platform:'小红书',followers:3100},
                 {name:'义采宝',platform:'公众号',followers:1800}
             ];
@@ -9215,7 +9214,6 @@ CREATE POLICY "allow_all" ON workbench_sync
                             { name: 'YiwuTrade', platform: '抖音', followers: 2898 },
                             { name: '义采宝', platform: '视频号', followers: 3520 },
                             { name: 'YiwuTrade', platform: '视频号', followers: 4872 },
-                            { name: '义采宝', platform: '小红书', followers: 5200 },
                             { name: 'YiwuTrade', platform: '小红书', followers: 3100 },
                             { name: '义采宝', platform: '公众号', followers: 1800 }
                         ];
@@ -9301,7 +9299,6 @@ CREATE POLICY "allow_all" ON workbench_sync
                             { name: 'YiwuTrade', platform: '抖音', followers: 2898 },
                             { name: '义采宝', platform: '视频号', followers: 3520 },
                             { name: 'YiwuTrade', platform: '视频号', followers: 4872 },
-                            { name: '义采宝', platform: '小红书', followers: 5200 },
                             { name: 'YiwuTrade', platform: '小红书', followers: 3100 },
                             { name: '义采宝', platform: '公众号', followers: 1800 }
                         ];
@@ -9353,7 +9350,6 @@ CREATE POLICY "allow_all" ON workbench_sync
                             { name: 'YiwuTrade', platform: '抖音', followers: 2898 },
                             { name: '义采宝', platform: '视频号', followers: 3520 },
                             { name: 'YiwuTrade', platform: '视频号', followers: 4872 },
-                            { name: '义采宝', platform: '小红书', followers: 5200 },
                             { name: 'YiwuTrade', platform: '小红书', followers: 3100 },
                             { name: '义采宝', platform: '公众号', followers: 1800 }
                         ];
@@ -9364,10 +9360,15 @@ CREATE POLICY "allow_all" ON workbench_sync
                         let accts15 = getStoredData(STORAGE_KEY_ACCOUNTS, []);
                         let data15 = getStoredData(STORAGE_KEY_ACCOUNT_DATA, {});
                         let tasks15 = getStoredData(STORAGE_KEY_TASKS, []);
-                        // 删除：不在白名单平台 OR (name,platform)组合不属于种子
+                        // v31 修复：读取已删除记录，跳过已删账号
+                        var delSeeds15 = {};
+                        try { var dsRaw15 = localStorage.getItem('media_workflow_deleted_seeds'); if (dsRaw15) delSeeds15 = JSON.parse(dsRaw15); } catch(e) { delSeeds15 = {}; }
+                        // v31 修复：只删除错误平台的账号，保留用户手动添加的非种子账号
                         accts15 = accts15.filter(a => {
                             if (!ALLOWED[a.platform]) return false;
-                            return !!validKey[a.name + '|' + a.platform];
+                            // v31 修复：跳过用户已删除的种子账号组合
+                            if (delSeeds15[a.name + '|' + a.platform]) return false;
+                            return true; // 保留所有合法平台的账号，包括用户手动添加的
                         });
                         // 强制对齐粉丝数/头像/分类
                         accts15.forEach(a => {
@@ -9380,6 +9381,8 @@ CREATE POLICY "allow_all" ON workbench_sync
                         // 补齐缺失种子账号
                         const ts15 = __localDateStr();
                         SEED_V15.forEach(seed => {
+                            // v31 修复：跳过用户已删除的种子账号组合
+                            if (delSeeds15[seed.name + '|' + seed.platform]) return;
                             const exist = accts15.find(a => a.name === seed.name && a.platform === seed.platform);
                             if (!exist) {
                                 accts15.push({
