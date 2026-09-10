@@ -187,15 +187,26 @@
                 console.log('[早期注入] 删除错误平台账号',accts.length-filteredAccts.length,'个');
                 accts=filteredAccts;acctChanged=true;
             }
-            // 删除 YiwuTrade+公众号 这种不属于种子集合的组合（若存在）
-            var validKey={};
-            SEED_ACCOUNTS.forEach(function(s){validKey[s.name+'|'+s.platform]=1;});
-            var extraRemoved=0;
-            accts=accts.filter(function(a){
-                if(validKey[a.name+'|'+a.platform])return true;
-                extraRemoved++;return false;
+            // v31 修复：去掉"删除非种子账号组合"逻辑，保留用户手动添加的账号
+            // 之前会删除不在种子集合里的账号，导致用户添加的账号被误删
+            // v31 修复：基于 id 去重，防止同一账号被重复注入
+            var seenIds={};
+            var dedupedAccts=[];
+            var dedupedByName={};
+            accts.forEach(function(a){
+                if(!a||!a.id)return;
+                var idKey=String(a.id);
+                var nameKey=(a.name||'')+'|'+(a.platform||'');
+                if(seenIds[idKey])return; // 同 ID 跳过
+                if(dedupedByName[nameKey])return; // 同 name|platform 跳过（保留第一个）
+                seenIds[idKey]=1;
+                dedupedByName[nameKey]=1;
+                dedupedAccts.push(a);
             });
-            if(extraRemoved>0){acctChanged=true;console.log('[早期注入] 删除非种子账号组合',extraRemoved,'个');}
+            if(dedupedAccts.length!==accts.length){
+                console.log('[早期注入] v31去重: 删除重复账号',accts.length-dedupedAccts.length,'个');
+                accts=dedupedAccts;acctChanged=true;
+            }
 
             // 2) 同步删除被过滤账号关联的数据（v24：不再级联删除任务）
             var keepIds={};
@@ -525,13 +536,31 @@
           }
         } catch(e) { console.error('[v27预加载] 新闻替换失败', e); }
       } else if (key === 'media_workflow_accounts') {
-        // v30 修复：账号按 name|platform 智能合并，绝不覆盖现有账号的 followers/avatar/category 等用户修改值
+        // v31 修复：账号按 name|platform 智能合并 + 去重，绝不覆盖现有账号的 followers/avatar/category 等用户修改值
         // 无论 force=true/false 都不能整包覆盖，避免用户修改的粉丝数被种子值回退
         try {
           var localAcctRaw = localStorage.getItem(key);
           var localAccts2 = [];
           if (localAcctRaw) { try { localAccts2 = JSON.parse(localAcctRaw); } catch(e) { localAccts2 = []; } }
           if (!Array.isArray(localAccts2)) localAccts2 = [];
+          // v31 修复：先对本地账号去重（按 id 和 name|platform 双重去重）
+          var localSeenIds2 = {};
+          var localSeenKeys2 = {};
+          var deduped2 = [];
+          localAccts2.forEach(function(a) {
+            if (!a || !a.id) return;
+            var idK = String(a.id);
+            var nameK = (a.name||'')+'|'+(a.platform||'');
+            if (localSeenIds2[idK]) return;
+            if (localSeenKeys2[nameK]) return;
+            localSeenIds2[idK] = 1;
+            localSeenKeys2[nameK] = 1;
+            deduped2.push(a);
+          });
+          if (deduped2.length !== localAccts2.length) {
+            console.log('[v31预加载] 本地账号去重: 删除', localAccts2.length - deduped2.length, '个重复账号');
+          }
+          localAccts2 = deduped2;
           var preloadAccts = (typeof preloadData[key] === 'string') ? JSON.parse(preloadData[key]) : preloadData[key];
           if (!Array.isArray(preloadAccts)) preloadAccts = [];
           // 构建本地 name|platform 索引
@@ -556,11 +585,11 @@
             }
             // 本地已有：绝不覆盖（包括 followers / avatar / category / bio / url 等用户修改值）
           });
-          if (addedAccts2 > 0 || skippedDeleted2 > 0 || !localAcctRaw) {
+          if (addedAccts2 > 0 || skippedDeleted2 > 0 || !localAcctRaw || deduped2.length !== (localAcctRaw ? JSON.parse(localAcctRaw).length : 0)) {
             localStorage.setItem(key, JSON.stringify(localAccts2));
-            console.log('[v30预加载] 账号合并: 补充', addedAccts2, '个缺失种子账号, 跳过', skippedDeleted2, '个已删账号(共', localAccts2.length, '个，用户粉丝数/头像完全保留)');
+            console.log('[v31预加载] 账号合并: 补充', addedAccts2, '个缺失种子账号, 跳过', skippedDeleted2, '个已删账号(共', localAccts2.length, '个，用户粉丝数/头像完全保留)');
           } else {
-            console.log('[v30预加载] 账号合并: 种子账号齐全(共', localAccts2.length, '个，用户粉丝数/头像完全保留)');
+            console.log('[v31预加载] 账号合并: 种子账号齐全(共', localAccts2.length, '个，用户粉丝数/头像完全保留)');
           }
         } catch(e) { console.error('[v30预加载] 账号合并失败', e); }
       } else if (key === 'media_workflow_account_data') {
