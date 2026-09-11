@@ -10288,19 +10288,41 @@ CREATE POLICY "allow_all" ON workbench_sync
             const today = getTodayDate();
             if (showMsg !== false) showToast('正在加载本地每日新闻简报…');
 
+            // v30 新增：优先从 GitHub Pages 远程 news-data.json 加载今日快讯
+            let remoteNews = [];
+            try {
+                const remoteUrl = `https://qianshan797.github.io/qingqiu-media-workbench/news-data.json?t=${Date.now()}`;
+                const resp = await fetch(remoteUrl, { method: 'GET', mode: 'cors' });
+                if (resp.ok) {
+                    const data = await resp.json();
+                    if (Array.isArray(data) && data.length > 0) {
+                        remoteNews = data;
+                        console.log('[每日快讯] 从远程 news-data.json 加载', remoteNews.length, '条');
+                    }
+                } else {
+                    console.warn('[每日快讯] 远程 news-data.json 返回 HTTP', resp.status);
+                }
+            } catch (e) {
+                console.warn('[每日快讯] 远程 news-data.json 加载失败:', e);
+            }
+
             // 从 preloadData 获取 TraeWork 注入的真实新闻（优先 window 全局变量）
             let preloadNews = [];
-            try {
-              const src = (typeof window !== 'undefined' && window.preloadData)
-                ? window.preloadData
-                : (typeof preloadData !== 'undefined' ? preloadData : null);
-              if (src && src.media_workflow_news) {
-                preloadNews = (typeof src.media_workflow_news === 'string')
-                  ? JSON.parse(src.media_workflow_news)
-                  : src.media_workflow_news;
-              }
-            } catch(e) {
-              console.warn('[每日快讯] 从 preloadData 读取失败:', e);
+            if (remoteNews.length > 0) {
+                preloadNews = remoteNews;
+            } else {
+                try {
+                  const src = (typeof window !== 'undefined' && window.preloadData)
+                    ? window.preloadData
+                    : (typeof preloadData !== 'undefined' ? preloadData : null);
+                  if (src && src.media_workflow_news) {
+                    preloadNews = (typeof src.media_workflow_news === 'string')
+                      ? JSON.parse(src.media_workflow_news)
+                      : src.media_workflow_news;
+                  }
+                } catch(e) {
+                  console.warn('[每日快讯] 从 preloadData 读取失败:', e);
+                }
             }
 
             if (preloadNews.length === 0) {
