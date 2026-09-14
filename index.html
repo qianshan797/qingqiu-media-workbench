@@ -207,38 +207,24 @@
                 accts=dedupedAccts;acctChanged=true;
             }
 
-            // v31 修复：主动清理本地 localStorage 中已被用户删除的种子账号组合
-            // 注意：只清理种子账号，绝不删除用户手动添加的账号
+            // v31 回退：移除主动清理 deleted_seeds 逻辑，避免误删用户账号
+            // deleted_seeds 只在补齐种子账号时检查，绝不主动删除本地已有账号
             var DELETED_SEEDS_KEY='media_workflow_deleted_seeds';
             var deletedSeeds={};
             try{var dsRaw=localStorage.getItem(DELETED_SEEDS_KEY);if(dsRaw)deletedSeeds=JSON.parse(dsRaw);}catch(e){deletedSeeds={};}
-            // 构建种子账号组合集合，只清理种子账号
-            var seedKeysMap = {};
-            SEED_ACCOUNTS.forEach(function(s) { seedKeysMap[s.name + '|' + s.platform] = true; });
-            // v31 修复：清理 deleted_seeds 中非种子账号的错误记录，避免误删用户手动添加的账号
-            var delSeedsChanged = false;
+            // v31 修复：清理 deleted_seeds 中非种子账号的错误记录，避免补齐种子时误判
+            var seedKeysMap31 = {};
+            SEED_ACCOUNTS.forEach(function(s) { seedKeysMap31[s.name + '|' + s.platform] = true; });
+            var delSeedsChanged31 = false;
             Object.keys(deletedSeeds).forEach(function(k) {
-                if (!seedKeysMap[k]) {
+                if (!seedKeysMap31[k]) {
                     delete deletedSeeds[k];
-                    delSeedsChanged = true;
+                    delSeedsChanged31 = true;
                 }
             });
-            if (delSeedsChanged) {
+            if (delSeedsChanged31) {
                 localStorage.setItem(DELETED_SEEDS_KEY, JSON.stringify(deletedSeeds));
                 console.log('[早期注入] v31清理: 清理了非种子账号的错误删除记录');
-            }
-            if (Object.keys(deletedSeeds).length > 0) {
-                var beforeClean = accts.length;
-                accts = accts.filter(function(a) {
-                    var k = (a.name||'') + '|' + (a.platform||'');
-                    // 只删除：既是种子账号 又 被用户记录删除的组合
-                    if (seedKeysMap[k] && deletedSeeds[k]) return false;
-                    return true; // 用户手动添加的账号一律保留
-                });
-                if (accts.length !== beforeClean) {
-                    acctChanged = true;
-                    console.log('[早期注入] v31清理: 删除', beforeClean - accts.length, '个已删种子账号组合(用户手动添加的账号不受影响)');
-                }
             }
 
             // 2) 同步删除被过滤账号关联的数据（v24：不再级联删除任务）
