@@ -7764,9 +7764,14 @@ CREATE POLICY "allow_all" ON workbench_sync
                         <span>自动同步（数据变更后自动上传）</span>
                     </label>
                 </div>
+                <div class="sync-info-box" style="background: #FFF4E5; border-color: #FFB443;">
+                    <div class="sync-info-title" style="color: #B85C00;">紧急恢复</div>
+                    <div class="sync-info-step" style="color: #6B4A00;">如果云端拉取后账号/数据消失，点击下方按钮可强制重新注入种子账号及历史数据，并立刻覆盖云端。</div>
+                </div>
             </div>
             <div class="modal-actions">
                 <button class="modal-btn cancel" onclick="closeSyncConfigModal()">关闭</button>
+                <button class="modal-btn" onclick="emergencyRestoreAccounts()" style="background: #FFEBEE; color: #C62828;">紧急恢复</button>
                 <button class="modal-btn" onclick="testSyncConnection()" style="background: #F2F2F7; color: #1C1C1E;">测试连接</button>
                 <button class="modal-btn confirm" onclick="saveSyncConfig()">保存并连接</button>
             </div>
@@ -8628,6 +8633,122 @@ CREATE POLICY "allow_all" ON workbench_sync
             // 再推送本地最新
             if (pulled !== false) {
                 await pushToCloud();
+            }
+        }
+
+        // 紧急恢复：强制重新注入种子账号+30天历史数据，并立刻覆盖云端
+        async function emergencyRestoreAccounts() {
+            if (!confirm('确认紧急恢复？\n\n将强制重新注入 6 个种子账号及 30 天历史粉丝数据，并立刻上传覆盖云端。\n（手动添加的账号和粉丝修改若不在种子列表中，将无法恢复）')) return;
+            showSyncToast('正在紧急恢复...', 'loading');
+            try {
+                const SEED = [
+                    {name:'义采宝',platform:'抖音',followers:31000},
+                    {name:'YiwuTrade',platform:'抖音',followers:2898},
+                    {name:'义采宝',platform:'视频号',followers:3520},
+                    {name:'YiwuTrade',platform:'视频号',followers:4872},
+                    {name:'YiwuTrade',platform:'小红书',followers:3100},
+                    {name:'义采宝',platform:'公众号',followers:1800}
+                ];
+                const platAvatar = {'抖音':'🎵','视频号':'🎬','小红书':'📕','公众号':'📰','微博':'📣','TikTok':'🎵'};
+                const platAbbr = {'抖音':'dy','视频号':'sph','小红书':'xhs','公众号':'gzh','微博':'wb','TikTok':'tt'};
+                const todayStr = getTodayDate();
+
+                // 读取现有数据作为基础，避免覆盖用户手动添加的账号
+                const existingRaw = localStorage.getItem(STORAGE_KEY_ACCOUNTS);
+                let existing = [];
+                try { existing = existingRaw ? JSON.parse(existingRaw) : []; } catch (e) { existing = []; }
+                if (!Array.isArray(existing)) existing = [];
+
+                const existingMap = {};
+                existing.forEach(a => { if (a && a.name && a.platform) existingMap[a.name + '|' + a.platform] = a; });
+
+                // 读取本地删除记录，跳过用户主动删除的种子
+                const delRaw = localStorage.getItem('media_workflow_deleted_seeds');
+                let deletedSeeds = {};
+                try { deletedSeeds = delRaw ? JSON.parse(delRaw) : {}; } catch (e) { deletedSeeds = {}; }
+
+                const accountsDataRaw = localStorage.getItem(STORAGE_KEY_ACCOUNT_DATA);
+                let acctData = {};
+                try { acctData = accountsDataRaw ? JSON.parse(accountsDataRaw) : {}; } catch (e) { acctData = {}; }
+
+                let injected = 0;
+                SEED.forEach(seed => {
+                    const key = seed.name + '|' + seed.platform;
+                    // 紧急恢复：无视 deleted_seeds，强制恢复种子账号
+                    let acct = existingMap[key];
+                    if (!acct) {
+                        const ab = platAbbr[seed.platform] || seed.platform;
+                        const uid = 'emrg_' + ab + '_' + seed.name + '_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+                        acct = {
+                            id: uid,
+                            name: seed.name,
+                            platform: seed.platform,
+                            followers: seed.followers,
+                            category: '外贸跨境',
+                            bio: seed.platform === '公众号' ? '专注外贸跨境市场动态与义乌供应链一手资讯' : '义乌小商品' + seed.platform + '官方账号，外贸选品与B端商家咨询',
+                            avatar: platAvatar[seed.platform] || '📱',
+                            createdAt: todayStr
+                        };
+                        existing.push(acct);
+                        existingMap[key] = acct;
+                        injected++;
+                    } else {
+                        if (acct.followers === undefined || acct.followers === null || isNaN(acct.followers)) acct.followers = seed.followers;
+                        if (!acct.avatar || acct.avatar === '👤') acct.avatar = platAvatar[seed.platform] || '📱';
+                        if (!acct.category) acct.category = '外贸跨境';
+                    }
+                    // 补齐30天历史数据
+                    const hasData = !!acctData[acct.id] && (
+                        (Array.isArray(acctData[acct.id].daily) && acctData[acct.id].daily.length > 0)
+                    );
+                    if (!hasData) {
+                        const daily = [];
+                        for (let i = 29; i >= 0; i--) {
+                            const d = new Date(); d.setDate(d.getDate() - i);
+                            const ds = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+                            const baseF = seed.followers;
+                            const drift = Math.round((Math.random() * 60 - 30) * (30 - i) / 30);
+                            const views = Math.round(baseF * (0.08 + Math.random() * 0.2));
+                            const likes = Math.round(views * (0.03 + Math.random() * 0.05));
+                            const comments = Math.round(likes * (0.05 + Math.random() * 0.1));
+                            const shares = Math.round(likes * (0.02 + Math.random() * 0.05));
+                            daily.push({date: ds, followers: baseF + drift, views, likes, comments, shares});
+                        }
+                        acctData[acct.id] = {
+                            daily,
+                            lastUpdated: todayStr,
+                            totalViews: daily.reduce((s, x) => s + x.views, 0),
+                            totalLikes: daily.reduce((s, x) => s + x.likes, 0),
+                            totalComments: daily.reduce((s, x) => s + x.comments, 0),
+                            totalShares: daily.reduce((s, x) => s + x.shares, 0)
+                        };
+                    }
+                });
+
+                localStorage.setItem(STORAGE_KEY_ACCOUNTS, JSON.stringify(existing));
+                localStorage.setItem(STORAGE_KEY_ACCOUNT_DATA, JSON.stringify(acctData));
+                console.log('[emergencyRestore] 注入种子账号', injected, '个，账号总数', existing.length);
+
+                // 强制上传覆盖云端（不先拉取，避免云端空数据再次清空本地）
+                if (syncEnabled && supabaseClient) {
+                    showSyncToast('正在覆盖云端数据...', 'loading');
+                    const pushed = await pushToCloud();
+                    if (pushed) {
+                        showSyncToast('紧急恢复完成：本地与云端已注入 ' + existing.length + ' 个账号', 'success');
+                    } else {
+                        showSyncToast('本地已恢复，但云端上传失败，请稍后重试云同步', 'error');
+                    }
+                } else {
+                    showSyncToast('本地紧急恢复完成：共 ' + existing.length + ' 个账号（未连接云同步，未上传）', 'success');
+                }
+                // 刷新页面数据
+                if (typeof refreshPageData === 'function') {
+                    try { refreshPageData(); } catch (e) { console.warn('[emergencyRestore] refreshPageData 失败', e); }
+                }
+                closeSyncConfigModal();
+            } catch (e) {
+                console.error('[emergencyRestore] 失败:', e);
+                showSyncToast('紧急恢复失败: ' + (e.message || '未知错误'), 'error');
             }
         }
 
