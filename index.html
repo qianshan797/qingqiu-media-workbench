@@ -10004,6 +10004,43 @@ CREATE POLICY "allow_all" ON workbench_sync
                         });
                         if (repaired) { localStorage.setItem(key, JSON.stringify(parsed)); }
                     }
+                    // v34 修复：accounts 加载时按 name|platform 小写去重
+                    // 否则 yiwutrade（用户手写）和 YiwuTrade（种子注入）会同时存在，页面显示重复账号
+                    if (key === STORAGE_KEY_ACCOUNTS && Array.isArray(parsed)) {
+                        var seenKeys = {};
+                        var deduped = [];
+                        var removed = 0;
+                        parsed.forEach(function(a) {
+                            if (!a || !a.name || !a.platform) { deduped.push(a); return; }
+                            var k = (a.name + '|' + a.platform).toLowerCase();
+                            if (!seenKeys[k]) {
+                                seenKeys[k] = true;
+                                deduped.push(a);
+                            } else {
+                                removed++;
+                                // 合并 account_data：把被丢弃账号的历史数据转移到保留的账号
+                                try {
+                                    var adRaw = localStorage.getItem(STORAGE_KEY_ACCOUNT_DATA);
+                                    if (adRaw) {
+                                        var ad = JSON.parse(adRaw);
+                                        // 找到保留的账号 id
+                                        var kept = deduped.find(function(x){ return x && x.name && x.platform && (x.name + '|' + x.platform).toLowerCase() === k; });
+                                        if (kept && kept.id && a.id && kept.id !== a.id) {
+                                            if (ad[a.id] && !ad[kept.id]) {
+                                                ad[kept.id] = ad[a.id];
+                                                localStorage.setItem(STORAGE_KEY_ACCOUNT_DATA, JSON.stringify(ad));
+                                            }
+                                        }
+                                    }
+                                } catch(eAd) { console.warn('[getStoredData] account_data 合并失败:', eAd); }
+                            }
+                        });
+                        if (removed > 0) {
+                            console.log('[getStoredData] accounts 去重：移除', removed, '个重复账号（大小写不敏感）');
+                            localStorage.setItem(key, JSON.stringify(deduped));
+                            return deduped;
+                        }
+                    }
                     return parsed;
                 } catch (e) {
                     console.error('解析存储数据失败:', key, e);
