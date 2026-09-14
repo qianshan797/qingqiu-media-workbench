@@ -663,6 +663,8 @@
     if (latestRemote && latestRemote >= latestLocal) {
       localStorage.setItem('media_workflow_news', JSON.stringify(newsArr));
       console.log('[v30自动快讯] 已从 news-data.json 更新新闻，日期:', latestRemote, '共', newsArr.length, '条');
+      // v32 新增：从 news-data.json 更新后也触发云同步推送，保证其他 origin 也能拉到最新快讯
+      try { if (typeof scheduleAutoSync === 'function') scheduleAutoSync(); } catch (e) {}
       if (typeof renderNews === 'function') {
         try { renderNews(); } catch(e) { console.warn('[v30自动快讯] renderNews 失败', e); }
       }
@@ -8020,6 +8022,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                 STORAGE_KEY_PROFILE,
                 STORAGE_KEY_API_CONFIG,
                 STORAGE_KEY_SCHEMA_VERSION,
+                STORAGE_KEY_NEWS, // v32 新增：每日快讯也纳入云同步，避免不同 origin（github.io vs 本地）的新闻数据互相覆盖或缺失
                 'media_workflow_deleted_seeds', // v30 修复：删除记录也同步，避免新设备/刷新后被删账号被云端或种子补回
                 'media_workflow_deleted_tasks' // v31 修复：任务删除记录也同步，避免刷新后被删任务被重新注入
             ];
@@ -8273,6 +8276,69 @@ CREATE POLICY "allow_all" ON workbench_sync
                         return;
                     } catch (eDelT) {
                         console.error('[restoreFromCloudData] deleted_tasks 合并异常:', eDelT);
+                        return;
+                    }
+                }
+                // v32 新增：每日快讯采用并集合并，按 id 去重，本地已读状态优先，避免不同 origin 数据互相覆盖
+                if (k === STORAGE_KEY_NEWS) {
+                    try {
+                        const localNewsRaw = localStorage.getItem(k);
+                        const localNews = localNewsRaw ? JSON.parse(localNewsRaw) : [];
+                        const remoteNews = (typeof val === 'string') ? JSON.parse(val) : (Array.isArray(val) ? val : []);
+                        const safeLocal = Array.isArray(localNews) ? localNews : [];
+                        const safeRemote = Array.isArray(remoteNews) ? remoteNews : [];
+
+                        // 按 id 索引（部分旧数据没有 id，用 date|title 兜底作为 key）
+                        function newsKey(n) {
+                            if (!n) return '';
+                            if (n.id) return 'id:' + String(n.id);
+                            return 'dt:' + String(n.date || '') + '|' + String(n.title || '');
+                        }
+                        const mergedMap = new Map();
+                        // 先放云端（基础）
+                        safeRemote.forEach(n => {
+                            if (!n) return;
+                            mergedMap.set(newsKey(n), { ...n });
+                        });
+                        // 再用本地覆盖，但保留 read/addedToPool 状态（OR 合并）
+                        safeLocal.forEach(n => {
+                            if (!n) return;
+                            const key = newsKey(n);
+                            const exist = mergedMap.get(key);
+                            if (exist) {
+                                // 本地字段优先（除已读状态用 OR 合并）
+                                const merged = { ...exist, ...n };
+                                merged.read = (exist.read === true) || (n.read === true);
+                                merged.addedToPool = (exist.addedToPool === true) || (n.addedToPool === true);
+                                mergedMap.set(key, merged);
+                            } else {
+                                mergedMap.set(key, { ...n });
+                            }
+                        });
+
+                        // 清理 7 天前的过期历史新闻（与 preloadData 合并逻辑保持一致）
+                        const nowMs = Date.now();
+                        const EXPIRE_MS = 7 * 24 * 3600 * 1000;
+                        const cleaned = [];
+                        let expired = 0;
+                        mergedMap.forEach(n => {
+                            if (!n) return;
+                            // 按 date 字段判断
+                            if (n.date) {
+                                const newsMs = new Date(n.date + 'T23:59:59').getTime();
+                                const dayDiff = (nowMs - newsMs) / (24 * 3600 * 1000);
+                                if (dayDiff > 7) { expired++; return; }
+                            } else if (n.createdAt) {
+                                if ((nowMs - Number(n.createdAt)) > EXPIRE_MS) { expired++; return; }
+                            }
+                            cleaned.push(n);
+                        });
+
+                        localStorage.setItem(k, JSON.stringify(cleaned));
+                        console.log('[restoreFromCloudData] news 并集合并：本地', safeLocal.length, '条 + 云端', safeRemote.length, '条 = 合并后', cleaned.length, '条（清理过期', expired, '条）');
+                        return;
+                    } catch (eNews) {
+                        console.error('[restoreFromCloudData] news 合并异常:', eNews);
                         return;
                     }
                 }
@@ -8601,6 +8667,12 @@ CREATE POLICY "allow_all" ON workbench_sync
             renderTasks();
             renderMaterials();
             renderAccounts();
+            // v32 新增：同步后重新加载 news 并渲染，确保云端合并的快讯立即显示
+            try {
+                news = getStoredData(STORAGE_KEY_NEWS, []);
+                if (typeof renderNews === 'function') renderNews();
+                if (typeof updateNewsBadge === 'function') updateNewsBadge();
+            } catch (e) { console.warn('[refreshPageData] news 刷新失败:', e); }
             updateDashboardStats();
             updateTagFilterSelect();
             updateKanbanBadge();
