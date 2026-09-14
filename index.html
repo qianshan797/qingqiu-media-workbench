@@ -8189,15 +8189,28 @@ CREATE POLICY "allow_all" ON workbench_sync
                         const merged = [];
                         const processedKeys = new Set();
                         var skippedByDelete = 0;
+                        // v34 修复：本地同 key 多个账号（大小写重复）时，followers 最大的优先（保留用户最新修改）
+                        var localBestFollowers = {};
+                        safeLocal.forEach(localAcct => {
+                            if (!localAcct || !localAcct.name || !localAcct.platform) return;
+                            var k = (localAcct.name + '|' + localAcct.platform).toLowerCase();
+                            var f = Number(localAcct.followers) || 0;
+                            if (!localBestFollowers[k] || f > localBestFollowers[k]) {
+                                localBestFollowers[k] = f;
+                            }
+                        });
                         safeLocal.forEach(localAcct => {
                             if (!localAcct || !localAcct.name || !localAcct.platform) { if (localAcct) merged.push({ ...localAcct }); return; }
                             const key = (localAcct.name + '|' + localAcct.platform).toLowerCase();
                             // 跳过已被删除的组合（保险：本地不应有，但万一存在也剔除）
                             if (isDeleted(localAcct.name, localAcct.platform)) { skippedByDelete++; return; }
+                            // v34 修复：本地同 key 重复账号，只保留 followers 最大的那个
+                            if (processedKeys.has(key)) { skippedByDelete++; return; }
                             const remoteAcct = remoteByKey[key];
                             if (remoteAcct) {
                                 const mergedAcct = { ...remoteAcct, ...localAcct };
-                                mergedAcct.followers = localAcct.followers; // 本地 followers 优先
+                                // v34 修复：本地同 key 多个账号时，用最大的 followers（用户最新修改）
+                                mergedAcct.followers = localBestFollowers[key] || localAcct.followers;
                                 // v30 修复：avatar 图片优先同步，避免本地默认 emoji 覆盖云端用户上传的图片
                                 const localIsImg = localAcct.avatar && localAcct.avatar.startsWith('data:image/');
                                 const remoteIsImg = remoteAcct.avatar && remoteAcct.avatar.startsWith('data:image/');
