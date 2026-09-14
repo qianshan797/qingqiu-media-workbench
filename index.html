@@ -208,18 +208,36 @@
             }
 
             // v31 修复：主动清理本地 localStorage 中已被用户删除的种子账号组合
+            // 注意：只清理种子账号，绝不删除用户手动添加的账号
             var DELETED_SEEDS_KEY='media_workflow_deleted_seeds';
             var deletedSeeds={};
             try{var dsRaw=localStorage.getItem(DELETED_SEEDS_KEY);if(dsRaw)deletedSeeds=JSON.parse(dsRaw);}catch(e){deletedSeeds={};}
+            // 构建种子账号组合集合，只清理种子账号
+            var seedKeysMap = {};
+            SEED_ACCOUNTS.forEach(function(s) { seedKeysMap[s.name + '|' + s.platform] = true; });
+            // v31 修复：清理 deleted_seeds 中非种子账号的错误记录，避免误删用户手动添加的账号
+            var delSeedsChanged = false;
+            Object.keys(deletedSeeds).forEach(function(k) {
+                if (!seedKeysMap[k]) {
+                    delete deletedSeeds[k];
+                    delSeedsChanged = true;
+                }
+            });
+            if (delSeedsChanged) {
+                localStorage.setItem(DELETED_SEEDS_KEY, JSON.stringify(deletedSeeds));
+                console.log('[早期注入] v31清理: 清理了非种子账号的错误删除记录');
+            }
             if (Object.keys(deletedSeeds).length > 0) {
                 var beforeClean = accts.length;
                 accts = accts.filter(function(a) {
                     var k = (a.name||'') + '|' + (a.platform||'');
-                    return !deletedSeeds[k]; // 删除已记录的组合
+                    // 只删除：既是种子账号 又 被用户记录删除的组合
+                    if (seedKeysMap[k] && deletedSeeds[k]) return false;
+                    return true; // 用户手动添加的账号一律保留
                 });
                 if (accts.length !== beforeClean) {
                     acctChanged = true;
-                    console.log('[早期注入] v31清理: 删除', beforeClean - accts.length, '个已删种子账号组合');
+                    console.log('[早期注入] v31清理: 删除', beforeClean - accts.length, '个已删种子账号组合(用户手动添加的账号不受影响)');
                 }
             }
 
@@ -13848,13 +13866,19 @@ CREATE POLICY "allow_all" ON workbench_sync
                 return;
             }
 
-            // v30 修复：记录被删除的种子账号组合，防止刷新后早期注入又自动补齐
+            // v31 修复：只在删除种子账号时才记录到 deleted_seeds，用户手动添加的账号删除不记录
+            // 这样避免清理逻辑误删用户手动添加的同名账号
             try {
-                const dk = 'media_workflow_deleted_seeds';
-                let dList = {};
-                try { const r = localStorage.getItem(dk); if (r) dList = JSON.parse(r); } catch(e) {}
-                dList[account.name + '|' + account.platform] = true;
-                localStorage.setItem(dk, JSON.stringify(dList));
+                var isSeedAcct = SEED_ACCOUNTS.some(function(s) {
+                    return s.name === account.name && s.platform === account.platform;
+                });
+                if (isSeedAcct) {
+                    const dk = 'media_workflow_deleted_seeds';
+                    let dList = {};
+                    try { const r = localStorage.getItem(dk); if (r) dList = JSON.parse(r); } catch(e) {}
+                    dList[account.name + '|' + account.platform] = true;
+                    localStorage.setItem(dk, JSON.stringify(dList));
+                }
             } catch(e) {}
 
             accounts = accounts.filter(a => a.id !== accountId && String(a.id) !== String(accountId));
