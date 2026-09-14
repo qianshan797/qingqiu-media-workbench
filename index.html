@@ -9398,11 +9398,13 @@ CREATE POLICY "allow_all" ON workbench_sync
                             if (a.name === '义采宝' && a.platform === '小红书') return false;
                             return true; // 保留所有合法平台的账号，包括用户手动添加的
                         });
-                        // 强制对齐粉丝数/头像/分类
+                        // v31 修复：强制对齐粉丝数的逻辑移除，保留用户手动修改的粉丝数
+                        // 只补齐缺失的 avatar 和 category
                         accts15.forEach(a => {
                             const seed = validKey[a.name + '|' + a.platform];
                             if (!seed) return;
-                            if (a.followers !== seed.followers) a.followers = seed.followers;
+                            // v31 修复：不再强制对齐粉丝数，保留用户手动修改的值
+                            // if (a.followers !== seed.followers) a.followers = seed.followers;
                             if (!a.avatar || a.avatar === '👤') a.avatar = PLAT_AV[seed.platform] || '📱';
                             if (!a.category) a.category = '外贸跨境';
                         });
