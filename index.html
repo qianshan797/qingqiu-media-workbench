@@ -8192,11 +8192,51 @@ CREATE POLICY "allow_all" ON workbench_sync
 
                         console.log('[restoreFromCloudData] accounts 智能合并：本地', safeLocal.length, '条 + 云端', safeRemote.length, '条 = 合并后', merged.length, '条（本地 followers 优先，跳过已删账号', skippedByDelete, '个，云端独有补回', cloudOnlyRestored, '个）');
                         localStorage.setItem(k, JSON.stringify(merged));
+                        // v33 修复：同步处理 account_data，按 name|platform 重映射 key 到合并后账号 id
+                        // 否则本地 accounts 是 fix_xxx_id，云端 account_data 是 seed_xxx_id，导致 id 不匹配、历史数据消失
+                        try {
+                            var cloudAdRaw = localStorage.getItem(STORAGE_KEY_ACCOUNT_DATA);
+                            var cloudAd = cloudAdRaw ? JSON.parse(cloudAdRaw) : {};
+                            // 构建云端账号 id -> name|platform 的映射（用 cloudData 里的云端原始 accounts）
+                            var remoteAcctsList = (function(){
+                                var ra = (typeof cloudData[STORAGE_KEY_ACCOUNTS] === 'string') ? JSON.parse(cloudData[STORAGE_KEY_ACCOUNTS]) : cloudData[STORAGE_KEY_ACCOUNTS];
+                                return Array.isArray(ra) ? ra : [];
+                            })();
+                            var remoteIdToKey = {};
+                            remoteAcctsList.forEach(function(a){ if (a && a.id && a.name && a.platform) remoteIdToKey[a.id] = a.name + '|' + a.platform; });
+                            // 构建合并后账号的 name|platform -> 新 id 映射
+                            var mergedKeyToId = {};
+                            merged.forEach(function(a){ if (a && a.name && a.platform && a.id) mergedKeyToId[a.name + '|' + a.platform] = a.id; });
+                            // 重映射 account_data 的 key
+                            var remappedAd = {};
+                            var remappedCount = 0, lostCount = 0;
+                            Object.keys(cloudAd).forEach(function(oldId) {
+                                var npKey = remoteIdToKey[oldId];
+                                var newId = npKey ? mergedKeyToId[npKey] : null;
+                                if (newId) {
+                                    remappedAd[newId] = cloudAd[oldId];
+                                    remappedCount++;
+                                } else {
+                                    // 找不到对应账号，保留原始 key（避免数据丢失）
+                                    remappedAd[oldId] = cloudAd[oldId];
+                                    lostCount++;
+                                }
+                            });
+                            localStorage.setItem(STORAGE_KEY_ACCOUNT_DATA, JSON.stringify(remappedAd));
+                            console.log('[restoreFromCloudData] account_data 重映射：云端', Object.keys(cloudAd).length, '条 → 重映射', remappedCount, '条, 保留', lostCount, '条无对应账号');
+                        } catch (eAdMap) {
+                            console.error('[restoreFromCloudData] account_data 重映射失败:', eAdMap);
+                        }
                         return;
                     } catch (e3) {
                         console.error('[restoreFromCloudData] accounts 合并异常:', e3);
                         return;
                     }
+                }
+                // v33 修复：account_data 已在 accounts 分支中处理，这里跳过避免被 fallback 覆盖
+                if (k === STORAGE_KEY_ACCOUNT_DATA) {
+                    console.log('[restoreFromCloudData] account_data 已在 accounts 分支重映射，跳过 fallback');
+                    return;
                 }
                 // ✅ 保护 3：任务采用智能合并策略（本地已完成/已归档状态优先）
                 if (k === STORAGE_KEY_TASKS) {
