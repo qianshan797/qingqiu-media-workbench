@@ -9065,6 +9065,17 @@ CREATE POLICY "allow_all" ON workbench_sync
                         // 否则刚生成的今日任务会被云端的旧数据覆盖
                         console.log('[silentPull] 云同步完成，重新执行每日任务生成...');
                         generateDailyAccountTasks();
+                        // ✅ v33 修复：拉取合并后延迟 push 合并结果回云端
+                        // 确保多端数据一致：本地合并（含本地独有数据）后上传，云端永远是最新合并结果
+                        // 用 setTimeout(0) 确保 silentPull 完全释放锁后再 push，避免锁冲突
+                        var pushPending = true;
+                        setTimeout(function() {
+                            if (pushPending) {
+                                pushPending = false;
+                                console.log('[silentPull] 合并完成，推送合并结果回云端...');
+                                pushToCloud().catch(function(e){ console.warn('[silentPull] 合并后推送失败:', e); });
+                            }
+                        }, 0);
                     }
                 }
             } catch (e) {
