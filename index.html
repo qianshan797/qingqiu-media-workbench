@@ -8142,16 +8142,35 @@ CREATE POLICY "allow_all" ON workbench_sync
                         var localDelRaw = localStorage.getItem('media_workflow_deleted_seeds');
                         var localDeleted = {};
                         if (localDelRaw) { try { localDeleted = JSON.parse(localDelRaw); } catch(e) { localDeleted = {}; } }
-                        var isDeleted = function(name, platform) {
-                            if (!name || !platform) return false;
-                            return !!localDeleted[name + '|' + platform];
-                        };
 
                         // 按 name|platform 构建索引
                         const localByKey = {};
                         safeLocal.forEach(a => { if (a && a.name && a.platform) localByKey[a.name + '|' + a.platform] = a; });
                         const remoteByKey = {};
                         safeRemote.forEach(a => { if (a && a.name && a.platform) remoteByKey[a.name + '|' + a.platform] = a; });
+
+                        // v33 自愈修复：在 isDeleted 定义之前，清理本地错误的删除记录
+                        // 如果某条删除记录对应的账号在云端存在，说明该删除记录是错误的，移除它
+                        // 否则会导致义采宝等账号被 isDeleted 过滤，账号消失，然后自动 push 把错误状态固化到云端
+                        var healedCount = 0;
+                        Object.keys(localDeleted).forEach(function(delKey) {
+                            var delKeyLower = delKey.toLowerCase();
+                            var foundInRemote = Object.keys(remoteByKey).some(function(k){ return k.toLowerCase() === delKeyLower; });
+                            var foundInLocal = Object.keys(localByKey).some(function(k){ return k.toLowerCase() === delKeyLower; });
+                            if (foundInRemote || foundInLocal) {
+                                delete localDeleted[delKey];
+                                healedCount++;
+                            }
+                        });
+                        if (healedCount > 0) {
+                            localStorage.setItem('media_workflow_deleted_seeds', JSON.stringify(localDeleted));
+                            console.log('[restoreFromCloudData] deleted_seeds 自愈（accounts合并前）：移除', healedCount, '条错误删除记录');
+                        }
+
+                        var isDeleted = function(name, platform) {
+                            if (!name || !platform) return false;
+                            return !!localDeleted[name + '|' + platform];
+                        };
 
                         // v30 修复：智能合并，本地 followers 优先（用户手动修改不被云端覆盖）
                         const merged = [];
