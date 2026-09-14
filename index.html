@@ -8295,6 +8295,29 @@ CREATE POLICY "allow_all" ON workbench_sync
                         if (localDelStr) { try { localDel = JSON.parse(localDelStr); } catch(e) { localDel = {}; } }
                         var remoteDel = (typeof val === 'string') ? JSON.parse(val) : (val && typeof val === 'object' ? val : {});
                         var mergedDel = Object.assign({}, localDel, remoteDel); // 并集：任一设备删除过的都保留
+                        // v33 自愈修复：如果某条删除记录对应的账号在合并后的 accounts 里仍存在，说明该删除记录是错误的，移除它
+                        // 否则会导致 silentPull 合并后义采宝等账号被 isDeleted 过滤，然后自动 push 把错误状态固化到云端
+                        try {
+                            var mergedAcctsRaw = localStorage.getItem(STORAGE_KEY_ACCOUNTS);
+                            var mergedAccts = mergedAcctsRaw ? JSON.parse(mergedAcctsRaw) : [];
+                            if (Array.isArray(mergedAccts) && mergedAccts.length > 0) {
+                                var aliveKeys = {};
+                                mergedAccts.forEach(function(a){ if (a && a.name && a.platform) aliveKeys[a.name + '|' + a.platform] = true; });
+                                var healedCount = 0;
+                                Object.keys(mergedDel).forEach(function(delKey) {
+                                    // 大小写不敏感比较（兼容 YiwuTrade vs yiwutrade）
+                                    var delKeyLower = delKey.toLowerCase();
+                                    var found = Object.keys(aliveKeys).some(function(k){ return k.toLowerCase() === delKeyLower; });
+                                    if (found) {
+                                        delete mergedDel[delKey];
+                                        healedCount++;
+                                    }
+                                });
+                                if (healedCount > 0) {
+                                    console.log('[restoreFromCloudData] deleted_seeds 自愈：移除', healedCount, '条错误删除记录（对应账号仍存在于 accounts 中）');
+                                }
+                            }
+                        } catch (eHeal) { console.warn('[restoreFromCloudData] deleted_seeds 自愈失败:', eHeal); }
                         localStorage.setItem(k, JSON.stringify(mergedDel));
                         console.log('[restoreFromCloudData] deleted_seeds 并集合并：本地', Object.keys(localDel).length, '个 + 云端', Object.keys(remoteDel).length, '个 = 合并后', Object.keys(mergedDel).length, '个');
                         return;
