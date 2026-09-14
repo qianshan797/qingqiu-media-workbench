@@ -8384,12 +8384,29 @@ CREATE POLICY "allow_all" ON workbench_sync
         }
 
         // 获取同步配置
+        // Supabase 默认凭证（硬编码，避免每次手动输入）
+        const DEFAULT_SUPABASE_URL = 'https://jeenckvarydrdpdlqvdd.supabase.co';
+        const DEFAULT_SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImplZW5ja3ZhcnlkcmRwZGxxdmRkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU5ODg3NTQsImV4cCI6MjEwMTU2NDc1NH0.HjLXEf6BE_fsLpGzJ79lRcxudfEc3BI48IcCSOyOwqA';
+
         function getSyncConfig() {
             try {
                 const raw = localStorage.getItem(SYNC_KEY_CONFIG);
-                return raw ? JSON.parse(raw) : { url: '', key: '', autoSync: true };
+                if (!raw) {
+                    // 首次使用：返回硬编码默认值，并持久化以便后续读取
+                    const def = { url: DEFAULT_SUPABASE_URL, key: DEFAULT_SUPABASE_KEY, autoSync: true };
+                    try { localStorage.setItem(SYNC_KEY_CONFIG, JSON.stringify(def)); } catch (e) {}
+                    return def;
+                }
+                const cfg = JSON.parse(raw);
+                // 若用户曾清空过，回填默认值，保证总是可用
+                if (!cfg.url || !cfg.key) {
+                    cfg.url = cfg.url || DEFAULT_SUPABASE_URL;
+                    cfg.key = cfg.key || DEFAULT_SUPABASE_KEY;
+                    try { localStorage.setItem(SYNC_KEY_CONFIG, JSON.stringify(cfg)); } catch (e) {}
+                }
+                return cfg;
             } catch (e) {
-                return { url: '', key: '', autoSync: true };
+                return { url: DEFAULT_SUPABASE_URL, key: DEFAULT_SUPABASE_KEY, autoSync: true };
             }
         }
 
