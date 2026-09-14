@@ -9300,7 +9300,11 @@ CREATE POLICY "allow_all" ON workbench_sync
                         let acctsChanged = false;
                         let dataChanged = false;
 
+                        const DELETED_SEEDS_KEY = 'media_workflow_deleted_seeds';
+                        let deletedSeeds = {};
+                        try { const dsRaw = localStorage.getItem(DELETED_SEEDS_KEY); if (dsRaw) deletedSeeds = JSON.parse(dsRaw); } catch(e) { deletedSeeds = {}; }
                         SEED_ACCOUNTS.forEach(seed => {
+                            if (deletedSeeds[seed.name + '|' + seed.platform]) return; // 跳过用户已删除的种子
                             let acct = existingAccts.find(a => a.name === seed.name && a.platform === seed.platform);
                             if (!acct) {
                                 const abbr = platformAbbr[seed.platform] || seed.platform;
@@ -9384,7 +9388,11 @@ CREATE POLICY "allow_all" ON workbench_sync
                         const ts = __localDateStr();
                         const ab = { '抖音': 'dy', '视频号': 'sph', '小红书': 'xhs', '公众号': 'gzh', '微博': 'wb', 'TikTok': 'tt' };
                         let ac = false, dc = false;
+                        var DELETED_SEEDS_KEY_V14 = 'media_workflow_deleted_seeds';
+                        var deletedSeedsV14 = {};
+                        try { var dsRawV14 = localStorage.getItem(DELETED_SEEDS_KEY_V14); if (dsRawV14) deletedSeedsV14 = JSON.parse(dsRawV14); } catch(e) { deletedSeedsV14 = {}; }
                         SEED_ACCOUNTS_V14.forEach(function(seed){
+                            if (deletedSeedsV14[seed.name + '|' + seed.platform]) return; // 跳过用户已删除的种子
                             let a = exAccts.find(function(x){return x.name===seed.name&&x.platform===seed.platform;});
                             if(!a){
                                 var pre=ab[seed.platform]||seed.platform;
