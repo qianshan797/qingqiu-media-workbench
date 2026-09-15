@@ -166,12 +166,14 @@
             var acctData=acctDataRaw?JSON.parse(acctDataRaw):{};
             var taskRaw=localStorage.getItem(tk);
             var tasks=taskRaw?JSON.parse(taskRaw):[];
+            // v34 修复：种子账号名统一为小写 yiwutrade，与用户手动添加的账号一致
+            // 之前用驼峰 YiwuTrade，与用户小写账号大小写不匹配，导致 find 找不到而反复注入重复账号
             var SEED_ACCOUNTS=[
                 {name:'义采宝',platform:'抖音',followers:31000},
-                {name:'YiwuTrade',platform:'抖音',followers:2898},
+                {name:'yiwutrade',platform:'抖音',followers:2898},
                 {name:'义采宝',platform:'视频号',followers:3520},
-                {name:'YiwuTrade',platform:'视频号',followers:4872},
-                {name:'YiwuTrade',platform:'小红书',followers:3100},
+                {name:'yiwutrade',platform:'视频号',followers:4872},
+                {name:'yiwutrade',platform:'小红书',followers:3100},
                 {name:'义采宝',platform:'公众号',followers:1800}
             ];
             var todayStr=__localDateStr();
@@ -189,15 +191,16 @@
             // v31 修复：去掉"删除非种子账号组合"逻辑，保留用户手动添加的账号
             // 之前会删除不在种子集合里的账号，导致用户添加的账号被误删
             // v31 修复：基于 id 去重，防止同一账号被重复注入
+            // v34 修复：name|platform 比较改为大小写不敏感，防止 YiwuTrade 和 yiwutrade 同时存在
             var seenIds={};
             var dedupedAccts=[];
             var dedupedByName={};
             accts.forEach(function(a){
                 if(!a||!a.id)return;
                 var idKey=String(a.id);
-                var nameKey=(a.name||'')+'|'+(a.platform||'');
+                var nameKey=((a.name||'')+'|'+(a.platform||'')).toLowerCase();
                 if(seenIds[idKey])return; // 同 ID 跳过
-                if(dedupedByName[nameKey])return; // 同 name|platform 跳过（保留第一个）
+                if(dedupedByName[nameKey])return; // 同 name|platform 跳过（大小写不敏感，保留第一个）
                 seenIds[idKey]=1;
                 dedupedByName[nameKey]=1;
                 dedupedAccts.push(a);
@@ -251,7 +254,10 @@
             // 3) 补齐种子账号 + 强制对齐粉丝数（按种子覆盖）
             SEED_ACCOUNTS.forEach(function(seed){
                 if(deletedSeeds[seed.name+'|'+seed.platform])return; // 跳过用户已删除的组合
-                var acct=accts.find(function(a){return a.name===seed.name&&a.platform===seed.platform;});
+                // v34 修复：大小写不敏感比较，防止 YiwuTrade 找不到 yiwutrade 而反复注入
+                var seedNameLower=seed.name.toLowerCase();
+                var seedPlatformLower=seed.platform.toLowerCase();
+                var acct=accts.find(function(a){return (a.name||'').toLowerCase()===seedNameLower && (a.platform||'').toLowerCase()===seedPlatformLower;});
                 if(!acct){
                     var ab=platAbbr[seed.platform]||seed.platform;
                     var uid='fix_'+ab+'_'+seed.name+'_'+Date.now()+'_'+Math.floor(Math.random()*10000);
@@ -9564,12 +9570,13 @@ CREATE POLICY "allow_all" ON workbench_sync
                 // v12 -> v13: 强制补齐用户7个真实运营账号 + 粉丝数据 + 每日更新任务（新origin/端口首次访问时恢复丢失数据）
                 if (version < 13) {
                     try {
+                        // v34 修复：种子账号名统一为小写 yiwutrade，防止大小写不匹配导致重复注入
                         const SEED_ACCOUNTS = [
                             { name: '义采宝', platform: '抖音', followers: 31000 },
-                            { name: 'YiwuTrade', platform: '抖音', followers: 2898 },
+                            { name: 'yiwutrade', platform: '抖音', followers: 2898 },
                             { name: '义采宝', platform: '视频号', followers: 3520 },
-                            { name: 'YiwuTrade', platform: '视频号', followers: 4872 },
-                            { name: 'YiwuTrade', platform: '小红书', followers: 3100 },
+                            { name: 'yiwutrade', platform: '视频号', followers: 4872 },
+                            { name: 'yiwutrade', platform: '小红书', followers: 3100 },
                             { name: '义采宝', platform: '公众号', followers: 1800 }
                         ];
                         const existingAccts = getStoredData(STORAGE_KEY_ACCOUNTS, []);
@@ -9580,7 +9587,8 @@ CREATE POLICY "allow_all" ON workbench_sync
                         let dataChanged = false;
 
                         SEED_ACCOUNTS.forEach(seed => {
-                            let acct = existingAccts.find(a => a.name === seed.name && a.platform === seed.platform);
+                            // v34: 大小写不敏感查找
+                            let acct = existingAccts.find(a => (a.name||'').toLowerCase() === seed.name.toLowerCase() && (a.platform||'').toLowerCase() === seed.platform.toLowerCase());
                             if (!acct) {
                                 const abbr = platformAbbr[seed.platform] || seed.platform;
                                 const acctId = `seed_${abbr}_${seed.name}_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
@@ -9649,12 +9657,13 @@ CREATE POLICY "allow_all" ON workbench_sync
                 // v13 -> v14: 再次强制补齐账号(早期注入schema先升级到14,迁移脚本确保补齐)
                 if (version < 14) {
                     try {
+                        // v34 修复：种子账号名统一为小写 yiwutrade，防止大小写不匹配导致重复注入
                         const SEED_ACCOUNTS_V14 = [
                             { name: '义采宝', platform: '抖音', followers: 31000 },
-                            { name: 'YiwuTrade', platform: '抖音', followers: 2898 },
+                            { name: 'yiwutrade', platform: '抖音', followers: 2898 },
                             { name: '义采宝', platform: '视频号', followers: 3520 },
-                            { name: 'YiwuTrade', platform: '视频号', followers: 4872 },
-                            { name: 'YiwuTrade', platform: '小红书', followers: 3100 },
+                            { name: 'yiwutrade', platform: '视频号', followers: 4872 },
+                            { name: 'yiwutrade', platform: '小红书', followers: 3100 },
                             { name: '义采宝', platform: '公众号', followers: 1800 }
                         ];
                         const exAccts = getStoredData(STORAGE_KEY_ACCOUNTS, []);
@@ -9663,7 +9672,8 @@ CREATE POLICY "allow_all" ON workbench_sync
                         const ab = { '抖音': 'dy', '视频号': 'sph', '小红书': 'xhs', '公众号': 'gzh', '微博': 'wb', 'TikTok': 'tt' };
                         let ac = false, dc = false;
                         SEED_ACCOUNTS_V14.forEach(function(seed){
-                            let a = exAccts.find(function(x){return x.name===seed.name&&x.platform===seed.platform;});
+                            // v34: 大小写不敏感查找
+                            let a = exAccts.find(function(x){return (x.name||'').toLowerCase()===seed.name.toLowerCase()&&(x.platform||'').toLowerCase()===seed.platform.toLowerCase();});
                             if(!a){
                                 var pre=ab[seed.platform]||seed.platform;
                                 var aid='v14_'+pre+'_'+seed.name+'_'+Date.now()+'_'+Math.floor(Math.random()*10000);
@@ -14234,9 +14244,10 @@ CREATE POLICY "allow_all" ON workbench_sync
 
             // v31 修复：只在删除种子账号时才记录到 deleted_seeds，用户手动添加的账号删除不记录
             // 这样避免清理逻辑误删用户手动添加的同名账号
+            // v34 修复：大小写不敏感比较，防止 YiwuTrade/yiwutrade 匹配失败
             try {
                 var isSeedAcct = SEED_ACCOUNTS.some(function(s) {
-                    return s.name === account.name && s.platform === account.platform;
+                    return s.name.toLowerCase() === (account.name||'').toLowerCase() && s.platform.toLowerCase() === (account.platform||'').toLowerCase();
                 });
                 if (isSeedAcct) {
                     const dk = 'media_workflow_deleted_seeds';
