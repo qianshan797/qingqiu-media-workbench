@@ -12,6 +12,7 @@ GitHub Pages: https://qianshan797.github.io/qingqiu-media-workbench/
 - `news-data.json` — 每日快讯静态数据（手动维护，浏览器加载时若比本地新则覆盖；真正的多端同步依赖 Supabase）
 - `.nojekyll` — 禁用 Jekyll，让 GitHub Pages 直接托管根目录文件
 - `.github/workflows/pages.yml` — GitHub Pages 部署工作流（push 到 main 自动触发，不含定时任务）
+- `.github/workflows/update-news.yml` — 每日快讯定时更新工作流（北京时间 09:00 自动从 Supabase 拉取最新快讯，写入 news-data.json 并提交，触发 Pages 部署）
 - `README.md` — 本文件
 
 ## 数据同步机制
@@ -20,8 +21,8 @@ GitHub Pages: https://qianshan797.github.io/qingqiu-media-workbench/
 - **同步策略**：
   - 页面加载 → `silentPull` 拉取云端 → 与本地智能合并（本地修改优先，云端补齐缺失）→ 合并结果自动 push 回云端，保证多端数据一致。
   - 账号 ID 重映射：合并后按 `name|platform` 关联 `account_data`，避免历史数据因 ID 不匹配而丢失。
-- **每日快讯**：`news-data.json` 为静态兜底数据；运行时由 Supabase 云端 + `generateDailyAccountTasks` 在浏览器端维护，无外部定时任务更新此文件。
+- **每日快讯**：由 TRAE 定时任务（北京时间 08:30）抓取新闻并更新 Supabase 云端；GitHub Actions（北京时间 09:00）从 Supabase 拉取最新快讯写入 `news-data.json` 并提交，触发 Pages 部署。浏览器加载时若 `news-data.json` 比本地新则覆盖。
 
 ## 后续维护
 
-所有功能迭代、Bug 修复、数据同步逻辑变更均只改动 `index.html`；`news-data.json` 仅在需要更新静态兜底数据时手动提交。
+所有功能迭代、Bug 修复、数据同步逻辑变更均只改动 `index.html`；`news-data.json` 由 GitHub Actions 自动维护，无需手动提交。

@@ -1,0 +1,73 @@
+name: Update Daily News
+
+on:
+  schedule:
+    # UTC 01:00 = 北京时间 09:00（TRAE 任务 08:30 更新 Supabase 后半小时拉取）
+    - cron: '0 1 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-news:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fetch latest news from Supabase
+        env:
+          SUPABASE_URL: https://jeenckvarydrdpdlqvdd.supabase.co/rest/v1
+          SUPABASE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImplZW5ja3ZhcnlkcmRwZGxxdmRkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU5ODg3NTQsImV4cCI6MjEwMTU2NDc1NH0.HjLXEf6BE_fsLpGzJ79lRcxudfEc3BI48IcCSOyOwqA
+        run: |
+          python3 - <<'PYEOF'
+          import json, urllib.request, os, sys
+          from datetime import datetime, timezone
+
+          url = os.environ["SUPABASE_URL"] + "/workbench_sync?user_id=eq.default&select=data"
+          req = urllib.request.Request(url, headers={
+              "apikey": os.environ["SUPABASE_KEY"],
+              "Authorization": "Bearer " + os.environ["SUPABASE_KEY"],
+          })
+          with urllib.request.urlopen(req) as resp:
+              rows = json.loads(resp.read())
+
+          if not rows:
+              print("无云端数据，退出")
+              sys.exit(0)
+
+          cloud = rows[0]["data"]
+          news = cloud.get("media_workflow_news", "[]")
+          if isinstance(news, str):
+              news = json.loads(news)
+
+          if not news:
+              print("云端无快讯数据，退出")
+              sys.exit(0)
+
+          # 按日期降序排序
+          news.sort(key=lambda x: x.get("date", ""), reverse=True)
+
+          with open("news-data.json", "w", encoding="utf-8") as f:
+              json.dump(news, f, ensure_ascii=False, indent=2)
+
+          print(f"写入 {len(news)} 条快讯")
+          for n in news[:5]:
+              print(f"  {n.get('date')} {n.get('title','')[:30]}")
+          PYEOF
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add news-data.json
+          if git diff --cached --quiet; then
+            echo "无变更，跳过提交"
+          else
+            git commit -m "auto: daily news $(date -u +%Y-%m-%d)"
+            git push
+          fi
