@@ -6,9 +6,15 @@
     "title": "TikTok Shop将于9月21日开启英欧跨境销售试点，10月19日扩大开放",
     "summary": "TikTok Shop宣布将于9月21日面向部分卖家启动英国与欧盟之间的跨境销售试点，10月19日全面开放。英国卖家可面向12个欧盟国家销售，欧盟8国卖家可反向销往英国，资格基于账号状态、近30天活跃度和财务表现评估。",
     "source": "https://ecomwatch.com/news/tiktok-shop-will-soon-allow-cross-border-sales-between-the-uk-and-the-eu/",
-    "tags": ["TikTok Shop", "跨境销售", "英欧", "平台动态"],
+    "tags": [
+      "TikTok Shop",
+      "跨境销售",
+      "英欧",
+      "平台动态"
+    ],
     "read": false,
-    "createdAt": 1789605101636
+    "createdAt": 1789605101636,
+    "addedToPool": false
   },
   {
     "id": "news_20260917_002",
@@ -17,9 +23,15 @@
     "title": "字节跳动上半年海外收入占比突破30%，TikTok Shop贡献核心增长",
     "summary": "据The Information报道，字节跳动2026年上半年营收同比增长30%，海外收入占比首次突破30%。TikTok Shop 2025年活跃消费者达4亿，GMV接近千亿美元；TikTok英国公司同期收入91亿美元并首次实现盈利7.03亿美元。",
     "source": "https://www.tt123.com/kx/WCQv3e8d",
-    "tags": ["字节跳动", "TikTok Shop", "海外收入", "财报"],
+    "tags": [
+      "字节跳动",
+      "TikTok Shop",
+      "海外收入",
+      "财报"
+    ],
     "read": false,
-    "createdAt": 1789605101636
+    "createdAt": 1789605101636,
+    "addedToPool": false
   },
   {
     "id": "news_20260917_003",
@@ -28,9 +40,15 @@
     "title": "Ozon启动风控排查，中国Global卖家遭遇集中账号锁定",
     "summary": "9月16日，俄罗斯电商平台Ozon对中国Global卖家启动风控排查，多个卖家账号被集中锁定，疑似触发反欺诈与资质合规审查。受影响卖家反馈订单暂停、提现受阻，建议尽快核查主体认证、产品资质与发货履约材料。",
     "source": "http://fw-kj.com/news/902.html",
-    "tags": ["Ozon", "俄罗斯电商", "风控", "合规"],
+    "tags": [
+      "Ozon",
+      "俄罗斯电商",
+      "风控",
+      "合规"
+    ],
     "read": false,
-    "createdAt": 1789605101636
+    "createdAt": 1789605101636,
+    "addedToPool": false
   },
   {
     "id": "news_20260917_004",
@@ -39,9 +57,15 @@
     "title": "TikTok Shop全面开放爱尔兰企业入驻，结束邀请制",
     "summary": "TikTok Shop正式结束爱尔兰邀请制模式，向所有本地企业开放入驻。自2024年12月上线以来，爱尔兰加入TikTok Shop联盟计划的活跃创作者数量已增长600%，过去六个月创作者推动的成交占比持续上升。",
     "source": "https://www.chwang.com/news/209680883940",
-    "tags": ["TikTok Shop", "爱尔兰", "入驻开放", "创作者"],
+    "tags": [
+      "TikTok Shop",
+      "爱尔兰",
+      "入驻开放",
+      "创作者"
+    ],
     "read": false,
-    "createdAt": 1789605101636
+    "createdAt": 1789605101636,
+    "addedToPool": false
   },
   {
     "id": "news_20260917_005",
@@ -50,9 +74,15 @@
     "title": "TikTok Shop美区上线直播砍价与拼团新玩法，9月10日对头部卖家内测",
     "summary": "TikTok Shop美区将于9月10日上线\"砍价(Price Cut)\"与\"拼团(Group Deal)\"两项直播新玩法内测，仅对受邀头部卖家开放。该玩法承接8月竞拍直播灰度测试成效，旨在通过社交裂变与价格博弈拉动直播转化率。",
     "source": "http://fw-kj.com/news/566.html",
-    "tags": ["TikTok Shop", "直播", "砍价", "拼团"],
+    "tags": [
+      "TikTok Shop",
+      "直播",
+      "砍价",
+      "拼团"
+    ],
     "read": false,
-    "createdAt": 1789605101636
+    "createdAt": 1789605101636,
+    "addedToPool": false
   },
   {
     "id": "news_20260917_006",
@@ -61,9 +91,15 @@
     "title": "FedEx 9月21日起全面启用国际非标货件分级收费",
     "summary": "FedEx将于9月21日起对国际非标货件实施分级计费，按尺寸、重量与可处理难度划分费率层级。这是本年度FedEx针对跨境货件结构最大规模规则调整，将显著影响黑五、圣诞旺季跨境出货成本与打包规范。",
     "source": "http://fw-kj.com/news/877.html",
-    "tags": ["FedEx", "物流", "收费规则", "旺季"],
+    "tags": [
+      "FedEx",
+      "物流",
+      "收费规则",
+      "旺季"
+    ],
     "read": false,
-    "createdAt": 1789605101636
+    "createdAt": 1789605101636,
+    "addedToPool": false
   },
   {
     "id": "news_20260917_007",
@@ -72,9 +108,15 @@
     "title": "亚马逊FBA Pan-EU 9月3日起需有荷兰有效报价，比利时2027年跟进",
     "summary": "自9月3日起，亚马逊Pan-EU FBA所有新旧商品必须在荷兰有有效报价，2027年2月26日比利时跟进。未达要求的ASIN将丧失Pan-EU资格，从本地履约转为跨境履约，单位费率发生变化，影响卖家欧洲站成本结构。",
     "source": "https://novadata.io/resources/news/pan-eu-fba-netherlands-offer-requirement-september-2026",
-    "tags": ["亚马逊", "Pan-EU", "FBA", "荷兰"],
+    "tags": [
+      "亚马逊",
+      "Pan-EU",
+      "FBA",
+      "荷兰"
+    ],
     "read": false,
-    "createdAt": 1789605101636
+    "createdAt": 1789605101636,
+    "addedToPool": false
   },
   {
     "id": "news_20260917_008",
@@ -83,9 +125,15 @@
     "title": "Shein香港上市首日开盘下跌，市值约260亿美元",
     "summary": "Shein于9月1日在香港挂牌交易，首日股价下跌，市值约260亿美元，较2022年约1000亿美元的峰值缩水近70%。市场关注其欧美与中东市场的关税、运营与履约成本压力对未来利润率的影响。",
     "source": "https://novadata.io/resources/news/shein-hong-kong-listing-debut-september-2026",
-    "tags": ["Shein", "上市", "市值", "香港"],
+    "tags": [
+      "Shein",
+      "上市",
+      "市值",
+      "香港"
+    ],
     "read": false,
-    "createdAt": 1789605101636
+    "createdAt": 1789605101636,
+    "addedToPool": false
   },
   {
     "id": "news_20260917_009",
@@ -94,9 +142,15 @@
     "title": "法国反快时尚税9月1日生效，每件至2030年最高近20欧元",
     "summary": "法国反快时尚税自9月1日起生效，针对超快时尚平台按件征收，单件费用至2030年最高接近20欧元。第三方服装卖家并非直接征税对象，但与之竞争的价格底线被抬升，需重新评估定价与利润空间。",
     "source": "https://novadata.io/resources/news/france-fast-fashion-levy-in-force-september-2026",
-    "tags": ["法国", "快时尚", "税收", "合规"],
+    "tags": [
+      "法国",
+      "快时尚",
+      "税收",
+      "合规"
+    ],
     "read": false,
-    "createdAt": 1789605101636
+    "createdAt": 1789605101636,
+    "addedToPool": false
   },
   {
     "id": "news_20260917_010",
@@ -105,8 +159,364 @@
     "title": "小红书Redshop拟收10%出海服务费，9月16日生效",
     "summary": "小红书旗下Redshop出海平台对\"出海领航计划\"商家新增出海服务费，规则处于公示期、9月16日生效。多数一级类目费率10%，手工DIY与卡牌5%，谷子周边8%，单笔订单封顶70元，规则执行至2026年底。",
     "source": "https://www.chwang.com/news/209974219786",
-    "tags": ["小红书", "Redshop", "出海", "服务费"],
+    "tags": [
+      "小红书",
+      "Redshop",
+      "出海",
+      "服务费"
+    ],
     "read": false,
-    "createdAt": 1789605101636
+    "createdAt": 1789605101636,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20260916_001",
+    "date": "2026-09-16",
+    "category": "平台动态",
+    "title": "小红书Redshop拟收10%出海服务费，9月16日生效",
+    "summary": "小红书旗下Redshop出海平台向出海领航计划商家收取独立的出海服务费，多数一级类目（服饰、美妆、家居、3C数码等）费率定为10%，手工DIY、卡牌为5%，谷子及娃衣类目为8%，单笔订单服务费封顶70元，规则执行至2026年底。",
+    "source": "https://www.chwang.com/news/209974219786",
+    "tags": [
+      "小红书",
+      "Redshop",
+      "出海服务费",
+      "跨境电商",
+      "平台政策"
+    ],
+    "read": false,
+    "createdAt": 1789518779458,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20260916_002",
+    "date": "2026-09-16",
+    "category": "平台动态",
+    "title": "亚马逊墨西哥站上线新卖家佣金豁免计划，加码本土卖家扶持",
+    "summary": "亚马逊墨西哥站正式推出新卖家佣金豁免计划，针对税务地址登记在墨西哥的本土新卖家，提供最长5个月的佣金减免福利，进一步降低本土商家入驻经营成本。",
+    "source": "http://fw-kj.com/news/898.html",
+    "tags": [
+      "亚马逊",
+      "墨西哥站",
+      "佣金豁免",
+      "本土卖家",
+      "平台扶持"
+    ],
+    "read": false,
+    "createdAt": 1789518779458,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20260916_003",
+    "date": "2026-09-16",
+    "category": "技术动态",
+    "title": "DHL牵手阿里国际站，AI智能体重构跨境物流订舱链路",
+    "summary": "DHL集团与阿里巴巴国际站签署谅解备忘录，DHL全球货运将逐步接入阿里国际站企业级AI智能体Accio，面向外贸中小企业开放物流询价、方案评估、在线订舱等能力。",
+    "source": "http://fw-kj.com/news/897.html",
+    "tags": [
+      "DHL",
+      "阿里国际站",
+      "AI",
+      "跨境物流",
+      "智能体"
+    ],
+    "read": false,
+    "createdAt": 1789518779458,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20260916_004",
+    "date": "2026-09-16",
+    "category": "市场趋势",
+    "title": "亚马逊牵手OpenAI，品牌广告正式接入ChatGPT营销生态",
+    "summary": "亚马逊宣布与OpenAI达成合作，部分美国品牌可借助亚马逊广告体系实现在ChatGPT内投放广告，标志着亚马逊对外部AI平台的营销态度发生明显转变。",
+    "source": "http://fw-kj.com/news/895.html",
+    "tags": [
+      "亚马逊",
+      "OpenAI",
+      "ChatGPT",
+      "品牌广告",
+      "AI营销"
+    ],
+    "read": false,
+    "createdAt": 1789518779458,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20260916_005",
+    "date": "2026-09-16",
+    "category": "平台功能更新",
+    "title": "TikTok Shop美区全面放开图文挂车功能，三个月GMV增幅超800%",
+    "summary": "TikTok Shop美区全品类开放图文挂车权限，黑五备战期商家可通过图文内容直接挂车转化。数据显示，过去三个月美区图文挂车GMV增幅超800%。",
+    "source": "https://www.tt123.com/kx",
+    "tags": [
+      "TikTok Shop",
+      "美区",
+      "图文挂车",
+      "GMV",
+      "黑五备战"
+    ],
+    "read": false,
+    "createdAt": 1789518779458,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20260916_006",
+    "date": "2026-09-16",
+    "category": "平台动态",
+    "title": "TikTok Shop日本跨境POP推出领航计划，三类商家享新手期豁免",
+    "summary": "TikTok Shop日本跨境POP推出领航计划，三类重点商家可享新手期豁免与达人撮合资源，降低品牌出海日本的运营门槛。",
+    "source": "https://www.tt123.com/kx",
+    "tags": [
+      "TikTok Shop",
+      "日本",
+      "领航计划",
+      "达人撮合",
+      "跨境POP"
+    ],
+    "read": false,
+    "createdAt": 1789518779458,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20260916_007",
+    "date": "2026-09-16",
+    "category": "市场趋势",
+    "title": "Shopee巴西2026年新增10座配送中心，仓储规模扩张逾60%",
+    "summary": "Shopee宣布在巴西市场新增10座配送中心，仓储规模同比扩张超过60%，强化拉美市场物流履约能力，应对订单增长需求。",
+    "source": "https://www.tt123.com/kx",
+    "tags": [
+      "Shopee",
+      "巴西",
+      "配送中心",
+      "仓储扩张",
+      "拉美市场"
+    ],
+    "read": false,
+    "createdAt": 1789518779458,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20260916_008",
+    "date": "2026-09-16",
+    "category": "平台合规",
+    "title": "Shopee印尼站危险品申报新规9月21日生效，跨境卖家需提前合规整改",
+    "summary": "Shopee印尼站危险品申报强制规则将于2026年9月21日生效，液体、电池、加压气体、磁铁、爆炸物及易燃品类必须完成申报，平台将强化商品审核以降低跨境运输安全隐患。",
+    "source": "http://fw-kj.com/news/886.html",
+    "tags": [
+      "Shopee",
+      "印尼",
+      "危险品",
+      "合规",
+      "平台新规"
+    ],
+    "read": false,
+    "createdAt": 1789518779458,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20260916_009",
+    "date": "2026-09-16",
+    "category": "贸易政策",
+    "title": "关税透明化落地：FedEx发布Global Trade Navigator全套贸易工具",
+    "summary": "FedEx发布Global Trade Navigator全套数字化贸易解决方案，将税则归类、税费核算、单证筹备前置到订单规划环节，为跨境商家提供一体化合规支持。",
+    "source": "http://fw-kj.com/news/894.html",
+    "tags": [
+      "FedEx",
+      "Global Trade Navigator",
+      "关税透明",
+      "合规工具",
+      "跨境物流"
+    ],
+    "read": false,
+    "createdAt": 1789518779458,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20260916_010",
+    "date": "2026-09-16",
+    "category": "市场趋势",
+    "title": "TikTok Shop头部卖家转战亚马逊的成功率是反向路径的5倍",
+    "summary": "MarketplacePulse跨平台比对数据显示，TikTok Shop头部卖家转战亚马逊的成功率约为反向迁移路径的5倍，反映两个平台在用户画像与购物意图上的本质差异。",
+    "source": "https://www.tt123.com/kx",
+    "tags": [
+      "TikTok Shop",
+      "亚马逊",
+      "头部卖家",
+      "跨平台迁移",
+      "市场趋势"
+    ],
+    "read": false,
+    "createdAt": 1789518779458,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20260904_001",
+    "date": "2026-09-04",
+    "category": "平台动态",
+    "title": "Temu联手罗马尼亚邮政构建本土物流网络，加速深耕东南欧市场",
+    "summary": "Temu与罗马尼亚国家邮政达成合作，为当地卖家提供从上门取件、分拣到末端配送的一站式物流服务，支持送货上门、自提点、智能快递柜或邮局自取。双方还将共同支持罗马尼亚企业在Temu平台上拓展业务。目前Temu本地卖家计划已覆盖全球35多个国家，标志其欧洲战略从跨境直邮转向本土卖家+国有邮政基础设施的深度融合。",
+    "source": "https://m.10100.com/zb",
+    "tags": [
+      "Temu",
+      "罗马尼亚邮政",
+      "本土物流",
+      "东南欧",
+      "供应链"
+    ],
+    "read": false,
+    "createdAt": 1788483600000
+  },
+  {
+    "id": "news_20260904_002",
+    "date": "2026-09-04",
+    "category": "平台合规",
+    "title": "Shopee台湾站10月5日新规：发票逾期7周扣3分，11周直接封号",
+    "summary": "Shopee中国台湾站宣布自2026年10月5日起将发票与对账单合规缴回纳入卖家考核。逾期7周扣3分，逾期9周再扣3分，逾期11周直接冻结账号。累计扣分达6分将限制店铺活动权限。税务凭证合规性已成为与发货时效、订单完成率同等关键的店铺生死指标。",
+    "source": "https://m.10100.com/zb",
+    "tags": [
+      "Shopee",
+      "台湾站",
+      "发票合规",
+      "扣分",
+      "封号"
+    ],
+    "read": false,
+    "createdAt": 1788483600000
+  },
+  {
+    "id": "news_20260904_003",
+    "date": "2026-09-04",
+    "category": "贸易政策",
+    "title": "巴西对华家电钢化玻璃启动反倾销调查，追溯期涵盖2020-2025年",
+    "summary": "巴西政府9月1日正式宣布对原产于中国的家用钢化玻璃启动反倾销调查，聚焦烤箱、洗碗机等高温潮湿环境用钢化玻璃。调查涵盖2024年10月至2025年9月核实倾销行为，以及2020年10月至2025年9月评估对巴西本土产业损害，自公布之日起立即生效。",
+    "source": "https://m.10100.com/zb",
+    "tags": [
+      "巴西",
+      "反倾销",
+      "钢化玻璃",
+      "家电",
+      "贸易调查"
+    ],
+    "read": false,
+    "createdAt": 1788483600000
+  },
+  {
+    "id": "news_20260904_004",
+    "date": "2026-09-04",
+    "category": "政策动态",
+    "title": "泰国新政9月1日生效：中欧美等60国游客免签停留期缩至30天",
+    "summary": "泰国内政部确认新版外国游客免签政策9月1日正式生效，取代此前面向93个国家和地区、单次停留最长60天的旧规。包括中国、美国、英国、法国、德国、日本、韩国等60国的免签停留期缩短至30天，跨境采购及商务出行时间收紧。",
+    "source": "https://m.10100.com/zb",
+    "tags": [
+      "泰国",
+      "免签新政",
+      "停留期",
+      "30天",
+      "跨境商务"
+    ],
+    "read": false,
+    "createdAt": 1788483600000
+  },
+  {
+    "id": "news_20260904_005",
+    "date": "2026-09-04",
+    "category": "市场趋势",
+    "title": "TikTok Shop上半年直播销售额翻倍，但单位时长销售效率仅增11%",
+    "summary": "各大平台表现分化明显：TikTok Shop上半年直播销售额翻倍，直播总时长激增80%，但单位时间销售效率仅微增11%，增长主要靠拉长直播时间驱动。新兴平台Whatnot估值已达200亿美元，上半年GMV突破80亿美元。典型品牌通过直播每小时可创收约2000美元，需向平台支付6%佣金。",
+    "source": "https://m.10100.com/zb",
+    "tags": [
+      "TikTok Shop",
+      "直播电商",
+      "销售效率",
+      "Whatnot",
+      "市场趋势"
+    ],
+    "read": false,
+    "createdAt": 1788483600000
+  },
+  {
+    "id": "news_20260904_006",
+    "date": "2026-09-04",
+    "category": "平台合规",
+    "title": "9月跨境新规密集生效：亚马逊Pan-EU、FBA、退货期全面收紧",
+    "summary": "9月起跨境电商平台新规密集生效：亚马逊9月1日起FBA合规要求MRN+EORI、法国站需提供SIREN/SIRET、欧洲五国FBA送达窗口缩至7天、FBM备货时间自动校准、德国站16品类退货期缩至14天；9月3日起Pan-EU强制纳入荷兰站；9月7日起德国站提高Prime配送要求。卖家需提前核查各SKU备货时间与ASIN状态。",
+    "source": "https://m.sohu.com/a/1071486040_121810763/",
+    "tags": [
+      "亚马逊",
+      "9月新规",
+      "Pan-EU",
+      "FBA",
+      "退货期"
+    ],
+    "read": false,
+    "createdAt": 1788483600000
+  },
+  {
+    "id": "news_20260904_007",
+    "date": "2026-09-04",
+    "category": "平台功能更新",
+    "title": "TikTok Shop马来西亚运费SST 9月1日生效，9月7日起由卖家承担",
+    "summary": "TikTok Shop马来西亚站点运费SST（销售服务税）9月1日正式生效，对跨境商家本地段尾程运费征收6%服务税。平台在9月1日至6日期间代卖家承担此费用，9月7日起由卖家自行承担。卖家需及时调整定价策略以应对成本上升。",
+    "source": "https://m.sohu.com/a/1071486040_121810763/",
+    "tags": [
+      "TikTok Shop",
+      "马来西亚",
+      "SST",
+      "运费",
+      "成本上升"
+    ],
+    "read": false,
+    "createdAt": 1788483600000
+  },
+  {
+    "id": "news_20260904_008",
+    "date": "2026-09-04",
+    "category": "平台动态",
+    "title": "TikTok Shop东南亚9.9超级狂欢大促开幕，旺季流量窗口开启",
+    "summary": "TikTok Shop东南亚9.9超级狂欢大促正式开幕，覆盖马来西亚、泰国、菲律宾、越南、新加坡等站点。大促期间平台将提供亿级流量扶持、跨店满减、直播达人对接等资源，为跨境卖家提供旺季流量窗口。卖家需提前备货、优化直播内容、设置营销工具以最大化承接大促流量。",
+    "source": "https://m.sohu.com/a/1071486040_121810763/",
+    "tags": [
+      "TikTok Shop",
+      "9.9大促",
+      "东南亚",
+      "旺季",
+      "流量扶持"
+    ],
+    "read": false,
+    "createdAt": 1788483600000
+  },
+  {
+    "id": "news_20260904_009",
+    "date": "2026-09-04",
+    "category": "技术动态",
+    "title": "谷歌发布Gemini 3.8 Flash，支持百万级上下文，主打低成本智能体部署",
+    "summary": "9月2日谷歌通过DeepMind官网推出Gemini 3.8 Flash模型，显著提升软件工程及智能体工作流处理能力，支持100万token超长上下文窗口，文本输出上限64K token。在编程辅助、知识处理、多模态识别、长文本理解等领域表现优异，主打低成本大规模部署，适合构建可直接投入生产的通用型智能体。",
+    "source": "https://m.10100.com/zb",
+    "tags": [
+      "谷歌",
+      "Gemini 3.8 Flash",
+      "AI模型",
+      "智能体",
+      "技术动态"
+    ],
+    "read": false,
+    "createdAt": 1788483600000
+  },
+  {
+    "id": "news_20260904_010",
+    "date": "2026-09-04",
+    "category": "平台合规",
+    "title": "亚马逊9月8日Prime秋季大促Deal提报截止，FBA到仓时间分批倒计时",
+    "summary": "2026年亚马逊秋季会员日（Prime Big Deal Days）预计10月7日至8日开跑。美国站Deal提报截止9月8日，FBA到仓截止时间分批：AWD货件9月2日前到仓、最少货件拆分9月9日前到仓、亚马逊优化货件拆分9月16日前到仓。同时9月14日起分批恢复FBA热敏商品销售，卖家需按ASIN核查批次归属。",
+    "source": "https://m.sohu.com/a/1071486040_121810763/",
+    "tags": [
+      "亚马逊",
+      "Prime秋季大促",
+      "Deal提报",
+      "FBA到仓",
+      "热敏商品"
+    ],
+    "read": false,
+    "createdAt": 1788483600000
   }
 ]
