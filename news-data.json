@@ -1,1 +1,112 @@
-test content
+[
+  {
+    "id": "news_20260922_001",
+    "date": "2026-09-22",
+    "category": "平台动态",
+    "title": "TikTok豪掷9.8亿美元在越南自建物流平台Swift Logistics",
+    "summary": "TikTok将在越南打造名为Swift Logistics的物流平台，总投资额达9.8亿美元，由字节跳动旗下Tokgistic Pte. Ltd.负责实施，已获胡志明市投资证书。这是TikTok在东南亚最大一笔基础设施投入，标志着东南亚电商从跑马圈地进入精耕细作阶段，三家头部平台合计占据98.8% GMV。",
+    "source": "https://m.toutiao.com/group/7686528680835564058/",
+    "tags": ["TikTok", "东南亚", "物流", "基础设施", "越南"],
+    "read": false,
+    "createdAt": 1790037092353
+  },
+  {
+    "id": "news_20260922_002",
+    "date": "2026-09-22",
+    "category": "平台功能更新",
+    "title": "TikTok Shop正式开放英欧跨境销售，9月21日试点、10月19日全量上线",
+    "summary": "TikTok Shop正式开通英欧跨境销售通道。UK卖家可销往德法意西波等12个Sell Across Europe国家，8个EU市场卖家可反向销往英国。一个Seller Center账号即可多国管理商品、仓储与配送，准入门槛大幅降低，欧洲市场首次以整体面貌呈现给卖家。",
+    "source": "https://ecomwatch.com/news/tiktok-shop-will-soon-allow-cross-border-sales-between-the-uk-and-the-eu/",
+    "tags": ["TikTok Shop", "英国", "欧盟", "跨境销售", "市场拓展"],
+    "read": false,
+    "createdAt": 1790037092353
+  },
+  {
+    "id": "news_20260922_003",
+    "date": "2026-09-22",
+    "category": "贸易政策",
+    "title": "欧盟新海关法规二读通过，11月1日起对跨境小包征统一处理费",
+    "summary": "9月16日欧洲议会二读通过海关改革方案，欧盟理事会9月3日完成最终批准。新规明确非欧盟电商平台将被认定为进口方，须承担海关手续、关税缴纳及商品合规责任；对反复违规者最高可处以前12个月进口额15%罚款，并对跨境小包征收统一处理费。",
+    "source": "http://www.fw-kj.com/news/915.html",
+    "tags": ["欧盟", "海关", "合规", "跨境小包", "贸易政策"],
+    "read": false,
+    "createdAt": 1790037092353
+  },
+  {
+    "id": "news_20260922_004",
+    "date": "2026-09-22",
+    "category": "平台合规",
+    "title": "FedEx国际非标货件分级计费新规9月21日全面上线",
+    "summary": "FedEx官方公告自9月21日起全面上线国际非标货件分级收费制度，针对性解决旺季物流运力紧张、非标货件挤占资源、分拣效率低下等行业痛点。新规将深刻影响下半年黑五、圣诞旺季的跨境出货成本与打包规范。",
+    "source": "http://www.fw-kj.com/news/877.html",
+    "tags": ["FedEx", "物流", "计费改革", "跨境物流", "旺季"],
+    "read": false,
+    "createdAt": 1790037092353
+  },
+  {
+    "id": "news_20260922_005",
+    "date": "2026-09-22",
+    "category": "市场趋势",
+    "title": "亚马逊启动水星计划，2031年前将美国当日达站点扩至1000个",
+    "summary": "亚马逊内部规划文件显示，水星计划(Project Mercury)目标在2031年前将美国境内的当日达履约网点(SSD)从现有85个扩容至1000个以上，整体规模实现十倍以上增长，让全美80% Prime会员在直线10英里范围内触达当日达站点。",
+    "source": "https://kuajing.baijing.cn/newsflashes/",
+    "tags": ["亚马逊", "物流", "当日达", "Prime", "美国市场"],
+    "read": false,
+    "createdAt": 1790037092353
+  },
+  {
+    "id": "news_20260922_006",
+    "date": "2026-09-22",
+    "category": "平台合规",
+    "title": "泰国海关严查泰国制造商品原产地，打击转口规避行为",
+    "summary": "泰国海关与商务部外贸厅合作，对标注Made in Thailand或声称在泰国生产的商品加强核查。重点核实是否真正在泰国境内完成生产加工，针对借用原产地名义规避其他国家贸易措施的行为，影响范围涵盖泰国本土生产商及海外市场信誉。",
+    "source": "https://kuajing.baijing.cn/newsflashes/",
+    "tags": ["泰国", "原产地", "海关", "合规", "东南亚"],
+    "read": false,
+    "createdAt": 1790037092353
+  },
+  {
+    "id": "news_20260922_007",
+    "date": "2026-09-22",
+    "category": "平台功能更新",
+    "title": "TikTok Shop规范菲越市场AIGC商品图，禁止虚构材质与功能",
+    "summary": "TikTok Shop更新AIGC卖家指引，新规已在菲律宾、越南等市场落地。要求AI生成或修改后的商品图片必须真实反映实际商品，不能通过技术手段虚构功能、材质、数量、颜色或使用效果，禁止过度美化误导消费者，违者将面临下架或处罚。",
+    "source": "https://kuajing.baijing.cn/newsflashes/",
+    "tags": ["TikTok Shop", "AIGC", "商品图", "合规", "菲律宾越南"],
+    "read": false,
+    "createdAt": 1790037092353
+  },
+  {
+    "id": "news_20260922_008",
+    "date": "2026-09-22",
+    "category": "平台动态",
+    "title": "Whatnot推出基于销量的分级佣金，高销量卖家最低可享3.5%费率",
+    "summary": "Whatnot宣布自9月21日起对现有卖家实施新佣金结构，根据每四周总销售额确定下一周期费率，新卖家自9月28日起适用。四周销售额达50万美元及以上可享公开费率：体育及集换式卡牌6.5%、其他收藏品5%、时尚4.5%、其他品类4%；硬币起价4%，最低可至3.5%。",
+    "source": "https://kuajing.baijing.cn/newsflashes/",
+    "tags": ["Whatnot", "佣金", "分级费率", "美国市场", "直播电商"],
+    "read": false,
+    "createdAt": 1790037092353
+  },
+  {
+    "id": "news_20260922_009",
+    "date": "2026-09-22",
+    "category": "平台动态",
+    "title": "UPS双新规9月落地，6日美线报关费调价、28日系统迭代",
+    "summary": "UPS于9月6日生效美国报关费用调价，9月28日落地全球物流管理系统迭代更替。两项规则直接改变跨境卖家美线出货的成本核算、清关申报与订单管理模式，对旺季备货、黑五出货产生深远影响，建议卖家重新评估美线运营成本结构。",
+    "source": "http://www.fw-kj.com/news/876.html",
+    "tags": ["UPS", "报关", "物流系统", "美线", "跨境物流"],
+    "read": false,
+    "createdAt": 1790037092353
+  },
+  {
+    "id": "news_20260922_010",
+    "date": "2026-09-22",
+    "category": "贸易政策",
+    "title": "TikTok肯尼亚创作者将被预扣税，非居民数字收入税率高达20%",
+    "summary": "TikTok通知肯尼亚创作者提交个人信息与税务表格，区分居民与非居民适用不同预扣税率——居民5%、非居民20%。该政策源自2023年7月《财政法案》，2024年12月法律进一步要求数字平台运营商履行代扣义务。覆盖广告、品牌赞助、联盟佣金、订阅、直播礼物等变现收入。",
+    "source": "https://kuajing.baijing.cn/newsflashes/",
+    "tags": ["TikTok", "肯尼亚", "数字税", "预扣税", "非洲市场"],
+    "read": false,
+    "createdAt": 1790037092353
+  }
+]
