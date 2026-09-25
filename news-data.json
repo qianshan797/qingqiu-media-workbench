@@ -1,5 +1,184 @@
 [
   {
+    "id": "news_20260925_001",
+    "date": "2026-09-25",
+    "category": "平台合规",
+    "title": "亚马逊欧洲站锂电池9月30日TIC认证截止，未合规商品将下架",
+    "summary": "亚马逊欧洲站规定9月30日前未通过TIC认证的锂电池商品将被下架，卖家需尽快完成认证并提交资质，避免旺季前ASIN被强制移除。",
+    "source": "https://gs.amazon.cn/en/news",
+    "tags": [
+      "亚马逊",
+      "欧洲站",
+      "锂电池",
+      "TIC认证",
+      "合规"
+    ],
+    "read": false,
+    "createdAt": 1790318009189,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20260925_002",
+    "date": "2026-09-25",
+    "category": "平台合规",
+    "title": "亚马逊PAN-EU入库欧盟及直发法国货件9月起须提供MRN+EORI",
+    "summary": "9月1日起通过PAN-EU入库欧盟及直接发往法国的货件必须提供MRN与EORI号，否则将影响清关与库存入仓，欧洲站卖家需核对发货资料。",
+    "source": "https://gs.amazon.cn/en/news",
+    "tags": [
+      "亚马逊",
+      "PAN-EU",
+      "MRN",
+      "EORI",
+      "清关合规"
+    ],
+    "read": false,
+    "createdAt": 1790318009189,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20260925_003",
+    "date": "2026-09-25",
+    "category": "平台合规",
+    "title": "亚马逊欧洲站要求尽快验证主要营业地址，逾期付款扣留或账户停用",
+    "summary": "亚马逊欧洲站提醒卖家尽快完成主要营业地址验证，逾期未验证将面临付款扣留甚至账户停用，影响资金结算与店铺正常运营。",
+    "source": "https://gs.amazon.cn/en/news",
+    "tags": [
+      "亚马逊",
+      "欧洲站",
+      "营业地址",
+      "账户合规"
+    ],
+    "read": false,
+    "createdAt": 1790318009189,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20260925_004",
+    "date": "2026-09-25",
+    "category": "平台动态",
+    "title": "Shopee扩展东南亚及台湾本地履约网络，备战区域旺季包裹高峰",
+    "summary": "Shopee依托动态承运商路由与分布式库存扩展东南亚及台湾本地履约网络，应对区域旺季包裹量增长，提升末端配送时效与稳定性。",
+    "source": "https://retailnews.asia/e-tailing",
+    "tags": [
+      "Shopee",
+      "本地履约",
+      "东南亚",
+      "台湾",
+      "物流"
+    ],
+    "read": false,
+    "createdAt": 1790318009189,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20260925_005",
+    "date": "2026-09-25",
+    "category": "平台功能更新",
+    "title": "TikTok Shop美国10月15日上线新版Shop Performance Score",
+    "summary": "TikTok Shop将于10月15日在美国上线新版Shop Performance Score，新版SPS页面将替代现有页面，修订商品满意度与物流履约指标计算方式。",
+    "source": "https://partner.tiktokshop.com/docv2/changelog",
+    "tags": [
+      "TikTok Shop",
+      "SPS",
+      "美国",
+      "卖家绩效",
+      "指标更新"
+    ],
+    "read": false,
+    "createdAt": 1790318009189,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20260925_006",
+    "date": "2026-09-25",
+    "category": "平台功能更新",
+    "title": "TikTok新版Smart+广告升级，打破全自动/手动二元模式",
+    "summary": "TikTok本月将新版Smart+更新至广告帮助中心，核心升级打破全自动与全手动二元模式，中小企业可按需选择全自动、部分模块自动化或完全手动控制。",
+    "source": "https://m.ebrun.com/709961.html",
+    "tags": [
+      "TikTok",
+      "Smart+",
+      "广告投放",
+      "自动化",
+      "中小企业"
+    ],
+    "read": false,
+    "createdAt": 1790318009189,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20260925_007",
+    "date": "2026-09-25",
+    "category": "平台动态",
+    "title": "TikTok Shop东南亚2026飞轮计划Q3收官，新商免佣任务9月30日截止",
+    "summary": "TikTok Shop东南亚2026飞轮计划Q3适用7月1日至9月30日入驻的新店铺，新商免佣任务仅在入驻30天内有效，9月30日即将截止，新卖家需尽快领取。",
+    "source": "https://seller.tiktokshopglobalselling.com/university/course?learning_id=806823045105409",
+    "tags": [
+      "TikTok Shop",
+      "飞轮计划",
+      "东南亚",
+      "新商免佣",
+      "Q3"
+    ],
+    "read": false,
+    "createdAt": 1790318009189,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20260925_008",
+    "date": "2026-09-25",
+    "category": "平台动态",
+    "title": "TikTok Shop开放2026 US CBT限时优惠活动报名",
+    "summary": "TikTok Shop开放2026 US CBT限时优惠活动报名，首次申请要求过去15天单个店铺或店群日均创建包裹量≥200单，涵盖CBT、TikTok Shipping和自发货模式。",
+    "source": "https://seller.tiktokglobalshop.com/university/new-articles",
+    "tags": [
+      "TikTok Shop",
+      "US CBT",
+      "限时优惠",
+      "店群",
+      "跨境"
+    ],
+    "read": false,
+    "createdAt": 1790318009189,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20260925_009",
+    "date": "2026-09-25",
+    "category": "市场趋势",
+    "title": "2026杭州跨博会聚焦海外采购商与外贸工厂新需求",
+    "summary": "2026杭州跨博会上，海外采购商与外贸工厂不再只关注订单，更聚焦供应链柔性、小单快反与本地化能力，折射跨境B2B从拼价格向拼履约与拼定制转型。",
+    "source": "https://m.ebrun.com/709961.html",
+    "tags": [
+      "杭州跨博会",
+      "外贸工厂",
+      "海外采购",
+      "B2B",
+      "供应链"
+    ],
+    "read": false,
+    "createdAt": 1790318009189,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20260925_010",
+    "date": "2026-09-25",
+    "category": "技术动态",
+    "title": "WCO发布跨境电子商务标准技术规范框架修正案",
+    "summary": "世界海关组织WCO发布跨境电子商务标准技术规范框架修正案，明确海关估价、税费征收及与税务机构合作等规范，为各国跨境电子商务监管提供统一技术标准。",
+    "source": "https://www.wcoomd.org/-/media/wco/public/global/pdf/topics/facilitation/ressources/permanent-technical-committee/251-252/summary/pc0822eae5a.pdf?la=pt-PT",
+    "tags": [
+      "WCO",
+      "跨境电商",
+      "标准框架",
+      "海关估价",
+      "技术规范"
+    ],
+    "read": false,
+    "createdAt": 1790318009189,
+    "addedToPool": false
+  },
+  {
     "id": "news_20260924_001",
     "date": "2026-09-24",
     "category": "平台功能更新",
