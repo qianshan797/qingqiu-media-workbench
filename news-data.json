@@ -1,163 +1,112 @@
 [
   {
-    "id": "news_20260927_001",
-    "date": "2026-09-27",
+    "id": "news_20260928_001",
+    "date": "2026-09-28",
+    "category": "贸易政策",
+    "title": "中美达成300亿美元对等降税协议 跨境电商迎利好",
+    "summary": "9月28日最新消息，中美达成300亿美元对等降税协议，涵盖多个品类商品。此举将显著降低跨境卖家出口成本，提升中国制造商品在美国市场的价格竞争力，预计对跨境电商行业产生积极推动作用，亚马逊、TikTok Shop等平台中国卖家将直接受益。",
+    "source": "https://www.ebrun.com/wap/c0.html",
+    "tags": ["贸易政策", "中美贸易", "降税", "跨境电商", "亚马逊"],
+    "read": false,
+    "createdAt": 1790555477000
+  },
+  {
+    "id": "news_20260928_002",
+    "date": "2026-09-28",
+    "category": "平台合规",
+    "title": "TikTok Shop越南站将对超10公斤包裹加收物流运营费",
+    "summary": "TikTok Shop越南本土站发布通知，自2025年10月12日0时起，所有新订单中计费重量超过10公斤的包裹须缴纳额外物流运营费。该政策旨在覆盖大件商品物流成本，跨境卖家需提前调整大件商品的成本结构与定价策略。",
+    "source": "https://www.ebrun.com/wap/c0.html",
+    "tags": ["TikTok Shop", "越南", "物流费用", "平台合规", "大件商品"],
+    "read": false,
+    "createdAt": 1790555477000
+  },
+  {
+    "id": "news_20260928_003",
+    "date": "2026-09-28",
+    "category": "市场趋势",
+    "title": "曼谷50个区全面受灾 Shopee泰国物流配送大面积延迟",
+    "summary": "受泰国曼谷50个区严重洪涝灾害影响，Shopee泰国本土站点订单履约与末端配送出现大面积延迟，平台已启动应急响应机制。东南亚跨境卖家需密切关注泰国站订单状态变化，提前与买家沟通并准备售后方案。",
+    "source": "https://www.ebrun.com/retail/o2o/1/",
+    "tags": ["Shopee", "泰国", "自然灾害", "物流", "履约"],
+    "read": false,
+    "createdAt": 1790555477000
+  },
+  {
+    "id": "news_20260928_004",
+    "date": "2026-09-28",
+    "category": "平台动态",
+    "title": "亚马逊封禁Meta旗下AI代理Muse 强化平台购物安全",
+    "summary": "美国时间2026年9月20日，亚马逊正式阻止Meta旗下AI代理Muse代替用户在亚马逊网站购物。亚马逊称Muse未与平台达成合作且不主动表明AI身份，存在获取用户凭证的安全风险。此举体现亚马逊对平台AI代理生态的强势管控。",
+    "source": "https://m.toutiao.com/group/7690239844366287369/",
+    "tags": ["亚马逊", "AI代理", "平台安全", "Meta", "合规"],
+    "read": false,
+    "createdAt": 1790555477000
+  },
+  {
+    "id": "news_20260928_005",
+    "date": "2026-09-28",
     "category": "平台功能更新",
-    "title": "亚马逊 Seller Central 开放 eBay/Shopify/TikTok Shop 多渠道管理",
-    "summary": "亚马逊在 9 月 24 日 Accelerate 卖家大会上宣布，将允许独立卖家在 Seller Central 后台直接管理 eBay、Shopify、TikTok Shop 和 Walmart 店铺，提供免费多渠道工具，同时给予自有网站 Prime 配送和最高 25% 的履约折扣。",
-    "source": "https://www.vizaca.com/entrepreneurship/amazon-seller-central-multichannel-tools/",
-    "tags": [
-      "Amazon",
-      "Seller Central",
-      "多渠道销售",
-      "Accelerate"
-    ],
+    "title": "TikTok Shop欧盟四国加码 德国法国意大利西班牙全面发力内容电商",
+    "summary": "TikTok Shop持续在欧盟四国（德、法、意、西）加码内容电商布局，扩充本地化达人资源、完善履约基建与广告产品矩阵。德、法、意、西四国成为TikTok Shop欧洲扩张的核心市场，跨境卖家可加速布局内容化运营。",
+    "source": "https://m.toutiao.com/group/7690239844366287369/",
+    "tags": ["TikTok Shop", "欧盟", "内容电商", "欧洲市场", "达人"],
     "read": false,
-    "createdAt": 1790469182587
+    "createdAt": 1790555477000
   },
   {
-    "id": "news_20260927_002",
-    "date": "2026-09-27",
+    "id": "news_20260928_006",
+    "date": "2026-09-28",
+    "category": "技术动态",
+    "title": "速卖通潜力国家地区智能经营Agent全面上线 AI驱动选品投放",
+    "summary": "阿里速卖通面向潜力国家与潜力地区市场正式推出智能经营Agent，覆盖智能选品、自动投放、动态定价与本地化营销全链路。该Agent基于AI大模型帮助商家在新兴市场降低运营门槛，提升全球扩张效率。",
+    "source": "https://m.toutiao.com/group/7690239844366287369/",
+    "tags": ["速卖通", "AI", "智能经营", "潜力市场", "自动化"],
+    "read": false,
+    "createdAt": 1790555477000
+  },
+  {
+    "id": "news_20260928_007",
+    "date": "2026-09-28",
+    "category": "市场趋势",
+    "title": "Lazada公布9.9大促战报：百元以上订单贡献近六成GMV",
+    "summary": "Lazada发布2026年9.9 Mega Brands Sale战报：100美元及以上订单贡献近60%GMV，其中新加坡占比约75%，泰国与马来西亚均达60%；整体平均订单价值同比提升近50%。大促升级带动客单价显著提升，跨境品牌型卖家迎来红利。",
+    "source": "https://m.toutiao.com/group/7690239844366287369/",
+    "tags": ["Lazada", "9.9大促", "GMV", "客单价", "东南亚"],
+    "read": false,
+    "createdAt": 1790555477000
+  },
+  {
+    "id": "news_20260928_008",
+    "date": "2026-09-28",
     "category": "平台动态",
-    "title": "TikTok Shop 2026 全托管黑五大促开启，三个月超长周期覆盖 16 国",
-    "summary": "TikTok Shop 2026 年全托管黑五大促季窗口敲定在 10-12 月，首次将黑五促销周期拉长至三个月，覆盖美国、英国及欧洲多国共计 16 个国家，为跨境卖家提供更长的转化窗口。",
-    "source": "http://fw-kj.com/news/list_0_27.html",
-    "tags": [
-      "TikTok Shop",
-      "黑五",
-      "全托管",
-      "大促"
-    ],
+    "title": "Pinterest携手Shopee 在印尼巴西推出创作者导购合作",
+    "summary": "Pinterest与Shopee在印尼与巴西两大市场联合推出创作者导购合作，打通内容种草到电商交易的闭环。该合作依托Pinterest视觉发现优势与Shopee本地化电商基建，覆盖Z世代用户，应对区域平台竞争。",
+    "source": "https://www.ebrun.com/information",
+    "tags": ["Pinterest", "Shopee", "创作者导购", "印尼", "巴西"],
     "read": false,
-    "createdAt": 1790469182587
+    "createdAt": 1790555477000
   },
   {
-    "id": "news_20260927_003",
-    "date": "2026-09-27",
+    "id": "news_20260928_009",
+    "date": "2026-09-28",
+    "category": "市场趋势",
+    "title": "阿里速卖通澳洲流量逆势增长 8月访问量达1435万次",
+    "summary": "数字营销平台Semrush数据显示，2026年8月澳大利亚零售网站整体流量下滑，而阿里旗下速卖通AliExpress逆势增长5.37%，访问量达1435万次，成为前20大零售网站中唯一环比增长的平台，澳洲市场成为中国出海新蓝海。",
+    "source": "https://www.ebrun.com/retail/o2o/14",
+    "tags": ["速卖通", "澳洲", "流量增长", "新兴市场", "Semrush"],
+    "read": false,
+    "createdAt": 1790555477000
+  },
+  {
+    "id": "news_20260928_010",
+    "date": "2026-09-28",
     "category": "平台合规",
-    "title": "Temu 因 DSA 合规漏洞被欧盟罚款 2 亿欧元",
-    "summary": "欧盟委员会依据《数字服务法》(DSA) 对 Temu 处以 2 亿欧元罚款，认定其未能有效履行风险评估与缓解义务，在识别和评估平台非法及不安全产品的系统性风险上存在合规漏洞。",
-    "source": "http://www.chinanews.com.cn/cj/2026/08-07/10673390.shtml",
-    "tags": [
-      "Temu",
-      "欧盟",
-      "DSA",
-      "罚款"
-    ],
+    "title": "亚马逊欧洲站锂电池新规：9月30日未通过TIC认证商品将下架",
+    "summary": "亚马逊欧洲站发布锂电池合规通知：9月30日起，未通过TIC认证的锂电池类商品将被强制下架。通过PAN-EU入库欧盟货件以及直接发往法国的货件必须提供MRN+EORI。卖家需在截止日前完成检测与认证以避免链接下架风险。",
+    "source": "https://gs.amazon.cn/news",
+    "tags": ["亚马逊", "欧洲站", "锂电池", "TIC认证", "合规"],
     "read": false,
-    "createdAt": 1790469182587
-  },
-  {
-    "id": "news_20260927_004",
-    "date": "2026-09-27",
-    "category": "平台合规",
-    "title": "AliExpress 因 DSA 违规被欧盟罚款 5.5 亿欧元",
-    "summary": "继 Temu 之后，AliExpress 于 2026 年 7 月 20 日被欧盟处以 5.5 亿欧元罚款，创下 DSA 处罚新高，凸显平台合规成本在欧盟市场正急剧攀升。",
-    "source": "http://www.chinanews.com.cn/cj/2026/08-07/10673390.shtml",
-    "tags": [
-      "AliExpress",
-      "欧盟",
-      "DSA",
-      "罚款"
-    ],
-    "read": false,
-    "createdAt": 1790469182587
-  },
-  {
-    "id": "news_20260927_005",
-    "date": "2026-09-27",
-    "category": "平台合规",
-    "title": "亚马逊欧洲站 PAN-EU 入库新规 9/1 起必须提供 MRN+EORI",
-    "summary": "自 2026 年 9 月 1 日起，通过 PAN-EU 入库欧盟货件及直接发往法国的货件，60 天期限届满后仍缺少有效进口详情（MRN 和 EORI）的卖家，将无法创建发往欧盟运营中心的新货件。",
-    "source": "https://gs.amazon.cn/news/news-notices-260811",
-    "tags": [
-      "Amazon",
-      "欧洲站",
-      "PAN-EU",
-      "MRN",
-      "EORI"
-    ],
-    "read": false,
-    "createdAt": 1790469182587
-  },
-  {
-    "id": "news_20260927_006",
-    "date": "2026-09-27",
-    "category": "平台合规",
-    "title": "亚马逊欧洲站锂电池 9/30 新规：未过 TIC 认证将下架",
-    "summary": "亚马逊欧洲站发布锂电池新规，要求所有锂电池商品在 2026 年 9 月 30 日前通过 TIC 认证，逾期未认证商品将被下架，同时要求卖家尽快验证主要营业地址，逾期可能面临付款扣留和账户停用。",
-    "source": "https://gs.amazon.cn/en/news",
-    "tags": [
-      "Amazon",
-      "锂电池",
-      "TIC认证",
-      "欧洲合规"
-    ],
-    "read": false,
-    "createdAt": 1790469182587
-  },
-  {
-    "id": "news_20260927_007",
-    "date": "2026-09-27",
-    "category": "贸易政策",
-    "title": "欧盟 (EU) 2026/382：低值 B2C 货件每件征收 3 欧元进口关税",
-    "summary": "自 2026 年 7 月 1 日起，欧盟新规对所有从境外发往欧盟消费者、货值≤150 欧元的低值 B2C 零售货件（含英国发出的包裹），每件征收 3 欧元进口关税，该税费属于欧盟法定海关税费。",
-    "source": "https://sellercentral.amazon.de/help/hub/reference/external/200149570?locale=zh-CN",
-    "tags": [
-      "欧盟",
-      "关税",
-      "低值货件",
-      "B2C"
-    ],
-    "read": false,
-    "createdAt": 1790469182587
-  },
-  {
-    "id": "news_20260927_008",
-    "date": "2026-09-27",
-    "category": "平台动态",
-    "title": "Shopee 新加坡站首店免佣期从 3 个月延长至 6 个月",
-    "summary": "Shopee 2026 年 9 月 3 日更新政策，自 7 月 1 日起，新加坡站点新卖家首店免佣期从 3 个月延长至 6 个月，覆盖跨境直邮、官方海外仓及三方仓店铺，降低新卖家入驻门槛。",
-    "source": "https://shopee.cn/edu/article/26619",
-    "tags": [
-      "Shopee",
-      "新加坡",
-      "免佣",
-      "新卖家"
-    ],
-    "read": false,
-    "createdAt": 1790469182587
-  },
-  {
-    "id": "news_20260927_009",
-    "date": "2026-09-27",
-    "category": "贸易政策",
-    "title": "跨境电商出口退运税收优惠再延续两年至 2027",
-    "summary": "财政部等发布公告，将跨境电子商务出口退运商品税收优惠政策延续至 2027 年底，覆盖海关监管代码 1210、9610、9710、9810 项下申报出口、因滞销退货的商品。",
-    "source": "https://www.yicai.com/news/103045815.html",
-    "tags": [
-      "跨境电商",
-      "出口退税",
-      "退运",
-      "税收优惠"
-    ],
-    "read": false,
-    "createdAt": 1790469182587
-  },
-  {
-    "id": "news_20260927_010",
-    "date": "2026-09-27",
-    "category": "贸易政策",
-    "title": "欧洲议会通过电商关税新规，11 月起平台视同进口商",
-    "summary": "欧洲议会通过新规，要求直接向欧盟消费者发货的电商平台视同进口商承担关税责任，并引入每包裹处理费，最迟 2026 年 11 月生效；欧盟 Data Hub 系统将取代现有 111 个海关系统。",
-    "source": "https://www.europarl.europa.eu/news/fr/press-room/20260911IPR47456/adoption-de-nouvelles-regles-en-matiere-de-commerce-electronique-et-de-douanes",
-    "tags": [
-      "欧盟",
-      "关税",
-      "电商平台",
-      "海关新规"
-    ],
-    "read": false,
-    "createdAt": 1790469182587
+    "createdAt": 1790555477000
   }
 ]
