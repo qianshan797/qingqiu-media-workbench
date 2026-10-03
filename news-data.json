@@ -1,162 +1,112 @@
 [
   {
-    "id": "news_20261002_001",
-    "date": "2026-10-02",
-    "read": false,
-    "tags": [
-      "TikTok Shop",
-      "大促活动",
-      "美国站",
-      "GMV"
-    ],
-    "title": "TikTok Shop US 启动十月 GMV 冲刺大促",
-    "source": "https://www.niceggie.com/en/news/tiktok-shop-us-announces-october-gmv-sprint-2026-6abe0a451bc406cba4adbd8c",
-    "summary": "TikTok Shop 美国站宣布十月 GMV Sprint 活动，10月1日至31日面向邀请制 Startup、Rising、Accelerating 卖家开放，按对比基线 GMV 的增长率排名激励。",
-    "category": "平台动态",
-    "createdAt": 1790901112000
-  },
-  {
-    "id": "news_20261002_002",
-    "date": "2026-10-02",
-    "read": false,
-    "tags": [
-      "TikTok Shop",
-      "物流",
-      "退货",
-      "UPS"
-    ],
-    "title": "TikTok Shop 接入 UPS Happy Returns 无标签退货",
-    "source": "https://novadata.io/resources/news/tiktok-shop-ups-happy-returns-label-free-september-2026",
-    "summary": "UPS 旗下 Happy Returns 于 9 月 29 日宣布与 TikTok Shop 美国站集成，消费者可在 Return Bar 网点免盒免标签退货，自发货和平台代发订单均支持。",
-    "category": "平台功能更新",
-    "createdAt": 1790901112000
-  },
-  {
-    "id": "news_20261002_003",
-    "date": "2026-10-02",
-    "read": false,
-    "tags": [
-      "Amazon",
-      "Seller Central",
-      "多渠道",
-      "工具"
-    ],
-    "title": "Amazon Seller Central 新增多渠道销售工具",
-    "source": "https://www.aboutamazon.com/news/small-business/amazon-seller-central-multichannel-selling-tools",
-    "summary": "亚马逊在 Seller Central 推出多渠道销售工具，打通 Amazon、eBay、Shopify、TikTok、Walmart 的订单、Listing 和利润数据，美国站卖家逐步灰度中。",
-    "category": "平台功能更新",
-    "createdAt": 1790901112000
-  },
-  {
-    "id": "news_20261002_004",
-    "date": "2026-10-02",
-    "read": false,
-    "tags": [
-      "Amazon",
-      "Prime Big Deal Days",
-      "大促",
-      "Q4"
-    ],
-    "title": "Amazon Prime Big Deal Days 定档 10 月 6-7 日",
-    "source": "https://www.aboutamazon.com/news/retail/prime-big-deal-days-best-deals-savings-2026",
-    "summary": "亚马逊宣布 2026 年秋季 Prime Big Deal Days 于 10 月 6-7 日举办，覆盖 35+ 品类的百万级 Prime 专属折扣，Alexa for Shopping 支持优惠提醒。",
-    "category": "平台动态",
-    "createdAt": 1790901112000
-  },
-  {
-    "id": "news_20261002_005",
-    "date": "2026-10-02",
-    "read": false,
-    "tags": [
-      "Shopee",
-      "海外仓",
-      "费率",
-      "东南亚"
-    ],
-    "title": "Shopee 公布 10 月海外仓头程服务费率",
-    "source": "https://www.chwang.com/baike/shopee_news",
-    "summary": "Shopee 发布 2026 年 10 月海外仓官方头程服务渠道费率通知，覆盖菲律宾、泰国、马来西亚和新加坡市场，计费标准沿用 8 月水平。",
-    "category": "平台动态",
-    "createdAt": 1790901112000
-  },
-  {
-    "id": "news_20261002_006",
-    "date": "2026-10-02",
-    "read": false,
-    "tags": [
-      "Temu",
-      "SHEIN",
-      "本地仓",
-      "中东"
-    ],
-    "title": "Temu 加速欧洲本地仓布局 筹备中东站点",
-    "source": "https://www.chwang.com/temu",
-    "summary": "Temu 与 SHEIN 正加速欧洲本地仓布局，目标 80% 欧单本地履约；同时 Temu 正筹备中东站点上线，继日韩之后进一步全球化。",
+    "id": "news_20261003_001",
+    "date": "2026-10-03",
     "category": "市场趋势",
-    "createdAt": 1790901112000
+    "title": "TikTok Shop与亚马逊头部卖家重合度仅约5%",
+    "summary": "Marketplace Pulse报告显示，TikTok Shop与亚马逊美国站前1万名卖家中仅约5%重合，且两边排名几乎无相关性。TikTok头部品牌落地亚马逊的成功率是反向路径的5倍，显示两平台生态差异显著。",
+    "source": "https://m.chwang.com/tiktokshop",
+    "tags": ["TikTok Shop", "亚马逊", "卖家生态", "市场分析"],
+    "read": false,
+    "createdAt": 1791072000000
   },
   {
-    "id": "news_20261002_007",
-    "date": "2026-10-02",
-    "read": false,
-    "tags": [
-      "合规",
-      "法国",
-      "罚款",
-      "SHEIN"
-    ],
-    "title": "法国《反超快时尚法》罚款最高每件 10 欧",
-    "source": "http://www.chinanews.com.cn/cj/2026/08-07/10673390.shtml",
-    "summary": "法国参议院通过反超快时尚法案，监管目标直指 Shein、Temu、速卖通等中国跨境平台，罚款从每件 0.25 欧至 6 欧起，后续拟增至 10 欧并加收 2 欧处理费。",
+    "id": "news_20261003_002",
+    "date": "2026-10-03",
     "category": "平台合规",
-    "createdAt": 1790901112000
+    "title": "Shopee印尼站正式停止销售跨境商品",
+    "summary": "据印尼媒体报道，Shopee印尼站已自10月4日起正式停止销售来自海外或跨境卖家的商品。此举系对印尼2023年第31号贸易部长条例的响应，意味着印尼电商市场本地化门槛进一步提高。",
+    "source": "https://letschuhai.com/shopeeyinnizhantingshoukuajingshangpinyinnidianshanghequhecong",
+    "tags": ["Shopee", "印尼", "跨境合规", "本地化"],
+    "read": false,
+    "createdAt": 1791072001000
   },
   {
-    "id": "news_20261002_008",
-    "date": "2026-10-02",
+    "id": "news_20261003_003",
+    "date": "2026-10-03",
+    "category": "平台功能更新",
+    "title": "TikTok Shop美国接入免包装退货服务",
+    "summary": "TikTok Shop美国站点正式上线免包装退货服务，与UPS旗下逆向物流服务商Happy Returns合作。消费者无需自备纸箱或打印面单，可前往近一万个线下退货网点完成投递，进一步完善退货履约体系。",
+    "source": "https://fw-kj.com/news/list_25_1.html",
+    "tags": ["TikTok Shop", "退货物流", "Happy Returns", "美国站"],
     "read": false,
-    "tags": [
-      "TikTok Shop",
-      "美国站",
-      "销售额",
-      "市场数据"
-    ],
-    "title": "TikTok Shop 美区前 4 月销售额突破 67.5 亿",
-    "source": "http://www.fw-kj.com/",
-    "summary": "2026 年前 4 个月 TikTok Shop 美区整体销售额突破 67.5 亿美元，内容电商独特优势逆势突围，增速稳居主流跨境平台首位，成为中小卖家欧美核心增量赛道。",
-    "category": "市场趋势",
-    "createdAt": 1790901112000
+    "createdAt": 1791072002000
   },
   {
-    "id": "news_20261002_009",
-    "date": "2026-10-02",
+    "id": "news_20261003_004",
+    "date": "2026-10-03",
+    "category": "平台合规",
+    "title": "欧盟7月起取消150欧元以下低价进口免税",
+    "summary": "自2026年7月1日起，欧盟取消对价值150欧元及以下B2C进口商品的免税政策，改为每件征收3欧元关税。亚马逊提醒FBM卖家必须使用合规承运人并完税后交货，避免消费者收货后被额外征税。",
+    "source": "https://finance.sina.com.cn/tech/roll/2026-06-22/doc-iniefuxz7210454.shtml",
+    "tags": ["欧盟", "关税", "亚马逊", "FBM", "合规"],
     "read": false,
-    "tags": [
-      "TikTok Shop",
-      "Amazon",
-      "卖家分析",
-      "Marketplace Pulse"
-    ],
-    "title": "TikTok Shop 与亚马逊头部卖家重合度仅 5%",
-    "source": "https://www.chwang.com/baike/tiktokshop_article",
-    "summary": "Marketplace Pulse 报告显示，TikTok Shop 与亚马逊美国站前 1 万名卖家重合度仅约 5%，TikTok 头部卖家转亚成功率是反向路径的 5 倍。",
-    "category": "市场趋势",
-    "createdAt": 1790901112000
+    "createdAt": 1791072003000
   },
   {
-    "id": "news_20261002_010",
-    "date": "2026-10-02",
-    "read": false,
-    "tags": [
-      "RCEP",
-      "海关",
-      "中马贸易",
-      "原产地"
-    ],
-    "title": "中国-马来西亚原产地电子信息交换系统运行",
-    "source": "http://www.customs.gov.cn/customs/2026-06/01/article_2026060114192869022.html",
-    "summary": "海关总署宣布中国-马来西亚原产地电子信息交换系统 6 月起正式运行，实现 RCEP 和中国-东盟框架协议项下原产地证书实时传输，提升中马贸易便利化。",
+    "id": "news_20261003_005",
+    "date": "2026-10-03",
     "category": "贸易政策",
-    "createdAt": 1790901112000
+    "title": "美区小包免税政策剧变，800美元免税无限期暂停",
+    "summary": "美国非邮政渠道800美元以下小包免税政策被无限期暂停，直邮成本将大幅上涨。关税暴涨104%，美区卖家需立刻核算成本、调整定价与物流方案，以应对政策突变带来的冲击。",
+    "source": "https://aitosea.ai/daily-reports",
+    "tags": ["美国", "免税政策", "小包", "关税", "直邮"],
+    "read": false,
+    "createdAt": 1791072004000
+  },
+  {
+    "id": "news_20261003_006",
+    "date": "2026-10-03",
+    "category": "平台合规",
+    "title": "TEMU强制所有商品提供英代/欧代信息",
+    "summary": "TEMU平台强制要求所有商品提供英国授权代表和欧盟授权代表信息，以符合当地产品安全法规。未合规商品可能面临下架风险，卖家需尽快完成英代/欧代注册并上传相关信息。",
+    "source": "https://aitosea.ai/daily-reports",
+    "tags": ["TEMU", "英代", "欧代", "合规", "产品安全"],
+    "read": false,
+    "createdAt": 1791072005000
+  },
+  {
+    "id": "news_20261003_007",
+    "date": "2026-10-03",
+    "category": "平台动态",
+    "title": "Shein诉Temu版权侵权案在英国败诉",
+    "summary": "英国伦敦高等法院就Shein起诉Temu版权侵权案作出判决，驳回Shein相关指控，裁定Temu在英国网站使用的促销服装照片未侵犯Shein版权。此案涉及2559张产品图片的版权争议。",
+    "source": "https://www.chwang.com/temu",
+    "tags": ["Shein", "Temu", "版权", "英国", "诉讼"],
+    "read": false,
+    "createdAt": 1791072006000
+  },
+  {
+    "id": "news_20261003_008",
+    "date": "2026-10-03",
+    "category": "市场趋势",
+    "title": "eBay调查：57%美国消费者10月就开始年终购物",
+    "summary": "eBay发布的2026年年终购物洞察显示，57%的美国消费者计划在10月或更早开始年终购物，26%的消费者计划增加年终购物预算。这意味着跨境卖家需将旺季准备周期进一步前移。",
+    "source": "https://news.sohu.com/a/1076230649_120465227",
+    "tags": ["eBay", "美国消费者", "黑五", "旺季", "购物趋势"],
+    "read": false,
+    "createdAt": 1791072007000
+  },
+  {
+    "id": "news_20261003_009",
+    "date": "2026-10-03",
+    "category": "平台动态",
+    "title": "亚马逊10月15日起收取FBA假期旺季配送费用",
+    "summary": "亚马逊宣布2026年10月15日至2027年1月14日期间收取FBA、加拿大和墨西哥远程配送、多通路配送及使用Prime购买的假期旺季配送费用。卖家需提前核算成本，做好库存与定价策略调整。",
+    "source": "https://sellercentral.amazon.com/help/hub/reference/external/GMUTB89XM7AATPR3",
+    "tags": ["亚马逊", "FBA", "旺季费用", "配送费", "Q4"],
+    "read": false,
+    "createdAt": 1791072008000
+  },
+  {
+    "id": "news_20261003_010",
+    "date": "2026-10-03",
+    "category": "贸易政策",
+    "title": "跨境电商出口退运商品税收优惠政策延续至2027年底",
+    "summary": "财政部等三部门发布公告，对2026年1月1日至2027年12月31日期间在跨境电商海关监管代码项下申报出口，且自出口之日起6个月内因滞销、退货原因原状退运进境的商品，免征进口关税和进口环节增值税、消费税。",
+    "source": "https://gss.mof.gov.cn/gzdt/zhengcejiedu/202602/t20260209_3983562.htm",
+    "tags": ["财政部", "海关总署", "退运", "税收优惠", "跨境电商"],
+    "read": false,
+    "createdAt": 1791072009000
   }
 ]
