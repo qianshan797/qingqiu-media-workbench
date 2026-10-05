@@ -1,5 +1,165 @@
 [
   {
+    "id": "news_20261005_001",
+    "date": "2026-10-05",
+    "category": "平台动态",
+    "title": "TikTok Shop新加坡卖家突破8万，直播销售同比翻倍",
+    "summary": "截至10月初，TikTok Shop新加坡卖家基数已达8万家，直播电商销售额同比增长超70%，直播观看人次增长150%，视频带货成为核心增长引擎。",
+    "source": "https://retailnews.asia/e-tailing",
+    "tags": [
+      "TikTok Shop",
+      "新加坡",
+      "直播电商",
+      "卖家增长"
+    ],
+    "read": false,
+    "createdAt": 1791160348404
+  },
+  {
+    "id": "news_20261005_002",
+    "date": "2026-10-05",
+    "category": "平台动态",
+    "title": "TikTok Shop Q4卖家费率改革：佣金从6%上调至8%",
+    "summary": "自10月1日起，TikTok Shop将标准佣金率从6%提升至8%，并新增1.5%的达人促成费及SFN履约附加费，对年收入超百万美元的品牌卖家利润空间影响显著。",
+    "source": "https://ecommerce-times.com/tiktok-shops-q4-2026-seller-fee-overhaul-is-reshaping-dtc-margins/",
+    "tags": [
+      "TikTok Shop",
+      "佣金调整",
+      "卖家成本",
+      "Q4政策"
+    ],
+    "read": false,
+    "createdAt": 1791160348405
+  },
+  {
+    "id": "news_20261005_003",
+    "date": "2026-10-05",
+    "category": "平台动态",
+    "title": "亚马逊Prime Big Deal Days定于10月6-7日，覆盖22个国家",
+    "summary": "亚马逊官方确认2026年Prime会员大促日定于10月6日至7日，活动覆盖德国、法国、意大利、西班牙、英国等22个国家，卖家报名截止日期已延至9月22日。",
+    "source": "https://themarketplaceguys.com/en/news",
+    "tags": [
+      "亚马逊",
+      "Prime Day",
+      "大促",
+      "全球站点"
+    ],
+    "read": false,
+    "createdAt": 1791160348406
+  },
+  {
+    "id": "news_20261005_004",
+    "date": "2026-10-05",
+    "category": "平台功能更新",
+    "title": "亚马逊扩展FBA Export至175个以上新目的地",
+    "summary": "亚马逊宣布将FBA Export服务扩展至超过175个新目的地，符合条件的商品将自动面向更多国际买家开放，已开通卖家默认启用，除非手动屏蔽特定国家或商品。",
+    "source": "https://go2market.eu/en/news/zmiany-amazon-listingi-fba-export-2026",
+    "tags": [
+      "亚马逊",
+      "FBA Export",
+      "国际物流",
+      "全球销售"
+    ],
+    "read": false,
+    "createdAt": 1791160348407
+  },
+  {
+    "id": "news_20261005_005",
+    "date": "2026-10-05",
+    "category": "贸易政策",
+    "title": "商务部延长对美国相关做法贸易壁垒调查期限",
+    "summary": "商务部发布公告，延长对美国破坏全球产供链及阻碍绿色产品贸易相关做法的贸易壁垒调查期限，以进一步评估美方措施对中国外贸企业的影响。",
+    "source": "https://news.cctv.cn/2026/10/01/ARTIH7xTk1g6gTOA8kkV7Be9260930.shtml",
+    "tags": [
+      "商务部",
+      "贸易壁垒",
+      "中美贸易",
+      "调查期限"
+    ],
+    "read": false,
+    "createdAt": 1791160348408
+  },
+  {
+    "id": "news_20261005_006",
+    "date": "2026-10-05",
+    "category": "平台合规",
+    "title": "欧洲议会通过新电商海关规则，非欧盟卖家被视为进口商",
+    "summary": "欧洲议会正式通过新规，将促成非欧盟国家远程销售的卖家和平台视为进口商，须向海关提供完整数据、缴纳关税并确保商品符合欧盟法规，合规门槛大幅提升。",
+    "source": "https://www.europarl.europa.eu/news/nl/press-room/20260911IPR47456/the-european-parliament-adopts-new-e-commerce-and-customs-rules",
+    "tags": [
+      "欧盟",
+      "海关规则",
+      "跨境电商",
+      "合规"
+    ],
+    "read": false,
+    "createdAt": 1791160348409
+  },
+  {
+    "id": "news_20261005_007",
+    "date": "2026-10-05",
+    "category": "平台动态",
+    "title": "亚马逊全球开店中国发布'下一代跨境链'及2026四大战略",
+    "summary": "亚马逊全球开店中国发布'下一代跨境链'战略，并公布2026年四大业务重点，推出AI卖家助手，涵盖库存优化、账户健康、合规分析、广告营销等多领域智能决策支持。",
+    "source": "https://gs.amazon.cn/news-center/news-center-260301",
+    "tags": [
+      "亚马逊",
+      "全球开店",
+      "AI",
+      "跨境链"
+    ],
+    "read": false,
+    "createdAt": 1791160348410
+  },
+  {
+    "id": "news_20261005_008",
+    "date": "2026-10-05",
+    "category": "市场趋势",
+    "title": "Shopee被菲律宾消费者评为最信任零售品牌",
+    "summary": "Shopee在菲律宾消费者调研中获评当地最值得信任、最愿意推荐的零售品牌，同时在亚洲整体榜单中排名第4，显示其在东南亚市场的品牌认可度持续领先。",
+    "source": "https://kjnote.cn/post",
+    "tags": [
+      "Shopee",
+      "菲律宾",
+      "品牌信任",
+      "东南亚"
+    ],
+    "read": false,
+    "createdAt": 1791160348411
+  },
+  {
+    "id": "news_20261005_009",
+    "date": "2026-10-05",
+    "category": "贸易政策",
+    "title": "美国海关T86与Section 321规则双重收紧，小额包裹免税红利收窄",
+    "summary": "美国海关针对低值货物的T86清关通道与Section 321免税规则同步收紧，800美元以下小包免税政策红利持续收窄，直邮卖家需重新评估物流与定价策略。",
+    "source": "https://aitosea.ai/daily-reports",
+    "tags": [
+      "美国海关",
+      "小额包裹",
+      "免税政策",
+      "直邮"
+    ],
+    "read": false,
+    "createdAt": 1791160348412
+  },
+  {
+    "id": "news_20261005_010",
+    "date": "2026-10-05",
+    "category": "市场趋势",
+    "title": "中美经贸显现'双轨贸易模式'，安全敏感领域持续严格管控",
+    "summary": "专家分析中美经贸关系正朝'双轨贸易模式'发展，非敏感领域逐步恢复放开，但先进芯片、人工智能、关键矿产等安全敏感领域将继续严格管控，企业需差异化布局。",
+    "source": "https://www.shobserver.cn/staticsg/wap/newsDetail?id=1189389",
+    "tags": [
+      "中美经贸",
+      "双轨模式",
+      "贸易安全",
+      "出口管制"
+    ],
+    "read": false,
+    "createdAt": 1791160348413
+  },
+  {
     "id": "news_20261004_001",
     "date": "2026-10-04",
     "read": false,
