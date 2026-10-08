@@ -7643,10 +7643,12 @@
             </div>
             <div class="modal-body">
                 <div class="checkin-modal-hint">是否记录今天的学习进度？可附带照片作为打卡凭证。</div>
-                <label style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-                    <input type="file" id="checkinPhotoInput" accept="image/*" style="display:none;" onchange="onCheckinPhotoSelect()">
-                    <button type="button" class="toolbar-btn invert" onclick="document.getElementById('checkinPhotoInput').click()">📷 选择打卡照片</button>
-                </label>
+                <div style="position:relative;display:inline-block;margin-bottom:12px;">
+                    <button type="button" class="toolbar-btn invert" style="pointer-events:none;">📷 选择打卡照片</button>
+                    <input type="file" id="checkinPhotoInput" accept="image/*"
+                        onchange="onCheckinPhotoSelect()"
+                        style="position:absolute;left:0;top:0;width:100%;height:100%;opacity:0;cursor:pointer;"/>
+                </div>
                 <div id="checkinPhotoWrap" style="margin-bottom:12px;">
                     <img id="checkinPhotoPreview" alt="打卡照片预览" style="display:none;max-width:100%;max-height:240px;border-radius:10px;object-fit:cover;"/>
                     <div id="checkinPhotoName" style="font-size:12px;color:#8E8E93;margin-top:6px;"></div>
