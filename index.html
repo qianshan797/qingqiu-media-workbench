@@ -1058,6 +1058,17 @@
             .checkin-calendar { grid-template-columns: repeat(4, 1fr); }
         }
 
+        /* v37 侧边栏目录拖动排序 */
+        .nav-item[draggable="true"] { cursor: grab; }
+        .nav-item[draggable="true"]:active { cursor: grabbing; }
+        .nav-item.nav-dragging {
+            opacity: 0.5;
+            transform: scale(0.98);
+        }
+        .sidebar-nav.nav-drag-over .nav-item {
+            transition: transform 0.15s ease;
+        }
+
         .nav-badge {
             margin-left: auto;
             background: #007AFF;
@@ -7165,40 +7176,40 @@
                 </div>
             </div>
             <nav class="sidebar-nav">
-                <button class="nav-item active" onclick="switchPage('account', this)">
+                <button class="nav-item active" data-page="account" onclick="switchPage('account', this)">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                     <span class="nav-label" id="navLabel_account">账号管理</span>
                     <span class="nav-edit-btn" data-nav="account" title="编辑目录名称" onclick="event.stopPropagation();startNavEdit('account')">✎</span>
                 </button>
-                <button class="nav-item" onclick="switchPage('kanban', this)">
+                <button class="nav-item" data-page="kanban" onclick="switchPage('kanban', this)">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="5" height="18" rx="1"/><rect x="9.5" y="3" width="5" height="12" rx="1"/><rect x="16" y="3" width="5" height="8" rx="1"/></svg>
                     <span class="nav-label" id="navLabel_kanban">工作任务</span>
                     <span class="nav-edit-btn" data-nav="kanban" title="编辑目录名称" onclick="event.stopPropagation();startNavEdit('kanban')">✎</span>
                     <span class="nav-badge" id="navKanbanBadge">3</span>
                 </button>
-                <button class="nav-item" onclick="switchPage('workflow', this)">
+                <button class="nav-item" data-page="workflow" onclick="switchPage('workflow', this)">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
                     <span class="nav-label" id="navLabel_workflow">数据看板</span>
                     <span class="nav-edit-btn" data-nav="workflow" title="编辑目录名称" onclick="event.stopPropagation();startNavEdit('workflow')">✎</span>
                 </button>
-                <button class="nav-item" onclick="switchPage('materials', this)">
+                <button class="nav-item" data-page="materials" onclick="switchPage('materials', this)">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
                     <span class="nav-label" id="navLabel_materials">素材筛选池</span>
                     <span class="nav-edit-btn" data-nav="materials" title="编辑目录名称" onclick="event.stopPropagation();startNavEdit('materials')">✎</span>
                     <span class="nav-badge" id="navMaterialsBadge" style="display: none;">0</span>
                 </button>
-                <button class="nav-item" onclick="switchPage('calendar', this)">
+                <button class="nav-item" data-page="calendar" onclick="switchPage('calendar', this)">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                     <span class="nav-label" id="navLabel_calendar">工作日历</span>
                     <span class="nav-edit-btn" data-nav="calendar" title="编辑目录名称" onclick="event.stopPropagation();startNavEdit('calendar')">✎</span>
                 </button>
-                <button class="nav-item" onclick="switchPage('news', this)">
+                <button class="nav-item" data-page="news" onclick="switchPage('news', this)">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
                     <span class="nav-label" id="navLabel_news">每日快讯</span>
                     <span class="nav-edit-btn" data-nav="news" title="编辑目录名称" onclick="event.stopPropagation();startNavEdit('news')">✎</span>
                     <span class="nav-badge" id="navNewsBadge" style="display: none;">0</span>
                 </button>
-                <button class="nav-item" onclick="switchPage('study', this)">
+                <button class="nav-item" data-page="study" onclick="switchPage('study', this)">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
                     <span class="nav-label" id="navLabel_study">个人学习</span>
                     <span class="nav-edit-btn" data-nav="study" title="编辑目录名称" onclick="event.stopPropagation();startNavEdit('study')">✎</span>
@@ -8250,6 +8261,8 @@ CREATE POLICY "allow_all" ON workbench_sync
         const STORAGE_KEY_STUDY_CHECKIN = 'media_workflow_study_checkin';
         // v35 新增：侧边栏目录名称（可自定义，同步到云端）
         const STORAGE_KEY_NAV_LABELS = 'media_workflow_nav_labels';
+        // v37 新增：侧边栏目录排序（可拖动排序，同步到云端）
+        const STORAGE_KEY_NAV_ORDER = 'media_workflow_nav_order';
         const NAV_DEFAULT_LABELS = {
             account: '账号管理',
             kanban: '工作任务',
@@ -8297,6 +8310,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                 STORAGE_KEY_NAV_LABELS, // v35 新增：侧边栏自定义目录名称纳入云同步，多端改名保持一致
                 STORAGE_KEY_STUDY_TASKS, // v36 新增：个人学习任务清单纳入云同步
                 STORAGE_KEY_STUDY_CHECKIN, // v36 新增：学习进度打卡纳入云同步
+                STORAGE_KEY_NAV_ORDER, // v37 新增：侧边栏目录排序纳入云同步
                 'media_workflow_deleted_seeds', // v30 修复：删除记录也同步，避免新设备/刷新后被删账号被云端或种子补回
                 'media_workflow_deleted_tasks' // v31 修复：任务删除记录也同步，避免刷新后被删任务被重新注入
             ];
@@ -9380,6 +9394,8 @@ CREATE POLICY "allow_all" ON workbench_sync
                     if (cloudTime > lastSyncTime) {
                         restoreFromCloudData(row.data);
                         setLastSyncTime(cloudTime);
+                        // v37 新增：云端拉取后应用目录排序（若云端有自定义顺序）
+                        try { if (typeof applyNavOrder === 'function') applyNavOrder(); } catch(e){}
                         // ✅ 防御性保护2：restoreFromCloudData 后，强制恢复本地 used=true 的素材
                         if (localUsedSnapshot && Object.keys(localUsedSnapshot).length > 0) {
                             try {
@@ -11955,6 +11971,91 @@ CREATE POLICY "allow_all" ON workbench_sync
             input.addEventListener('click', function(e) { e.stopPropagation(); });
         }
 
+        // ===== v37 侧边栏目录拖动排序 =====
+        function getNavOrder() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY_NAV_ORDER);
+                const arr = raw ? JSON.parse(raw) : null;
+                return Array.isArray(arr) ? arr : [];
+            } catch (e) {
+                return [];
+            }
+        }
+        // 应用存储的排序到 DOM（未在存储中出现的页面追加到末尾）
+        function applyNavOrder() {
+            const nav = document.querySelector('.sidebar-nav');
+            if (!nav) return;
+            const order = getNavOrder();
+            const items = Array.prototype.slice.call(nav.querySelectorAll('.nav-item'));
+            const orderMap = {};
+            items.forEach(it => {
+                const pg = it.getAttribute('data-page');
+                if (pg) orderMap[pg] = it;
+            });
+            // 按存储顺序重排
+            order.forEach(pg => {
+                const node = orderMap[pg];
+                if (node) { nav.appendChild(node); }
+            });
+            // 追加未出现的项，保持原始相对顺序
+            items.forEach(it => {
+                const pg = it.getAttribute('data-page');
+                if (pg && order.indexOf(pg) === -1) nav.appendChild(it);
+            });
+        }
+        // 将当前 DOM 顺序保存到存储并云同步
+        function saveNavOrderFromDom() {
+            const nav = document.querySelector('.sidebar-nav');
+            if (!nav) return;
+            const order = [];
+            nav.querySelectorAll('.nav-item').forEach(it => {
+                const pg = it.getAttribute('data-page');
+                if (pg) order.push(pg);
+            });
+            try { localStorage.setItem(STORAGE_KEY_NAV_ORDER, JSON.stringify(order)); } catch (e) {}
+            if (typeof pushToCloud === 'function' && syncEnabled) {
+                pushToCloud().catch(function(e){ console.warn('[saveNavOrderFromDom] 云同步失败:', e); });
+            }
+        }
+        // 初始化拖动排序
+        let navDragged = null;
+        function initNavReorder() {
+            const nav = document.querySelector('.sidebar-nav');
+            if (!nav) return;
+            applyNavOrder(); // 先应用已保存的顺序
+            nav.querySelectorAll('.nav-item').forEach((item, idx) => {
+                item.setAttribute('draggable', 'true');
+                item.addEventListener('dragstart', function(e) {
+                    navDragged = this;
+                    this.classList.add('nav-dragging');
+                    e.dataTransfer.effectAllowed = 'move';
+                });
+                item.addEventListener('dragend', function() {
+                    this.classList.remove('nav-dragging');
+                    nav.classList.remove('nav-drag-over');
+                    navDragged = null;
+                });
+                item.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                    nav.classList.add('nav-drag-over');
+                });
+                item.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    if (!navDragged || navDragged === this) { nav.classList.remove('nav-drag-over'); return; }
+                    const items = Array.prototype.slice.call(nav.querySelectorAll('.nav-item'));
+                    const fromIdx = items.indexOf(navDragged);
+                    let toIdx = items.indexOf(this);
+                    items.splice(fromIdx, 1);
+                    toIdx = items.indexOf(this);
+                    items.splice(toIdx, 0, navDragged);
+                    items.forEach(node => nav.appendChild(node));
+                    nav.classList.remove('nav-drag-over');
+                    saveNavOrderFromDom();
+                });
+            });
+        }
+
         // ===== v36 个人学习模块 =====
         function getStudyTasks() {
             let tasks = [];
@@ -12080,12 +12181,8 @@ CREATE POLICY "allow_all" ON workbench_sync
             if (navEl) {
                 navEl.classList.add('active');
             } else {
-                const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
-                const pageOrder = ['account', 'kanban', 'workflow', 'news', 'materials', 'calendar', 'study'];
-                const idx = pageOrder.indexOf(pageName);
-                if (idx > -1 && navItems[idx]) {
-                    navItems[idx].classList.add('active');
-                }
+                const node = document.querySelector('.sidebar-nav .nav-item[data-page="' + pageName + '"]');
+                if (node) node.classList.add('active');
             }
 
             const navLabels = getNavLabels();
@@ -15212,6 +15309,7 @@ CREATE POLICY "allow_all" ON workbench_sync
         deduplicateTasks(); // 清理重复任务
         initDarkMode(); // 初始化深色模式
         renderNavLabels(); // v35 应用已保存的侧边栏目录名称
+        initNavReorder(); // v37 应用目录排序并启用拖动
         renderTasks();
         renderMaterials();
         renderAccounts();
