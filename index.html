@@ -1065,6 +1065,10 @@
         body.dark-mode .study-checkin-day .day-number { color: #F2F2F7; }
         body.dark-mode .study-checkin-day.empty { background: transparent; }
 
+        .checkin-modal-hint { font-size: 14px; color: #1C1C1E; margin-bottom: 12px; }
+        body.dark-mode .checkin-modal-hint { color: #F2F2F7; }
+        .study-checkin-day .day-check-mark { font-style: normal; }
+
         /* v38 学习任务：短/长期任务 */
         .study-type-select {
             padding: 8px 10px;
@@ -7500,7 +7504,7 @@
                             学习进度打卡
                         </div>
                         <div class="checkin-header">
-                            <button class="toolbar-btn primary" onclick="checkInStudy()" title="记录今天学习打卡">
+                            <button class="toolbar-btn primary" onclick="openCheckInModal()" title="记录今天学习打卡（可附照片）">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M20 6L9 17l-5-5"/></svg>
                                 今日打卡
                             </button>
@@ -7628,6 +7632,47 @@
                 </div>
             </div>
         </main>
+    </div>
+
+    <!-- 打卡弹窗（可附照片） -->
+    <div class="modal-overlay" id="studyCheckinModal" onclick="if(event.target===this)closeCheckinModal()" style="display:none;">
+        <div class="modal" style="max-width: 420px;">
+            <div class="modal-header">
+                <h2>今日学习打卡</h2>
+                <button class="modal-close" onclick="closeCheckinModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="checkin-modal-hint">是否记录今天的学习进度？可附带照片作为打卡凭证。</div>
+                <label style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+                    <input type="file" id="checkinPhotoInput" accept="image/*" style="display:none;" onchange="onCheckinPhotoSelect()">
+                    <button type="button" class="toolbar-btn invert" onclick="document.getElementById('checkinPhotoInput').click()">📷 选择打卡照片</button>
+                </label>
+                <div id="checkinPhotoWrap" style="margin-bottom:12px;">
+                    <img id="checkinPhotoPreview" alt="打卡照片预览" style="display:none;max-width:100%;max-height:240px;border-radius:10px;object-fit:cover;"/>
+                    <div id="checkinPhotoName" style="font-size:12px;color:#8E8E93;margin-top:6px;"></div>
+                </div>
+                <div style="display:flex;gap:10px;justify-content:flex-end;">
+                    <button type="button" class="toolbar-btn invert" onclick="closeCheckinModal()">取消</button>
+                    <button type="button" class="toolbar-btn primary" onclick="confirmStudyCheckin()">确认打卡</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 打卡照片查看器 -->
+    <div class="modal-overlay" id="checkinPhotoViewer" onclick="if(event.target===this)closeCheckinPhotoViewer()" style="display:none;">
+        <div class="modal" style="max-width: 520px;">
+            <div class="modal-header">
+                <h2 id="checkinPhotoViewerDate">打卡凭证</h2>
+                <button class="modal-close" onclick="closeCheckinPhotoViewer()">×</button>
+            </div>
+            <div class="modal-body" style="text-align:center;">
+                <img id="checkinPhotoViewerImg" alt="打卡照片" style="max-width:100%;max-height:70vh;border-radius:10px;object-fit:contain;"/>
+                <div style="margin-top:12px;">
+                    <button type="button" class="toolbar-btn invert" onclick="closeCheckinPhotoViewer()">关闭</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="modal-overlay" id="profileModal">
@@ -12286,21 +12331,105 @@ CREATE POLICY "allow_all" ON workbench_sync
             } catch (e) { }
             return (map && typeof map === 'object') ? map : {};
         }
+        // 兼容旧数据：旧格式存 true/false 布尔，新格式存 {checked, photo}
+        function getCheckinInfo(map, date) {
+            const v = map[date];
+            if (v && typeof v === 'object') return v;
+            return v ? { checked: true, photo: null } : { checked: false, photo: null };
+        }
+        function saveStudyCheckin(map) {
+            try { localStorage.setItem(STORAGE_KEY_STUDY_CHECKIN, JSON.stringify(map)); } catch (e) { }
+            renderStudyCheckin();
+            if (typeof pushToCloud === 'function' && syncEnabled) {
+                pushToCloud().catch(function(e){ console.warn('[saveStudyCheckin] 云同步失败:', e); });
+            }
+        }
+        // 图片压缩：读文件 -> canvas 缩放（最长边 maxSize）-> 输出 JPEG dataURL
+        function compressCheckinImage(file, maxSize, cb) {
+            if (!file) { cb(null); return; }
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                const img = new Image();
+                img.onload = function() {
+                    const w = img.width, h = img.height;
+                    let nw = w, nh = h;
+                    if (w > maxSize || h > maxSize) {
+                        if (w >= h) { nw = maxSize; nh = Math.round(h * maxSize / w); }
+                        else { nh = maxSize; nw = Math.round(w * maxSize / h); }
+                    }
+                    const canvas = document.createElement('canvas');
+                    canvas.width = nw; canvas.height = nh;
+                    canvas.getContext('2d').drawImage(img, 0, 0, nw, nh);
+                    try { cb(canvas.toDataURL('image/jpeg', 0.72)); }
+                    catch (e) { cb(null); }
+                };
+                img.onerror = function() { cb(null); };
+                img.src = ev.target.result;
+            };
+            reader.onerror = function() { cb(null); };
+            reader.readAsDataURL(file);
+        }
+        // 弹窗：打开打卡（可附带照片）
+        function openCheckInModal() {
+            const dlg = document.getElementById('studyCheckinModal');
+            if (!dlg) return;
+            const preview = document.getElementById('checkinPhotoPreview');
+            document.getElementById('checkinPhotoInput').value = '';
+            preview.style.display = 'none';
+            preview.src = '';
+            document.getElementById('checkinPhotoName').textContent = '';
+            dlg.style.display = 'flex';
+        }
+        function onCheckinPhotoSelect() {
+            const input = document.getElementById('checkinPhotoInput');
+            const file = input.files && input.files[0];
+            if (!file) return;
+            const preview = document.getElementById('checkinPhotoPreview');
+            preview.style.display = 'block';
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                preview.src = ev.target.result;
+                document.getElementById('checkinPhotoName').textContent = file.name + '（' + (file.size / 1024).toFixed(0) + ' KB）';
+            };
+            reader.readAsDataURL(file);
+        }
+        function closeCheckinModal() {
+            const dlg = document.getElementById('studyCheckinModal');
+            if (dlg) dlg.style.display = 'none';
+        }
+        function confirmStudyCheckin() {
+            const map = getStudyCheckin();
+            const today = fmtDate(new Date());
+            const input = document.getElementById('checkinPhotoInput');
+            const file = input.files && input.files[0];
+            const finish = function(photoData) {
+                map[today] = { checked: true, photo: photoData || null };
+                saveStudyCheckin(map);
+                closeCheckinModal();
+            };
+            if (file) { compressCheckinImage(file, 480, finish); }
+            else { finish(null); }
+        }
+        // 查看打卡照片（大图）
+        function viewCheckinPhoto(dateStr) {
+            const map = getStudyCheckin();
+            const info = getCheckinInfo(map, dateStr);
+            const view = document.getElementById('checkinPhotoViewer');
+            const img = document.getElementById('checkinPhotoViewerImg');
+            if (!info.photo || !view) return;
+            img.src = info.photo;
+            document.getElementById('checkinPhotoViewerDate').textContent = dateStr + ' 打卡凭证';
+            view.style.display = 'flex';
+        }
+        function closeCheckinPhotoViewer() {
+            const view = document.getElementById('checkinPhotoViewer');
+            if (view) view.style.display = 'none';
+        }
         // 学习打卡月历当前显示的年月
         let currentStudyCheckinDate = new Date();
         function fmtDate(d) {
             const y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,'0'), day = String(d.getDate()).padStart(2,'0');
             return y + '-' + m + '-' + day;
-        }
-        function checkInStudy() {
-            const map = getStudyCheckin();
-            const today = fmtDate(new Date());
-            map[today] = true;
-            try { localStorage.setItem(STORAGE_KEY_STUDY_CHECKIN, JSON.stringify(map)); } catch (e) { }
-            renderStudyCheckin();
-            if (typeof pushToCloud === 'function' && syncEnabled) {
-                pushToCloud().catch(function(e){ console.warn('[checkInStudy] 云同步失败:', e); });
-            }
         }
         function changeStudyCheckinMonth(delta) {
             currentStudyCheckinDate.setMonth(currentStudyCheckinDate.getMonth() + delta);
@@ -12319,8 +12448,8 @@ CREATE POLICY "allow_all" ON workbench_sync
             // 计算连续打卡天数（从今天或昨天向前）
             let streak = 0;
             const cur = new Date();
-            if (!map[fmtDate(cur)]) cur.setDate(cur.getDate() - 1);
-            while (map[fmtDate(cur)]) {
+            if (!getCheckinInfo(map, fmtDate(cur)).checked) cur.setDate(cur.getDate() - 1);
+            while (getCheckinInfo(map, fmtDate(cur)).checked) {
                 streak++;
                 cur.setDate(cur.getDate() - 1);
             }
@@ -12342,11 +12471,13 @@ CREATE POLICY "allow_all" ON workbench_sync
             }
             for (let day = 1; day <= daysInMonth; day++) {
                 const dateStr = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(day).padStart(2, '0');
-                const checked = !!map[dateStr];
+                const info = getCheckinInfo(map, dateStr);
+                const checked = info.checked;
+                const hasPhoto = checked && !!info.photo;
                 const isToday = dateStr === todayStr;
-                html += '<div class="study-checkin-day' + (checked ? ' checked' : '') + (isToday ? ' today' : '') + '" title="' + dateStr + '">' +
+                html += '<div class="study-checkin-day' + (checked ? ' checked' : '') + (isToday ? ' today' : '') + '" title="' + dateStr + '"' + (hasPhoto ? ' onclick="viewCheckinPhoto(\'' + dateStr + '\')"' : '') + '>' +
                     '<span class="day-number">' + day + '</span>' +
-                    (checked ? '<span class="day-check-mark">✓</span>' : '') +
+                    (checked ? '<span class="day-check-mark">' + (hasPhoto ? '📷' : '✓') + '</span>' : '') +
                 '</div>';
             }
             wrap.innerHTML = html;
