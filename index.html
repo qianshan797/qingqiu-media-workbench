@@ -393,7 +393,7 @@
         }catch(e){}
     })();
     </script>
-    <title>新媒体运营工作台</title>
+    <title>个人工作台</title>
 
 <!-- v20预加载：首次访问直接注入7个真实账号+7条素材（帝王蝶+3D蝙蝠灯+宠物洗澡折叠凳每日新闻）+粉丝数据，仅在schema升级时强制覆盖一次 -->
 <script>
@@ -886,6 +886,176 @@
             outline: none;
             background: #fff;
             color: #1C1C1E;
+        }
+
+        /* v36 个人学习模块 */
+        .study-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            align-items: start;
+        }
+        @media (max-width: 860px) {
+            .study-layout { grid-template-columns: 1fr; }
+        }
+        .study-section-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .add-study-form {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .add-study-form input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #E5E5EA;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            background: #fff;
+            color: #1C1C1E;
+        }
+        .add-study-form input:focus { border-color: #007AFF; }
+        .study-task-list {
+            min-height: 80px;
+        }
+        .study-task-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 8px;
+            border-bottom: 1px solid #F2F2F7;
+            transition: opacity 0.2s;
+        }
+        .study-task-item.done .study-task-title {
+            text-decoration: line-through;
+            opacity: 0.55;
+        }
+        .study-task-check {
+            width: 22px;
+            height: 22px;
+            flex: 0 0 22px;
+            border: 1.5px solid #C7C7CC;
+            border-radius: 50%;
+            background: transparent;
+            color: #007AFF;
+            font-size: 14px;
+            font-weight: bold;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+        .study-task-check:hover { border-color: #007AFF; }
+        .study-task-title {
+            flex: 1;
+            font-size: 14px;
+            color: #1C1C1E;
+            word-break: break-word;
+        }
+        .study-task-del {
+            border: none;
+            background: transparent;
+            color: #999;
+            font-size: 14px;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+            padding: 2px 4px;
+        }
+        .study-task-item:hover .study-task-del { opacity: 1; }
+        .study-task-del:hover { color: #FF3B30; }
+        .study-empty {
+            padding: 24px;
+            text-align: center;
+            color: #999;
+            font-size: 14px;
+        }
+        .study-task-stats {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 12px;
+            font-size: 13px;
+            color: #8E8E93;
+        }
+        .study-task-stats b { color: #1C1C1E; }
+        .study-progress {
+            flex: 1;
+            height: 6px;
+            background: #F2F2F7;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .study-progress-bar {
+            height: 100%;
+            background: #007AFF;
+            border-radius: 3px;
+            width: 0;
+            transition: width 0.3s;
+        }
+        .checkin-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+        .checkin-streak {
+            font-size: 13px;
+            color: #FF9500;
+            font-weight: 600;
+        }
+        .checkin-calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+        .checkin-day {
+            text-align: center;
+            padding: 10px 4px;
+            border-radius: 10px;
+            background: #F2F2F7;
+            border: 1.5px solid transparent;
+        }
+        .checkin-day.today { border-color: #007AFF; }
+        .checkin-day.checked { background: rgba(0, 122, 255, 0.12); }
+        .checkin-day-num {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1C1C1E;
+        }
+        .checkin-day-wd {
+            font-size: 11px;
+            color: #8E8E93;
+            margin-top: 2px;
+        }
+        .checkin-day-dot {
+            margin-top: 6px;
+            font-size: 13px;
+            color: #C7C7CC;
+        }
+        .checkin-day.checked .checkin-day-dot { color: #007AFF; font-weight: bold; }
+        body.dark-mode .study-task-title { color: #F2F2F7; }
+        body.dark-mode .study-task-item { border-bottom-color: #2C2C2E; }
+        body.dark-mode .add-study-form input {
+            background: #1C1C1E;
+            border-color: #3A3A3C;
+            color: #F2F2F7;
+        }
+        body.dark-mode .study-task-stats b { color: #F2F2F7; }
+        body.dark-mode .checkin-day { background: #1C1C1E; }
+        body.dark-mode .checkin-day.checked { background: rgba(0, 122, 255, 0.2); }
+        body.dark-mode .checkin-day-num { color: #F2F2F7; }
+        @media (max-width: 480px) {
+            .checkin-calendar { grid-template-columns: repeat(4, 1fr); }
         }
 
         .nav-badge {
@@ -6985,7 +7155,7 @@
         <div class="mobile-overlay" id="mobileOverlay" onclick="closeMobileSidebar()"></div>
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-logo">
-                <h2>运营工作台</h2>
+                <h2>个人工作台</h2>
                 <div class="tagline">传播与粉丝增长</div>
             </div>
             <div class="sidebar-profile" onclick="openProfileModal()">
@@ -7027,6 +7197,11 @@
                     <span class="nav-label" id="navLabel_news">每日快讯</span>
                     <span class="nav-edit-btn" data-nav="news" title="编辑目录名称" onclick="event.stopPropagation();startNavEdit('news')">✎</span>
                     <span class="nav-badge" id="navNewsBadge" style="display: none;">0</span>
+                </button>
+                <button class="nav-item" onclick="switchPage('study', this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                    <span class="nav-label" id="navLabel_study">个人学习</span>
+                    <span class="nav-edit-btn" data-nav="study" title="编辑目录名称" onclick="event.stopPropagation();startNavEdit('study')">✎</span>
                 </button>
             </nav>
             <div class="sidebar-footer">
@@ -7209,6 +7384,46 @@
                         <div class="news-empty-icon">📰</div>
                         <div class="news-empty-title">暂无可显示的快讯</div>
                         <div class="news-empty-hint">打开页面时会自动联网抓取今日跨境/外贸热点，如仍为空，可点顶部「在线抓取今日内容」强制刷新，或点「本地兜底同步」回退到打包新闻。</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-section" id="page-study">
+                <div class="page-header">
+                    <div>
+                        <h1>个人学习</h1>
+                        <div class="subtitle">管理你的学习任务清单，并记录每日学习进度打卡</div>
+                    </div>
+                </div>
+                <div class="study-layout">
+                    <div class="page-content-card">
+                        <div class="section-title study-section-title">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                            学习任务清单
+                        </div>
+                        <div class="add-study-form">
+                            <input type="text" id="newStudyTitle" placeholder="输入学习任务，如 复习英语单词..." maxlength="50" onkeydown="if(event.key==='Enter')addStudyTask()">
+                            <button class="add-task-btn" onclick="addStudyTask()">添加任务</button>
+                        </div>
+                        <div class="study-task-list" id="studyTaskList"></div>
+                        <div class="study-task-stats">
+                            <span>已完成 <b id="studyDoneCount">0</b> / <b id="studyTotalCount">0</b></span>
+                            <div class="study-progress"><div class="study-progress-bar" id="studyProgressBar"></div></div>
+                        </div>
+                    </div>
+                    <div class="page-content-card">
+                        <div class="section-title study-section-title">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                            学习进度打卡
+                        </div>
+                        <div class="checkin-header">
+                            <button class="toolbar-btn primary" onclick="checkInStudy()" title="记录今天学习打卡">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M20 6L9 17l-5-5"/></svg>
+                                今日打卡
+                            </button>
+                            <div class="checkin-streak" id="studyStreak">连续打卡 0 天</div>
+                        </div>
+                        <div class="checkin-calendar" id="studyCheckinCalendar"></div>
                     </div>
                 </div>
             </div>
@@ -7871,7 +8086,7 @@ CREATE POLICY "allow_all" ON workbench_sync
             }
 
             // 设置钉钉导航栏标题
-            setDingTalkTitle('新媒体运营工作台');
+            setDingTalkTitle('个人工作台');
 
             // 配置钉钉导航栏右侧按钮
             configDingTalkNav();
@@ -8002,7 +8217,7 @@ CREATE POLICY "allow_all" ON workbench_sync
         function dingtalkShare(title, content, url) {
             if (typeof dtapi !== 'undefined' && dtapi.share) {
                 dtapi.share({
-                    title: title || '新媒体运营工作台',
+                    title: title || '个人工作台',
                     content: content || '高效管理运营任务',
                     url: url || window.location.href
                 });
@@ -8031,6 +8246,8 @@ CREATE POLICY "allow_all" ON workbench_sync
         const STORAGE_KEY_PROFILE = 'media_workflow_profile';
         const STORAGE_KEY_SCHEMA_VERSION = 'media_workflow_schema_version';
         const STORAGE_KEY_NEWS = 'media_workflow_news';
+        const STORAGE_KEY_STUDY_TASKS = 'media_workflow_study_tasks';
+        const STORAGE_KEY_STUDY_CHECKIN = 'media_workflow_study_checkin';
         // v35 新增：侧边栏目录名称（可自定义，同步到云端）
         const STORAGE_KEY_NAV_LABELS = 'media_workflow_nav_labels';
         const NAV_DEFAULT_LABELS = {
@@ -8039,7 +8256,8 @@ CREATE POLICY "allow_all" ON workbench_sync
             workflow: '数据看板',
             materials: '素材筛选池',
             calendar: '工作日历',
-            news: '每日快讯'
+            news: '每日快讯',
+            study: '个人学习'
         };
         const CURRENT_SCHEMA_VERSION = 18;
 
@@ -8077,6 +8295,8 @@ CREATE POLICY "allow_all" ON workbench_sync
                 STORAGE_KEY_SCHEMA_VERSION,
                 STORAGE_KEY_NEWS, // v32 新增：每日快讯也纳入云同步，避免不同 origin（github.io vs 本地）的新闻数据互相覆盖或缺失
                 STORAGE_KEY_NAV_LABELS, // v35 新增：侧边栏自定义目录名称纳入云同步，多端改名保持一致
+                STORAGE_KEY_STUDY_TASKS, // v36 新增：个人学习任务清单纳入云同步
+                STORAGE_KEY_STUDY_CHECKIN, // v36 新增：学习进度打卡纳入云同步
                 'media_workflow_deleted_seeds', // v30 修复：删除记录也同步，避免新设备/刷新后被删账号被云端或种子补回
                 'media_workflow_deleted_tasks' // v31 修复：任务删除记录也同步，避免刷新后被删任务被重新注入
             ];
@@ -11735,6 +11955,119 @@ CREATE POLICY "allow_all" ON workbench_sync
             input.addEventListener('click', function(e) { e.stopPropagation(); });
         }
 
+        // ===== v36 个人学习模块 =====
+        function getStudyTasks() {
+            let tasks = [];
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY_STUDY_TASKS);
+                if (raw) tasks = JSON.parse(raw);
+            } catch (e) { }
+            return Array.isArray(tasks) ? tasks : [];
+        }
+        function saveStudyTasks(tasks) {
+            try { localStorage.setItem(STORAGE_KEY_STUDY_TASKS, JSON.stringify(tasks)); } catch (e) { }
+            renderStudyTasks();
+            if (typeof pushToCloud === 'function' && syncEnabled) {
+                pushToCloud().catch(function(e){ console.warn('[saveStudyTasks] 云同步失败:', e); });
+            }
+        }
+        function addStudyTask() {
+            const input = document.getElementById('newStudyTitle');
+            const title = input.value.trim();
+            if (!title) return;
+            const tasks = getStudyTasks();
+            tasks.unshift({
+                id: 'study_' + Date.now(),
+                title: title,
+                done: false,
+                createdAt: Date.now()
+            });
+            input.value = '';
+            saveStudyTasks(tasks);
+        }
+        function toggleStudyTask(id) {
+            const tasks = getStudyTasks();
+            const t = tasks.find(x => x.id === id);
+            if (t) { t.done = !t.done; saveStudyTasks(tasks); }
+        }
+        function deleteStudyTask(id) {
+            saveStudyTasks(getStudyTasks().filter(x => x.id !== id));
+        }
+        function renderStudyTasks() {
+            const list = document.getElementById('studyTaskList');
+            if (!list) return;
+            const tasks = getStudyTasks();
+            const doneCount = tasks.filter(t => t.done).length;
+            document.getElementById('studyDoneCount').textContent = doneCount;
+            document.getElementById('studyTotalCount').textContent = tasks.length;
+            const pct = tasks.length ? Math.round(doneCount / tasks.length * 100) : 0;
+            document.getElementById('studyProgressBar').style.width = pct + '%';
+            if (!tasks.length) {
+                list.innerHTML = '<div class="study-empty">还没有学习任务，添加一个开始吧 📚</div>';
+                return;
+            }
+            list.innerHTML = tasks.map(t => {
+                return '<div class="study-task-item' + (t.done ? ' done' : '') + '">' +
+                    '<button class="study-task-check" onclick="toggleStudyTask(\'' + t.id + '\')" title="切换完成状态">' + (t.done ? '✓' : '') + '</button>' +
+                    '<div class="study-task-title">' + String(t.title).replace(/</g, '&lt;').replace(/"/g, '&quot;') + '</div>' +
+                    '<button class="study-task-del" onclick="deleteStudyTask(\'' + t.id + '\')" title="删除">✕</button>' +
+                '</div>';
+            }).join('');
+        }
+
+        function getStudyCheckin() {
+            let map = {};
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY_STUDY_CHECKIN);
+                if (raw) map = JSON.parse(raw);
+            } catch (e) { }
+            return (map && typeof map === 'object') ? map : {};
+        }
+        function fmtDate(d) {
+            const y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,'0'), day = String(d.getDate()).padStart(2,'0');
+            return y + '-' + m + '-' + day;
+        }
+        function checkInStudy() {
+            const map = getStudyCheckin();
+            const today = fmtDate(new Date());
+            map[today] = true;
+            try { localStorage.setItem(STORAGE_KEY_STUDY_CHECKIN, JSON.stringify(map)); } catch (e) { }
+            renderStudyCheckin();
+            if (typeof pushToCloud === 'function' && syncEnabled) {
+                pushToCloud().catch(function(e){ console.warn('[checkInStudy] 云同步失败:', e); });
+            }
+        }
+        function renderStudyCheckin() {
+            const wrap = document.getElementById('studyCheckinCalendar');
+            const streakEl = document.getElementById('studyStreak');
+            if (!wrap || !streakEl) return;
+            const map = getStudyCheckin();
+            // 计算连续打卡天数（从今天或昨天向前）
+            let streak = 0;
+            const cur = new Date();
+            if (!map[fmtDate(cur)]) cur.setDate(cur.getDate() - 1);
+            while (map[fmtDate(cur)]) {
+                streak++;
+                cur.setDate(cur.getDate() - 1);
+            }
+            streakEl.textContent = '连续打卡 ' + streak + ' 天';
+            // 渲染最近 7 天
+            let html = '';
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date(); d.setDate(d.getDate() - i);
+                const key = fmtDate(d);
+                const checked = !!map[key];
+                const isToday = i === 0;
+                const wd = ['日','一','二','三','四','五','六'][d.getDay()];
+                html += '<div class="checkin-day' + (checked ? ' checked' : '') + (isToday ? ' today' : '') + '">' +
+                    '<div class="checkin-day-num">' + d.getDate() + '</div>' +
+                    '<div class="checkin-day-wd">周' + wd + (isToday ? ' · 今' : '') + '</div>' +
+                    '<div class="checkin-day-dot">' + (checked ? '✓' : '·') + '</div>' +
+                '</div>';
+            }
+            wrap.innerHTML = html;
+        }
+
         function switchPage(pageName, navEl) {
             document.querySelectorAll('.page-section').forEach(page => {
                 page.classList.remove('active');
@@ -11748,7 +12081,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                 navEl.classList.add('active');
             } else {
                 const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
-                const pageOrder = ['account', 'kanban', 'workflow', 'news', 'materials', 'calendar'];
+                const pageOrder = ['account', 'kanban', 'workflow', 'news', 'materials', 'calendar', 'study'];
                 const idx = pageOrder.indexOf(pageName);
                 if (idx > -1 && navItems[idx]) {
                     navItems[idx].classList.add('active');
@@ -11762,7 +12095,8 @@ CREATE POLICY "allow_all" ON workbench_sync
                 'workflow': navLabels.workflow,
                 'materials': navLabels.materials,
                 'calendar': navLabels.calendar,
-                'news': navLabels.news
+                'news': navLabels.news,
+                'study': navLabels.study
             };
             const titleEl = document.getElementById('mobileHeaderTitle');
             if (titleEl && titleMap[pageName]) {
@@ -11787,6 +12121,9 @@ CREATE POLICY "allow_all" ON workbench_sync
                 renderCalendar();
             } else if (pageName === 'news') {
                 renderNews();
+            } else if (pageName === 'study') {
+                renderStudyTasks();
+                renderStudyCheckin();
             }
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -14886,6 +15223,8 @@ CREATE POLICY "allow_all" ON workbench_sync
         initCloudSync(); // 初始化云同步
         autoSyncNews(); // 自动同步每日快讯
         updateNewsBadge(); // 更新快讯未读徽标
+        renderStudyTasks(); // v36 渲染学习任务清单
+        renderStudyCheckin(); // v36 渲染学习进度打卡
 
         function exportHtmlWithData() {
             try {
@@ -14962,7 +15301,7 @@ CREATE POLICY "allow_all" ON workbench_sync
             var url = URL.createObjectURL(blob);
             var link = document.createElement('a');
             link.href = url;
-            link.download = '新媒体运营工作台_' + getTodayDate() + '.html';
+            link.download = '个人工作台_' + getTodayDate() + '.html';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
