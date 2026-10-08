@@ -857,6 +857,37 @@
             stroke-width: 1.8;
         }
 
+        /* v35 功能：侧边栏目录名称就地编辑 */
+        .nav-edit-btn {
+            margin-left: auto;
+            opacity: 0;
+            font-size: 13px;
+            color: #999;
+            cursor: pointer;
+            padding: 2px 4px;
+            border-radius: 4px;
+            transition: opacity 0.2s;
+            user-select: none;
+        }
+        .nav-item:hover .nav-edit-btn {
+            opacity: 0.7;
+        }
+        .nav-edit-btn:hover {
+            opacity: 1 !important;
+            color: #007AFF;
+            background: rgba(0, 122, 255, 0.1);
+        }
+        .nav-edit-input {
+            width: 90px;
+            font-size: 13px;
+            border: 1px solid #007AFF;
+            border-radius: 5px;
+            padding: 2px 5px;
+            outline: none;
+            background: #fff;
+            color: #1C1C1E;
+        }
+
         .nav-badge {
             margin-left: auto;
             background: #007AFF;
@@ -6966,29 +6997,35 @@
             <nav class="sidebar-nav">
                 <button class="nav-item active" onclick="switchPage('account', this)">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                    <span>账号管理</span>
+                    <span class="nav-label" id="navLabel_account">账号管理</span>
+                    <span class="nav-edit-btn" data-nav="account" title="编辑目录名称" onclick="event.stopPropagation();startNavEdit('account')">✎</span>
                 </button>
                 <button class="nav-item" onclick="switchPage('kanban', this)">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="5" height="18" rx="1"/><rect x="9.5" y="3" width="5" height="12" rx="1"/><rect x="16" y="3" width="5" height="8" rx="1"/></svg>
-                    <span>工作任务</span>
+                    <span class="nav-label" id="navLabel_kanban">工作任务</span>
+                    <span class="nav-edit-btn" data-nav="kanban" title="编辑目录名称" onclick="event.stopPropagation();startNavEdit('kanban')">✎</span>
                     <span class="nav-badge" id="navKanbanBadge">3</span>
                 </button>
                 <button class="nav-item" onclick="switchPage('workflow', this)">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-                    <span>数据看板</span>
+                    <span class="nav-label" id="navLabel_workflow">数据看板</span>
+                    <span class="nav-edit-btn" data-nav="workflow" title="编辑目录名称" onclick="event.stopPropagation();startNavEdit('workflow')">✎</span>
                 </button>
                 <button class="nav-item" onclick="switchPage('materials', this)">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-                    <span>素材筛选池</span>
+                    <span class="nav-label" id="navLabel_materials">素材筛选池</span>
+                    <span class="nav-edit-btn" data-nav="materials" title="编辑目录名称" onclick="event.stopPropagation();startNavEdit('materials')">✎</span>
                     <span class="nav-badge" id="navMaterialsBadge" style="display: none;">0</span>
                 </button>
                 <button class="nav-item" onclick="switchPage('calendar', this)">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    <span>工作日历</span>
+                    <span class="nav-label" id="navLabel_calendar">工作日历</span>
+                    <span class="nav-edit-btn" data-nav="calendar" title="编辑目录名称" onclick="event.stopPropagation();startNavEdit('calendar')">✎</span>
                 </button>
                 <button class="nav-item" onclick="switchPage('news', this)">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
-                    <span>每日快讯</span>
+                    <span class="nav-label" id="navLabel_news">每日快讯</span>
+                    <span class="nav-edit-btn" data-nav="news" title="编辑目录名称" onclick="event.stopPropagation();startNavEdit('news')">✎</span>
                     <span class="nav-badge" id="navNewsBadge" style="display: none;">0</span>
                 </button>
             </nav>
@@ -7994,6 +8031,16 @@ CREATE POLICY "allow_all" ON workbench_sync
         const STORAGE_KEY_PROFILE = 'media_workflow_profile';
         const STORAGE_KEY_SCHEMA_VERSION = 'media_workflow_schema_version';
         const STORAGE_KEY_NEWS = 'media_workflow_news';
+        // v35 新增：侧边栏目录名称（可自定义，同步到云端）
+        const STORAGE_KEY_NAV_LABELS = 'media_workflow_nav_labels';
+        const NAV_DEFAULT_LABELS = {
+            account: '账号管理',
+            kanban: '工作任务',
+            workflow: '数据看板',
+            materials: '素材筛选池',
+            calendar: '工作日历',
+            news: '每日快讯'
+        };
         const CURRENT_SCHEMA_VERSION = 18;
 
         // ===== 云同步核心逻辑 =====
@@ -8029,6 +8076,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                 STORAGE_KEY_API_CONFIG,
                 STORAGE_KEY_SCHEMA_VERSION,
                 STORAGE_KEY_NEWS, // v32 新增：每日快讯也纳入云同步，避免不同 origin（github.io vs 本地）的新闻数据互相覆盖或缺失
+                STORAGE_KEY_NAV_LABELS, // v35 新增：侧边栏自定义目录名称纳入云同步，多端改名保持一致
                 'media_workflow_deleted_seeds', // v30 修复：删除记录也同步，避免新设备/刷新后被删账号被云端或种子补回
                 'media_workflow_deleted_tasks' // v31 修复：任务删除记录也同步，避免刷新后被删任务被重新注入
             ];
@@ -11612,6 +11660,81 @@ CREATE POLICY "allow_all" ON workbench_sync
             updateThemeToggleBtn();
         }
 
+        // ===== v35 目录名称就地编辑 =====
+        // 读取（合并默认值），保证字段完整
+        function getNavLabels() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY_NAV_LABELS);
+                const parsed = raw ? JSON.parse(raw) : {};
+                return Object.assign({}, NAV_DEFAULT_LABELS, (parsed && typeof parsed === 'object') ? parsed : {});
+            } catch (e) {
+                console.warn('[getNavLabels] 读取失败:', e);
+                return Object.assign({}, NAV_DEFAULT_LABELS);
+            }
+        }
+
+        // 将存储的名称应用到侧边栏 DOM（含移动端标题共用一个数据源）
+        function renderNavLabels() {
+            const labels = getNavLabels();
+            Object.keys(labels).forEach(navKey => {
+                const el = document.getElementById('navLabel_' + navKey);
+                if (el) el.textContent = labels[navKey];
+            });
+        }
+
+        // 保存并同步到云端
+        function saveNavLabels(labels) {
+            try {
+                localStorage.setItem(STORAGE_KEY_NAV_LABELS, JSON.stringify(labels));
+            } catch (e) {
+                console.warn('[saveNavLabels] 本地保存失败:', e);
+            }
+            renderNavLabels();
+            // 同步到 Supabase（账号数据同一套机制）
+            if (typeof pushToCloud === 'function' && syncEnabled) {
+                pushToCloud().catch(function(e){ console.warn('[saveNavLabels] 云同步失败:', e); });
+            }
+        }
+
+        // 点击 ✎ 启动就地编辑
+        function startNavEdit(navKey) {
+            const el = document.getElementById('navLabel_' + navKey);
+            if (!el || el.querySelector('input')) return;
+            const current = el.textContent;
+            let cancelled = false;
+            el.innerHTML = '<input type="text" class="nav-edit-input" value="' + String(current).replace(/"/g, '&quot;').replace(/</g, '&lt;') + '" maxlength="10">';
+            const input = el.querySelector('input');
+            input.focus();
+            input.select();
+
+            const finish = function() {
+                if (el.querySelector('input')) {
+                    const labels = getNavLabels();
+                    if (!cancelled) {
+                        const val = input.value.trim() || current;
+                        labels[navKey] = val;
+                        saveNavLabels(labels);
+                    } else {
+                        renderNavLabels();
+                    }
+                } else {
+                    renderNavLabels();
+                }
+            };
+
+            ['click', 'mousedown', 'pointerdown', 'touchstart'].forEach(function(evt) {
+                input.addEventListener(evt, function(e) { e.stopPropagation(); });
+            });
+
+            input.addEventListener('keydown', function(e) {
+                e.stopPropagation();
+                if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+                if (e.key === 'Escape') { e.preventDefault(); cancelled = true; input.blur(); }
+            });
+            input.addEventListener('blur', finish);
+            input.addEventListener('click', function(e) { e.stopPropagation(); });
+        }
+
         function switchPage(pageName, navEl) {
             document.querySelectorAll('.page-section').forEach(page => {
                 page.classList.remove('active');
@@ -11632,13 +11755,14 @@ CREATE POLICY "allow_all" ON workbench_sync
                 }
             }
 
+            const navLabels = getNavLabels();
             const titleMap = {
-                'account': '账号管理',
-                'kanban': '工作任务',
-                'workflow': '数据看板',
-                'materials': '素材筛选池',
-                'calendar': '工作日历',
-                'news': '每日快讯'
+                'account': navLabels.account,
+                'kanban': navLabels.kanban,
+                'workflow': navLabels.workflow,
+                'materials': navLabels.materials,
+                'calendar': navLabels.calendar,
+                'news': navLabels.news
             };
             const titleEl = document.getElementById('mobileHeaderTitle');
             if (titleEl && titleMap[pageName]) {
@@ -14750,6 +14874,7 @@ CREATE POLICY "allow_all" ON workbench_sync
 
         deduplicateTasks(); // 清理重复任务
         initDarkMode(); // 初始化深色模式
+        renderNavLabels(); // v35 应用已保存的侧边栏目录名称
         renderTasks();
         renderMaterials();
         renderAccounts();
