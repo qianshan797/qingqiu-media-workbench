@@ -7635,7 +7635,7 @@
     </div>
 
     <!-- 打卡弹窗（可附照片） -->
-    <div class="modal-overlay" id="studyCheckinModal" onclick="if(event.target===this)closeCheckinModal()" style="display:none;">
+    <div class="modal-overlay" id="studyCheckinModal" onclick="if(event.target===this)closeCheckinModal()">
         <div class="modal" style="max-width: 420px;">
             <div class="modal-header">
                 <h2>今日学习打卡</h2>
@@ -7662,7 +7662,7 @@
     </div>
 
     <!-- 打卡照片查看器 -->
-    <div class="modal-overlay" id="checkinPhotoViewer" onclick="if(event.target===this)closeCheckinPhotoViewer()" style="display:none;">
+    <div class="modal-overlay" id="checkinPhotoViewer" onclick="if(event.target===this)closeCheckinPhotoViewer()">
         <div class="modal" style="max-width: 520px;">
             <div class="modal-header">
                 <h2 id="checkinPhotoViewerDate">打卡凭证</h2>
@@ -12380,7 +12380,7 @@ CREATE POLICY "allow_all" ON workbench_sync
             preview.style.display = 'none';
             preview.src = '';
             document.getElementById('checkinPhotoName').textContent = '';
-            dlg.style.display = 'flex';
+            dlg.classList.add('active');
         }
         function onCheckinPhotoSelect() {
             const input = document.getElementById('checkinPhotoInput');
@@ -12397,7 +12397,7 @@ CREATE POLICY "allow_all" ON workbench_sync
         }
         function closeCheckinModal() {
             const dlg = document.getElementById('studyCheckinModal');
-            if (dlg) dlg.style.display = 'none';
+            if (dlg) dlg.classList.remove('active');
         }
         function confirmStudyCheckin() {
             const map = getStudyCheckin();
@@ -12421,11 +12421,11 @@ CREATE POLICY "allow_all" ON workbench_sync
             if (!info.photo || !view) return;
             img.src = info.photo;
             document.getElementById('checkinPhotoViewerDate').textContent = dateStr + ' 打卡凭证';
-            view.style.display = 'flex';
+            view.classList.add('active');
         }
         function closeCheckinPhotoViewer() {
             const view = document.getElementById('checkinPhotoViewer');
-            if (view) view.style.display = 'none';
+            if (view) view.classList.remove('active');
         }
         // 学习打卡月历当前显示的年月
         let currentStudyCheckinDate = new Date();
