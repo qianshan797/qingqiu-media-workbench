@@ -890,13 +890,10 @@
 
         /* v36 个人学习模块 */
         .study-layout {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            display: flex;
+            flex-direction: column;
             gap: 16px;
-            align-items: start;
-        }
-        @media (max-width: 860px) {
-            .study-layout { grid-template-columns: 1fr; }
+            align-items: stretch;
         }
         .study-section-title {
             display: flex;
