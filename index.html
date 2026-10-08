@@ -1058,6 +1058,65 @@
             .checkin-calendar { grid-template-columns: repeat(4, 1fr); }
         }
 
+        /* v38 学习任务：短/长期任务 */
+        .study-type-select {
+            padding: 8px 10px;
+            border: 1px solid #E5E5EA;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #fff;
+            color: #1C1C1E;
+            outline: none;
+            cursor: pointer;
+        }
+        .study-deadline-input {
+            padding: 8px 10px;
+            border: 1px solid #E5E5EA;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #fff;
+            color: #1C1C1E;
+            outline: none;
+        }
+        .study-deadline-input:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+        .study-deadline-warn {
+            border-color: #FF3B30 !important;
+            box-shadow: 0 0 0 2px rgba(255, 59, 48, 0.2);
+        }
+        .study-type-hint {
+            font-size: 12px;
+            color: #8E8E93;
+            margin: -6px 0 12px;
+            line-height: 1.5;
+        }
+        .type-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 1px 6px;
+            border-radius: 4px;
+            margin-right: 4px;
+        }
+        .type-badge.short { background: rgba(255, 149, 0, 0.15); color: #FF9500; }
+        .type-badge.long { background: rgba(0, 122, 255, 0.12); color: #007AFF; }
+        .study-task-body { flex: 1; min-width: 0; }
+        .study-task-title { flex: none; font-size: 14px; color: #1C1C1E; word-break: break-word; }
+        .study-task-item.done .study-task-title {
+            text-decoration: line-through;
+            opacity: 0.55;
+        }
+        .study-task-meta { margin-top: 3px; display: flex; align-items: center; gap: 6px; }
+        .study-task-dl { font-size: 11px; color: #FF9500; }
+        body.dark-mode .study-type-select,
+        body.dark-mode .study-deadline-input {
+            background: #1C1C1E;
+            border-color: #3A3A3C;
+            color: #F2F2F7;
+        }
+
         /* v37 侧边栏目录拖动排序 */
         .nav-item[draggable="true"] { cursor: grab; }
         .nav-item[draggable="true"]:active { cursor: grabbing; }
@@ -7414,8 +7473,14 @@
                         </div>
                         <div class="add-study-form">
                             <input type="text" id="newStudyTitle" placeholder="输入学习任务，如 复习英语单词..." maxlength="50" onkeydown="if(event.key==='Enter')addStudyTask()">
+                            <select id="newStudyType" class="study-type-select" title="选择任务性质" onchange="onStudyTypeChange()">
+                                <option value="short">短期任务</option>
+                                <option value="long">长期任务</option>
+                            </select>
+                            <input type="date" id="newStudyDeadline" class="study-deadline-input" title="短期任务截止日期" value="" onkeydown="if(event.key==='Enter')addStudyTask()">
                             <button class="add-task-btn" onclick="addStudyTask()">添加任务</button>
                         </div>
+                        <div class="study-type-hint" id="studyTypeHint"><span class="type-badge short">短期</span>任务需设定截止日期，期限内每天出现；<span class="type-badge long">长期</span>任务每天出现，无截止日期。</div>
                         <div class="study-task-list" id="studyTaskList"></div>
                         <div class="study-task-stats">
                             <span>已完成 <b id="studyDoneCount">0</b> / <b id="studyTotalCount">0</b></span>
@@ -12063,7 +12128,13 @@ CREATE POLICY "allow_all" ON workbench_sync
                 const raw = localStorage.getItem(STORAGE_KEY_STUDY_TASKS);
                 if (raw) tasks = JSON.parse(raw);
             } catch (e) { }
-            return Array.isArray(tasks) ? tasks : [];
+            if (!Array.isArray(tasks)) return [];
+            // v38 兼容旧数据：无 type 的任务默认为长期任务（持续显示）
+            return tasks.map(function(t){
+                if (t && !t.type) { t.type = 'long'; }
+                if (t && t.type === 'long') t.deadline = null;
+                return t;
+            });
         }
         function saveStudyTasks(tasks) {
             try { localStorage.setItem(STORAGE_KEY_STUDY_TASKS, JSON.stringify(tasks)); } catch (e) { }
@@ -12072,24 +12143,72 @@ CREATE POLICY "allow_all" ON workbench_sync
                 pushToCloud().catch(function(e){ console.warn('[saveStudyTasks] 云同步失败:', e); });
             }
         }
+        function onStudyTypeChange() {
+            const type = document.getElementById('newStudyType').value;
+            const dlWrap = document.getElementById('newStudyDeadline');
+            if (type === 'long') { dlWrap.disabled = true; dlWrap.value = ''; }
+            else { dlWrap.disabled = false; hlStudyDeadline(); }
+        }
+        // 短期任务未设截止日期时高亮提示
+        function hlStudyDeadline() {
+            const dl = document.getElementById('newStudyDeadline');
+            if (dl && !dl.disabled && !dl.value) {
+                dl.classList.add('study-deadline-warn');
+                setTimeout(function(){ dl.classList.remove('study-deadline-warn'); }, 1500);
+            }
+        }
+        // 任务是否应在今天显示：长期总是；短期在今天<=截止日期时显示
+        function studyTaskVisibleToday(t) {
+            if (t.type === 'long') return true;
+            const dl = t.deadline;
+            if (!dl) return false;
+            return dl.localeCompare(fmtDate(new Date())) >= 0;
+        }
+        // 每天重置逻辑：符合条件的任务如已完成整日（done 且非今日本次完成）则回到未完成，供今天重新勾选
+        function resetDailyStudyTasks() {
+            const tasks = getStudyTasks();
+            let changed = false;
+            const today = fmtDate(new Date());
+            tasks.forEach(t => {
+                if (t.done && t.doneDate !== today) {
+                    if (t.type === 'long') { t.done = false; changed = true; }
+                    else if (t.deadline && t.deadline.localeCompare(today) >= 0) { t.done = false; changed = true; }
+                }
+            });
+            if (changed) {
+                try { localStorage.setItem(STORAGE_KEY_STUDY_TASKS, JSON.stringify(tasks)); } catch (e) { }
+            }
+        }
         function addStudyTask() {
             const input = document.getElementById('newStudyTitle');
             const title = input.value.trim();
             if (!title) return;
+            const type = document.getElementById('newStudyType').value;
+            const dl = document.getElementById('newStudyDeadline');
+            const deadline = (type === 'short' && dl.value) ? dl.value : null;
+            if (type === 'short' && !deadline) { hlStudyDeadline(); return; }
             const tasks = getStudyTasks();
             tasks.unshift({
                 id: 'study_' + Date.now(),
                 title: title,
+                type: type,
+                deadline: deadline,
                 done: false,
+                doneDate: null,
                 createdAt: Date.now()
             });
             input.value = '';
+            if (dl) dl.value = '';
             saveStudyTasks(tasks);
         }
         function toggleStudyTask(id) {
             const tasks = getStudyTasks();
             const t = tasks.find(x => x.id === id);
-            if (t) { t.done = !t.done; saveStudyTasks(tasks); }
+            if (t) {
+                t.done = !t.done;
+                t.doneDate = t.done ? fmtDate(new Date()) : null;
+                saveStudyTasks(tasks);
+            }
         }
         function deleteStudyTask(id) {
             saveStudyTasks(getStudyTasks().filter(x => x.id !== id));
@@ -12097,20 +12216,35 @@ CREATE POLICY "allow_all" ON workbench_sync
         function renderStudyTasks() {
             const list = document.getElementById('studyTaskList');
             if (!list) return;
-            const tasks = getStudyTasks();
-            const doneCount = tasks.filter(t => t.done).length;
+            resetDailyStudyTasks(); // 先执行每日重置，保证今天显示正确
+            const allTasks = getStudyTasks();
+            const visible = allTasks.filter(studyTaskVisibleToday); // 只显示今天的任务（短期到期隐藏）
+            const doneCount = visible.filter(t => t.done).length;
             document.getElementById('studyDoneCount').textContent = doneCount;
-            document.getElementById('studyTotalCount').textContent = tasks.length;
-            const pct = tasks.length ? Math.round(doneCount / tasks.length * 100) : 0;
+            document.getElementById('studyTotalCount').textContent = visible.length;
+            const pct = visible.length ? Math.round(doneCount / visible.length * 100) : 0;
             document.getElementById('studyProgressBar').style.width = pct + '%';
-            if (!tasks.length) {
-                list.innerHTML = '<div class="study-empty">还没有学习任务，添加一个开始吧 📚</div>';
+            if (!visible.length) {
+                list.innerHTML = allTasks.length
+                    ? '<div class="study-empty">今日没有待做的学习任务 🎉</div>'
+                    : '<div class="study-empty">还没有学习任务，添加一个开始吧 📚</div>';
                 return;
             }
-            list.innerHTML = tasks.map(t => {
+            list.innerHTML = visible.map(t => {
+                const badge = t.type === 'long'
+                    ? '<span class="type-badge long">长期</span>'
+                    : '<span class="type-badge short">短期</span>';
+                const dlText = (t.type === 'short' && t.deadline)
+                    ? '<span class="study-task-dl">截止 ' + t.deadline + '</span>'
+                    : '';
                 return '<div class="study-task-item' + (t.done ? ' done' : '') + '">' +
                     '<button class="study-task-check" onclick="toggleStudyTask(\'' + t.id + '\')" title="切换完成状态">' + (t.done ? '✓' : '') + '</button>' +
-                    '<div class="study-task-title">' + String(t.title).replace(/</g, '&lt;').replace(/"/g, '&quot;') + '</div>' +
+                    '<div class="study-task-body">' +
+                        '<div class="study-task-title-wrap">' +
+                            '<div class="study-task-title">' + String(t.title).replace(/</g, '&lt;').replace(/"/g, '&quot;') + '</div>' +
+                            '<div class="study-task-meta">' + badge + dlText + '</div>' +
+                        '</div>' +
+                    '</div>' +
                     '<button class="study-task-del" onclick="deleteStudyTask(\'' + t.id + '\')" title="删除">✕</button>' +
                 '</div>';
             }).join('');
@@ -15322,6 +15456,11 @@ CREATE POLICY "allow_all" ON workbench_sync
         autoSyncNews(); // 自动同步每日快讯
         updateNewsBadge(); // 更新快讯未读徽标
         renderStudyTasks(); // v36 渲染学习任务清单
+        (function(){
+            // v38 学习任务：默认短期任务，截止日期默认今天
+            const dl = document.getElementById('newStudyDeadline');
+            if (dl && !dl.value) dl.value = fmtDate(new Date());
+        })();
         renderStudyCheckin(); // v36 渲染学习进度打卡
 
         function exportHtmlWithData() {
