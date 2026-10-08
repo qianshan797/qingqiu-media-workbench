@@ -1010,36 +1010,48 @@
             color: #FF9500;
             font-weight: 600;
         }
-        .checkin-calendar {
+        .study-checkin-calendar {
+            border-top: 1px solid #F2F2F7;
+            padding-top: 14px;
+        }
+        .study-checkin-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 8px;
         }
-        .checkin-day {
-            text-align: center;
-            padding: 10px 4px;
-            border-radius: 10px;
+        .study-checkin-day {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             background: #F2F2F7;
-            border: 1.5px solid transparent;
+            position: relative;
+            border: 2px solid transparent;
         }
-        .checkin-day.today { border-color: #007AFF; }
-        .checkin-day.checked { background: rgba(0, 122, 255, 0.12); }
-        .checkin-day-num {
-            font-size: 16px;
+        .study-checkin-day:hover {
+            background: rgba(0, 122, 255, 0.08);
+            transform: translateY(-2px);
+        }
+        .study-checkin-day.empty {
+            background: transparent;
+        }
+        .study-checkin-day.today { border-color: #007AFF; }
+        .study-checkin-day.checked { background: rgba(0, 122, 255, 0.12); }
+        .study-checkin-day .day-number {
+            font-size: 15px;
             font-weight: 600;
             color: #1C1C1E;
         }
-        .checkin-day-wd {
-            font-size: 11px;
-            color: #8E8E93;
-            margin-top: 2px;
-        }
-        .checkin-day-dot {
-            margin-top: 6px;
+        .study-checkin-day .day-check-mark {
             font-size: 13px;
-            color: #C7C7CC;
+            color: #007AFF;
+            font-weight: bold;
+            line-height: 1;
         }
-        .checkin-day.checked .checkin-day-dot { color: #007AFF; font-weight: bold; }
+        .study-checkin-day.empty .day-number { color: transparent; }
         body.dark-mode .study-task-title { color: #F2F2F7; }
         body.dark-mode .study-task-item { border-bottom-color: #2C2C2E; }
         body.dark-mode .add-study-form input {
@@ -1048,12 +1060,10 @@
             color: #F2F2F7;
         }
         body.dark-mode .study-task-stats b { color: #F2F2F7; }
-        body.dark-mode .checkin-day { background: #1C1C1E; }
-        body.dark-mode .checkin-day.checked { background: rgba(0, 122, 255, 0.2); }
-        body.dark-mode .checkin-day-num { color: #F2F2F7; }
-        @media (max-width: 480px) {
-            .checkin-calendar { grid-template-columns: repeat(4, 1fr); }
-        }
+        body.dark-mode .study-checkin-day { background: #1C1C1E; }
+        body.dark-mode .study-checkin-day.checked { background: rgba(0, 122, 255, 0.2); }
+        body.dark-mode .study-checkin-day .day-number { color: #F2F2F7; }
+        body.dark-mode .study-checkin-day.empty { background: transparent; }
 
         /* v38 学习任务：短/长期任务 */
         .study-type-select {
@@ -7496,7 +7506,28 @@
                             </button>
                             <div class="checkin-streak" id="studyStreak">连续打卡 0 天</div>
                         </div>
-                        <div class="checkin-calendar" id="studyCheckinCalendar"></div>
+                        <div class="study-checkin-calendar">
+                            <div class="calendar-header">
+                                <button class="calendar-nav-btn" onclick="changeStudyCheckinMonth(-1)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+                                </button>
+                                <div class="calendar-title" id="studyCheckinTitle"></div>
+                                <button class="calendar-nav-btn" onclick="changeStudyCheckinMonth(1)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+                                </button>
+                                <button class="calendar-today-btn" onclick="goToStudyCheckinToday()">今天</button>
+                            </div>
+                            <div class="calendar-weekdays">
+                                <div class="calendar-weekday">日</div>
+                                <div class="calendar-weekday">一</div>
+                                <div class="calendar-weekday">二</div>
+                                <div class="calendar-weekday">三</div>
+                                <div class="calendar-weekday">四</div>
+                                <div class="calendar-weekday">五</div>
+                                <div class="calendar-weekday">六</div>
+                            </div>
+                            <div class="study-checkin-grid" id="studyCheckinCalendar"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -12255,6 +12286,8 @@ CREATE POLICY "allow_all" ON workbench_sync
             } catch (e) { }
             return (map && typeof map === 'object') ? map : {};
         }
+        // 学习打卡月历当前显示的年月
+        let currentStudyCheckinDate = new Date();
         function fmtDate(d) {
             const y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,'0'), day = String(d.getDate()).padStart(2,'0');
             return y + '-' + m + '-' + day;
@@ -12269,8 +12302,17 @@ CREATE POLICY "allow_all" ON workbench_sync
                 pushToCloud().catch(function(e){ console.warn('[checkInStudy] 云同步失败:', e); });
             }
         }
+        function changeStudyCheckinMonth(delta) {
+            currentStudyCheckinDate.setMonth(currentStudyCheckinDate.getMonth() + delta);
+            renderStudyCheckin();
+        }
+        function goToStudyCheckinToday() {
+            currentStudyCheckinDate = new Date();
+            renderStudyCheckin();
+        }
         function renderStudyCheckin() {
             const wrap = document.getElementById('studyCheckinCalendar');
+            const title = document.getElementById('studyCheckinTitle');
             const streakEl = document.getElementById('studyStreak');
             if (!wrap || !streakEl) return;
             const map = getStudyCheckin();
@@ -12283,18 +12325,28 @@ CREATE POLICY "allow_all" ON workbench_sync
                 cur.setDate(cur.getDate() - 1);
             }
             streakEl.textContent = '连续打卡 ' + streak + ' 天';
-            // 渲染最近 7 天
+
+            // 渲染与工作日历一致的月历
+            const year = currentStudyCheckinDate.getFullYear();
+            const month = currentStudyCheckinDate.getMonth();
+            if (title) title.textContent = year + '年' + (month + 1) + '月';
+            const monthStart = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const startDay = monthStart.getDay();
+            const daysInMonth = lastDay.getDate();
+            const todayStr = fmtDate(new Date());
+
             let html = '';
-            for (let i = 6; i >= 0; i--) {
-                const d = new Date(); d.setDate(d.getDate() - i);
-                const key = fmtDate(d);
-                const checked = !!map[key];
-                const isToday = i === 0;
-                const wd = ['日','一','二','三','四','五','六'][d.getDay()];
-                html += '<div class="checkin-day' + (checked ? ' checked' : '') + (isToday ? ' today' : '') + '">' +
-                    '<div class="checkin-day-num">' + d.getDate() + '</div>' +
-                    '<div class="checkin-day-wd">周' + wd + (isToday ? ' · 今' : '') + '</div>' +
-                    '<div class="checkin-day-dot">' + (checked ? '✓' : '·') + '</div>' +
+            for (let i = 0; i < startDay; i++) {
+                html += '<div class="study-checkin-day empty"></div>';
+            }
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(day).padStart(2, '0');
+                const checked = !!map[dateStr];
+                const isToday = dateStr === todayStr;
+                html += '<div class="study-checkin-day' + (checked ? ' checked' : '') + (isToday ? ' today' : '') + '" title="' + dateStr + '">' +
+                    '<span class="day-number">' + day + '</span>' +
+                    (checked ? '<span class="day-check-mark">✓</span>' : '') +
                 '</div>';
             }
             wrap.innerHTML = html;
