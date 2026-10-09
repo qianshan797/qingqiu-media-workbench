@@ -1,172 +1,112 @@
 [
   {
-    "id": "news_20261008_001",
-    "date": "2026-10-08",
-    "category": "平台动态",
-    "title": "TikTok Shop 欧洲黑五砸10亿补贴，首次覆盖16国全托管战场",
-    "summary": "TikTok Shop 2026全托管黑五大促季正式定档10月至12月，战线首次拉长至三个月，覆盖美国、英国及欧洲16个国家，新开通的波兰、荷兰、比利时等八国首次并入黑五核心战场，平台投入10亿欧元补贴加码欧洲。",
-    "source": "https://www.chwe.cn/article/MTRrrfHkGwn",
-    "tags": [
-      "TikTok Shop",
-      "黑五",
-      "补贴",
-      "欧洲",
-      "全托管"
-    ],
-    "read": false,
-    "createdAt": 1791419550368
-  },
-  {
-    "id": "news_20261008_002",
-    "date": "2026-10-08",
-    "category": "平台动态",
-    "title": "TikTok Shop 美区秋季大促 Fall Deals For You 定档10月5日至19日",
-    "summary": "TikTok Shop 美区秋季大促作为黑五前首轮高爆发窗口定档10月5-19日，自运营商家9月26日前完成基础报名、9月30日前完成主推品与新品报名；报名商家加油包达标最高可获5万美元激励。",
-    "source": "https://glosellers.com/newsflash/102509.html",
-    "tags": [
-      "TikTok Shop",
-      "秋季大促",
-      "美区",
-      "黑五备战",
-      "激励"
-    ],
-    "read": false,
-    "createdAt": 1791419550368
-  },
-  {
-    "id": "news_20261008_003",
-    "date": "2026-10-08",
-    "category": "平台合规",
-    "title": "Shopee 泰国优选卖家10月13日起新增 Express Delivery 硬性要求",
-    "summary": "Shopee 官方发布公告，自北京时间2026年10月13日起，泰国跨境站点将针对本地化履约模式（纯三方仓、一店多运、一店多运2.0）下的优选/优选+卖家新增快速配送开通硬性要求，进一步规范平台配送标准。",
-    "source": "https://www.chwang.com/baike/shopee_news",
-    "tags": [
-      "Shopee",
-      "泰国",
-      "合规",
-      "配送",
-      "优选卖家"
-    ],
-    "read": false,
-    "createdAt": 1791419550368
-  },
-  {
-    "id": "news_20261008_004",
-    "date": "2026-10-08",
-    "category": "平台功能更新",
-    "title": "亚马逊公布2026 Q4 旺季 FBA 入库截止日期",
-    "summary": "亚马逊公布2026 Q4 旺季入库时间表：黑五/网一备货截止为10月28日（FBA 优化分仓）、10月21日（最小分仓）、10月14日（AWD）；节日旺季配送费从10月15日起至2027年1月14日。",
-    "source": "https://sellercentral-europe.amazon.com/seller-forums/discussions/t/3e31fbb7-04e0-4ed4-873e-f74b1052e2ff",
-    "tags": [
-      "Amazon",
-      "FBA",
-      "Q4",
-      "黑五",
-      "入库截止"
-    ],
-    "read": false,
-    "createdAt": 1791419550368
-  },
-  {
-    "id": "news_20261008_005",
-    "date": "2026-10-08",
-    "category": "技术动态",
-    "title": "亚马逊推出 Global Warehousing and Distribution 全球仓储分销新工具",
-    "summary": "亚马逊发布全新 GWD 工具，卖家可将一次生产的商品发往工厂附近的亚马逊运营中心，即可从单一库存覆盖美国、英国、日本、德国、法国、意大利、西班牙、加拿大等多国市场，无需分批发货。",
-    "source": "https://www.aboutamazon.com/news/innovation-at-amazon/amazon-sellers-global-expansion-tools",
-    "tags": [
-      "Amazon",
-      "GWD",
-      "仓储",
-      "全球分销",
-      "新工具"
-    ],
-    "read": false,
-    "createdAt": 1791419550368
-  },
-  {
-    "id": "news_20261008_006",
-    "date": "2026-10-08",
+    "id": "news_20261009_001",
+    "date": "2026-10-09",
     "category": "贸易政策",
-    "title": "欧盟议会通过电商与海关新规，非欧盟卖家将被视为进口商",
-    "summary": "欧洲议会正式通过新电商与海关规则，从非欧盟国家向欧盟消费者远程销售商品的卖家及平台将被视为进口商，须向海关提供所有必要数据、缴纳或担保相关税费，并确保商品符合欧盟法规。",
-    "source": "https://www.europarl.europa.eu/news/nl/press-room/20260911IPR47456/the-european-parliament-adopts-new-e-commerce-and-customs-rules",
-    "tags": [
-      "欧盟",
-      "合规",
-      "海关",
-      "远程销售",
-      "政策"
-    ],
-    "read": false,
-    "createdAt": 1791419550368
-  },
-  {
-    "id": "news_20261008_007",
-    "date": "2026-10-08",
-    "category": "贸易政策",
-    "title": "商务部等6部门发布指导意见，推进电子商务高质量发展与合规出海",
-    "summary": "商务部等6部门联合发布指导意见，鼓励电商企业在海外注册商标、申请专利、布局自主品牌，依托海外综合服务体系建设跨境电商合规出海服务平台，加强海外经营风险监测预警。",
-    "source": "http://www.mofcom.gov.cn/zwgk/zcfb/art/2026/art_4c9888a79cc84deeac06ed96182671c6.html",
-    "tags": [
-      "商务部",
-      "政策",
-      "出海",
-      "合规",
-      "自主品牌"
-    ],
-    "read": false,
-    "createdAt": 1791419550368
-  },
-  {
-    "id": "news_20261008_008",
-    "date": "2026-10-08",
-    "category": "平台合规",
-    "title": "TEMU 强制英代欧代、亚马逊电动工具新规、俄罗斯税务新规同日生效",
-    "summary": "跨境电商合规高压来袭：TEMU 强制要求所有卖家配备英国/欧盟责任人，亚马逊对电动工具类产品出台新安全合规要求，俄罗斯同步上线税务新规，不合规商品将直接下架。",
+    "title": "美国海关密集推新规：800美元低值豁免拟取消，IEEPA关税退款已启动发放",
+    "summary": "美国海关近期密集出台新规，800美元以下进口小包低值豁免政策拟被取消，IEEPA关税退款流程已正式启动发放。跨境卖家申报合规压力陡增，需提前梳理受影响SKU与申报链路。",
     "source": "https://aitosea.ai/daily-reports",
-    "tags": [
-      "TEMU",
-      "Amazon",
-      "合规",
-      "电动工具",
-      "俄罗斯"
-    ],
+    "tags": ["美国海关", "关税政策", "低值豁免", "IEEPA", "合规"],
     "read": false,
-    "createdAt": 1791419550368
+    "createdAt": 1791620400000
   },
   {
-    "id": "news_20261008_009",
-    "date": "2026-10-08",
+    "id": "news_20261009_002",
+    "date": "2026-10-09",
+    "category": "平台合规",
+    "title": "TEMU强制英代欧代：未按时提交本地授权代表的商品即下架",
+    "summary": "Temu宣布对销往英国与欧盟的卖家强制要求配置英代/欧代，未按时提交本地授权代表信息的商品将被立即下架。卖家需在期限内完成补录，避免链接清零。",
+    "source": "https://aitosea.ai/daily-reports",
+    "tags": ["Temu", "英代欧代", "平台合规", "欧盟", "下架"],
+    "read": false,
+    "createdAt": 1791620410000
+  },
+  {
+    "id": "news_20261009_003",
+    "date": "2026-10-09",
     "category": "市场趋势",
-    "title": "美区部分商品关税暴涨104%，跨境卖家启动降价抢单与成本重算",
-    "summary": "美国对华部分商品关税进一步上调，个别品类涨幅达104%，已有跨境卖家启动降价促销以锁定订单，行业提示需立刻重新进行成本测算与定价策略调整，避免库存积压风险。",
+    "title": "TikTok Shop墨西哥日均GMV一年暴涨133倍，欧洲黑五补贴10亿",
+    "summary": "TikTok Shop墨西哥站过去一年日均GMV实现133倍爆发式增长，平台同步宣布欧洲黑五季将投入10亿元补贴，内容电商正成为欧美与拉美增量核心赛道。",
     "source": "https://aitosea.ai/daily-reports",
-    "tags": [
-      "关税",
-      "美区",
-      "成本",
-      "定价",
-      "风险"
-    ],
+    "tags": ["TikTok Shop", "墨西哥", "GMV", "黑五补贴", "内容电商"],
     "read": false,
-    "createdAt": 1791419550368
+    "createdAt": 1791620420000
   },
   {
-    "id": "news_20261008_010",
-    "date": "2026-10-08",
+    "id": "news_20261009_004",
+    "date": "2026-10-09",
     "category": "平台功能更新",
-    "title": "TikTok Shop 2026 黑五新增直播拍卖、图文新体裁、AIGC 多语种等玩法",
-    "summary": "TikTok Shop 2026 全托管黑五叠加多项新玩法：直播拍卖机制、图文新内容体裁、AIGC 多语种自动生成工具首次大规模接入，帮助商家以更低门槛触达欧洲八国新市场。",
-    "source": "https://www.chwe.cn/article/MTRrrfHkGwn",
-    "tags": [
-      "TikTok Shop",
-      "AIGC",
-      "直播拍卖",
-      "新玩法",
-      "黑五"
-    ],
+    "title": "Amazon Seller Central升级为多渠道商管中枢",
+    "summary": "亚马逊在Accelerate 2026大会推出Seller Central多渠道升级，卖家可在同一后台统一管理Shopify、Walmart、eBay、TikTok四平台的商品、订单与库存，并附带AI生成跨平台商品详情能力。",
+    "source": "https://cross-border-magazine.com/amazon-turns-seller-central-into-a-multichannel-commerce-hub/",
+    "tags": ["Amazon", "Seller Central", "多渠道", "Accelerate 2026", "AI"],
     "read": false,
-    "createdAt": 1791419550368
+    "createdAt": 1791620430000
+  },
+  {
+    "id": "news_20261009_005",
+    "date": "2026-10-09",
+    "category": "平台动态",
+    "title": "Shopee泰国优选卖家10月13日起强制Express Delivery",
+    "summary": "Shopee泰国跨境站将于2026年10月13日对优选与优选+卖家新增快速配送(Express Delivery)硬性要求，覆盖纯三方仓与一店多仓等本地化履约模式，物流时效未达标或被降级。",
+    "source": "http://fw-kj.com/news/list_38_15.html",
+    "tags": ["Shopee", "泰国", "Express Delivery", "本地化履约", "物流"],
+    "read": false,
+    "createdAt": 1791620440000
+  },
+  {
+    "id": "news_20261009_006",
+    "date": "2026-10-09",
+    "category": "平台动态",
+    "title": "Temu与ChannelEngine达成全球战略合作",
+    "summary": "Temu与国际电商集成平台ChannelEngine正式签署战略合作，以欧洲为核心阵地并覆盖美、加、澳、新、墨西哥等多市场，为卖家提供一站式自动化跨境运营与海外仓履约接入能力。",
+    "source": "http://www.fw-kj.com/",
+    "tags": ["Temu", "ChannelEngine", "战略合作", "海外仓", "欧洲"],
+    "read": false,
+    "createdAt": 1791620450000
+  },
+  {
+    "id": "news_20261009_007",
+    "date": "2026-10-09",
+    "category": "技术动态",
+    "title": "Shopify 2026假日季AI购物方案发布",
+    "summary": "Shopify正式发布2026假日季AI购物方案，推出代理式智能购物系统，覆盖黑五、网一、圣诞季全周期。支持AI个性化导购、动态库存调度、自动化营销投放与跨境结算智能优化。",
+    "source": "http://news.iresearch.cn/content/202610/568020.shtml",
+    "tags": ["Shopify", "AI购物", "代理式", "黑五", "独立站"],
+    "read": false,
+    "createdAt": 1791620460000
+  },
+  {
+    "id": "news_20261009_008",
+    "date": "2026-10-09",
+    "category": "平台功能更新",
+    "title": "Shopee发布10月第1周市场周报，Q4广告金激励与SPayLater分期同步启动",
+    "summary": "Shopee发布2026年10月第1周市场周报，同步开启Q4广告金奖励报名与官方海外仓头程费率更新，越南站点上线Special SPayLater买家分期优惠，多项激励叠加Q4旺季。",
+    "source": "https://shopee.cn/edu/category",
+    "tags": ["Shopee", "Q4激励", "广告金", "SPayLater", "越南"],
+    "read": false,
+    "createdAt": 1791620470000
+  },
+  {
+    "id": "news_20261009_009",
+    "date": "2026-10-09",
+    "category": "贸易政策",
+    "title": "三部门明确跨境电子商务出口退运商品税收优惠政策",
+    "summary": "财政部、海关总署、税务总局联合发布公告，对2026年1月1日至2027年12月31日期间在1210、9610、9710、9810项下申报出口且6个月内原状退运进境的商品(不含食品)免征进口关税与进口环节增值税、消费税。",
+    "source": "https://www.gov.cn/zhengce/zhengceku/202602/content_7057580.htm",
+    "tags": ["出口退税", "退运商品", "1210", "9610", "海关监管"],
+    "read": false,
+    "createdAt": 1791620480000
+  },
+  {
+    "id": "news_20261009_010",
+    "date": "2026-10-09",
+    "category": "技术动态",
+    "title": "亚马逊广告unBoxed开箱盛典：AI驱动Ads Agent正式亮相",
+    "summary": "亚马逊广告unBoxed 2026现场推出AI Ads Agent，广告主可通过自然语言批量管理数百个跨账户广告活动，分钟级完成以往数小时的手动操作，并可获得智能推荐的细分受众与关键词。",
+    "source": "https://gs.amazon.cn/news-center/news-center-260422",
+    "tags": ["Amazon Ads", "AI Agent", "unBoxed", "广告投放", "Ads Agent"],
+    "read": false,
+    "createdAt": 1791620490000
   }
 ]
