@@ -7690,6 +7690,33 @@
         </div>
     </div>
 
+    <!-- 打卡详情弹窗：重新上传照片 / 删除打卡 -->
+    <div class="modal-overlay" id="checkinDetailModal" onclick="if(event.target===this)closeCheckinDetailModal()">
+        <div class="modal" style="max-width: 420px;">
+            <div class="modal-header">
+                <h2 id="checkinDetailTitle">打卡详情</h2>
+                <button class="modal-close" onclick="closeCheckinDetailModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+                    <span style="font-size:13px;color:#8E8E93;">打卡日期：</span>
+                    <span id="checkinDetailDate" style="font-size:14px;font-weight:600;"></span>
+                </div>
+                <div id="checkinDetailPhotoArea" style="margin-bottom:12px;text-align:center;">
+                    <img id="checkinDetailPhoto" alt="打卡照片" style="display:none;max-width:100%;max-height:220px;border-radius:10px;object-fit:contain;cursor:pointer;"/>
+                    <div id="checkinDetailNoPhoto" style="font-size:13px;color:#8E8E93;padding:14px 0;">该日期暂未上传照片</div>
+                </div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;">
+                    <button type="button" class="toolbar-btn invert" onclick="openReuploadCheckinPhoto()">📷 重新上传/补传照片</button>
+                    <button type="button" class="toolbar-btn invert" style="color:#FF3B30;border-color:#FF3B30;" onclick="deleteCheckinRecord()">🗑 删除打卡</button>
+                </div>
+                <div style="margin-top:12px;">
+                    <button type="button" class="toolbar-btn primary" style="width:100%;" onclick="closeCheckinDetailModal()">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="profileModal">
         <div class="modal" style="max-width: 400px;">
             <div class="modal-header">
@@ -12454,6 +12481,61 @@ CREATE POLICY "allow_all" ON workbench_sync
             const view = document.getElementById('checkinPhotoViewer');
             if (view) view.classList.remove('active');
         }
+        // 当前查看详情的打卡日期
+        let currentCheckinDetailDate = null;
+        // 打开打卡详情：可重新上传照片或删除
+        function openCheckinDetail(dateStr) {
+            const modal = document.getElementById('checkinDetailModal');
+            if (!modal) return;
+            currentCheckinDetailDate = dateStr;
+            const map = getStudyCheckin();
+            const info = getCheckinInfo(map, dateStr);
+            document.getElementById('checkinDetailTitle').textContent = '打卡详情';
+            document.getElementById('checkinDetailDate').textContent = dateStr;
+            const img = document.getElementById('checkinDetailPhoto');
+            const noPhoto = document.getElementById('checkinDetailNoPhoto');
+            if (info.photo) {
+                img.src = info.photo;
+                img.style.display = 'inline-block';
+                noPhoto.style.display = 'none';
+            } else {
+                img.style.display = 'none';
+                noPhoto.style.display = 'block';
+            }
+            modal.classList.add('active');
+        }
+        function closeCheckinDetailModal() {
+            const modal = document.getElementById('checkinDetailModal');
+            if (modal) modal.classList.remove('active');
+            currentCheckinDetailDate = null;
+        }
+        // 从详情弹窗跳到上传照片弹窗（自动带上该日期）
+        function openReuploadCheckinPhoto() {
+            if (!currentCheckinDetailDate) return;
+            closeCheckinDetailModal();
+            const dateInput = document.getElementById('checkinPhotoDate');
+            if (dateInput) dateInput.value = currentCheckinDetailDate;
+            const dlg = document.getElementById('studyCheckinModal');
+            if (dlg) dlg.classList.add('active');
+            // 打开时重置文件与预览
+            const preview = document.getElementById('checkinPhotoPreview');
+            document.getElementById('checkinPhotoInput').value = '';
+            preview.style.display = 'none';
+            preview.src = '';
+            document.getElementById('checkinPhotoName').textContent = '';
+        }
+        // 删除该日期的打卡记录
+        function deleteCheckinRecord() {
+            if (!currentCheckinDetailDate) return;
+            const dateStr = currentCheckinDetailDate;
+            const map = getStudyCheckin();
+            if (map[dateStr]) {
+                delete map[dateStr];
+                saveStudyCheckin(map);
+            }
+            closeCheckinDetailModal();
+            showSyncToast('已删除 ' + dateStr + ' 的打卡记录', 'success');
+        }
         // 学习打卡月历当前显示的年月
         let currentStudyCheckinDate = new Date();
         function fmtDate(d) {
@@ -12504,7 +12586,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                 const checked = info.checked;
                 const hasPhoto = checked && !!info.photo;
                 const isToday = dateStr === todayStr;
-                html += '<div class="study-checkin-day' + (checked ? ' checked' : '') + (isToday ? ' today' : '') + '" title="' + dateStr + '"' + (hasPhoto ? ' onclick="viewCheckinPhoto(\'' + dateStr + '\')"' : '') + '>' +
+                html += '<div class="study-checkin-day' + (checked ? ' checked' : '') + (isToday ? ' today' : '') + '" title="' + dateStr + '"' + (checked ? ' onclick="openCheckinDetail(\'' + dateStr + '\')"' : '') + '>' +
                     '<span class="day-number">' + day + '</span>' +
                     (checked ? '<span class="day-check-mark">' + (hasPhoto ? '📷' : '✓') + '</span>' : '') +
                 '</div>';
