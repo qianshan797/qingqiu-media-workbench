@@ -6,7 +6,13 @@
     "title": "美国海关密集推新规：800美元低值豁免拟取消，IEEPA关税退款已启动发放",
     "summary": "美国海关近期密集出台新规，800美元以下进口小包低值豁免政策拟被取消，IEEPA关税退款流程已正式启动发放。跨境卖家申报合规压力陡增，需提前梳理受影响SKU与申报链路。",
     "source": "https://aitosea.ai/daily-reports",
-    "tags": ["美国海关", "关税政策", "低值豁免", "IEEPA", "合规"],
+    "tags": [
+      "美国海关",
+      "关税政策",
+      "低值豁免",
+      "IEEPA",
+      "合规"
+    ],
     "read": false,
     "createdAt": 1791620400000
   },
@@ -17,7 +23,13 @@
     "title": "TEMU强制英代欧代：未按时提交本地授权代表的商品即下架",
     "summary": "Temu宣布对销往英国与欧盟的卖家强制要求配置英代/欧代，未按时提交本地授权代表信息的商品将被立即下架。卖家需在期限内完成补录，避免链接清零。",
     "source": "https://aitosea.ai/daily-reports",
-    "tags": ["Temu", "英代欧代", "平台合规", "欧盟", "下架"],
+    "tags": [
+      "Temu",
+      "英代欧代",
+      "平台合规",
+      "欧盟",
+      "下架"
+    ],
     "read": false,
     "createdAt": 1791620410000
   },
@@ -28,7 +40,13 @@
     "title": "TikTok Shop墨西哥日均GMV一年暴涨133倍，欧洲黑五补贴10亿",
     "summary": "TikTok Shop墨西哥站过去一年日均GMV实现133倍爆发式增长，平台同步宣布欧洲黑五季将投入10亿元补贴，内容电商正成为欧美与拉美增量核心赛道。",
     "source": "https://aitosea.ai/daily-reports",
-    "tags": ["TikTok Shop", "墨西哥", "GMV", "黑五补贴", "内容电商"],
+    "tags": [
+      "TikTok Shop",
+      "墨西哥",
+      "GMV",
+      "黑五补贴",
+      "内容电商"
+    ],
     "read": false,
     "createdAt": 1791620420000
   },
@@ -39,7 +57,13 @@
     "title": "Amazon Seller Central升级为多渠道商管中枢",
     "summary": "亚马逊在Accelerate 2026大会推出Seller Central多渠道升级，卖家可在同一后台统一管理Shopify、Walmart、eBay、TikTok四平台的商品、订单与库存，并附带AI生成跨平台商品详情能力。",
     "source": "https://cross-border-magazine.com/amazon-turns-seller-central-into-a-multichannel-commerce-hub/",
-    "tags": ["Amazon", "Seller Central", "多渠道", "Accelerate 2026", "AI"],
+    "tags": [
+      "Amazon",
+      "Seller Central",
+      "多渠道",
+      "Accelerate 2026",
+      "AI"
+    ],
     "read": false,
     "createdAt": 1791620430000
   },
@@ -50,7 +74,13 @@
     "title": "Shopee泰国优选卖家10月13日起强制Express Delivery",
     "summary": "Shopee泰国跨境站将于2026年10月13日对优选与优选+卖家新增快速配送(Express Delivery)硬性要求，覆盖纯三方仓与一店多仓等本地化履约模式，物流时效未达标或被降级。",
     "source": "http://fw-kj.com/news/list_38_15.html",
-    "tags": ["Shopee", "泰国", "Express Delivery", "本地化履约", "物流"],
+    "tags": [
+      "Shopee",
+      "泰国",
+      "Express Delivery",
+      "本地化履约",
+      "物流"
+    ],
     "read": false,
     "createdAt": 1791620440000
   },
@@ -61,7 +91,13 @@
     "title": "Temu与ChannelEngine达成全球战略合作",
     "summary": "Temu与国际电商集成平台ChannelEngine正式签署战略合作，以欧洲为核心阵地并覆盖美、加、澳、新、墨西哥等多市场，为卖家提供一站式自动化跨境运营与海外仓履约接入能力。",
     "source": "http://www.fw-kj.com/",
-    "tags": ["Temu", "ChannelEngine", "战略合作", "海外仓", "欧洲"],
+    "tags": [
+      "Temu",
+      "ChannelEngine",
+      "战略合作",
+      "海外仓",
+      "欧洲"
+    ],
     "read": false,
     "createdAt": 1791620450000
   },
@@ -72,7 +108,13 @@
     "title": "Shopify 2026假日季AI购物方案发布",
     "summary": "Shopify正式发布2026假日季AI购物方案，推出代理式智能购物系统，覆盖黑五、网一、圣诞季全周期。支持AI个性化导购、动态库存调度、自动化营销投放与跨境结算智能优化。",
     "source": "http://news.iresearch.cn/content/202610/568020.shtml",
-    "tags": ["Shopify", "AI购物", "代理式", "黑五", "独立站"],
+    "tags": [
+      "Shopify",
+      "AI购物",
+      "代理式",
+      "黑五",
+      "独立站"
+    ],
     "read": false,
     "createdAt": 1791620460000
   },
@@ -83,7 +125,13 @@
     "title": "Shopee发布10月第1周市场周报，Q4广告金激励与SPayLater分期同步启动",
     "summary": "Shopee发布2026年10月第1周市场周报，同步开启Q4广告金奖励报名与官方海外仓头程费率更新，越南站点上线Special SPayLater买家分期优惠，多项激励叠加Q4旺季。",
     "source": "https://shopee.cn/edu/category",
-    "tags": ["Shopee", "Q4激励", "广告金", "SPayLater", "越南"],
+    "tags": [
+      "Shopee",
+      "Q4激励",
+      "广告金",
+      "SPayLater",
+      "越南"
+    ],
     "read": false,
     "createdAt": 1791620470000
   },
@@ -94,7 +142,13 @@
     "title": "三部门明确跨境电子商务出口退运商品税收优惠政策",
     "summary": "财政部、海关总署、税务总局联合发布公告，对2026年1月1日至2027年12月31日期间在1210、9610、9710、9810项下申报出口且6个月内原状退运进境的商品(不含食品)免征进口关税与进口环节增值税、消费税。",
     "source": "https://www.gov.cn/zhengce/zhengceku/202602/content_7057580.htm",
-    "tags": ["出口退税", "退运商品", "1210", "9610", "海关监管"],
+    "tags": [
+      "出口退税",
+      "退运商品",
+      "1210",
+      "9610",
+      "海关监管"
+    ],
     "read": false,
     "createdAt": 1791620480000
   },
@@ -105,7 +159,13 @@
     "title": "亚马逊广告unBoxed开箱盛典：AI驱动Ads Agent正式亮相",
     "summary": "亚马逊广告unBoxed 2026现场推出AI Ads Agent，广告主可通过自然语言批量管理数百个跨账户广告活动，分钟级完成以往数小时的手动操作，并可获得智能推荐的细分受众与关键词。",
     "source": "https://gs.amazon.cn/news-center/news-center-260422",
-    "tags": ["Amazon Ads", "AI Agent", "unBoxed", "广告投放", "Ads Agent"],
+    "tags": [
+      "Amazon Ads",
+      "AI Agent",
+      "unBoxed",
+      "广告投放",
+      "Ads Agent"
+    ],
     "read": false,
     "createdAt": 1791620490000
   }
