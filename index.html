@@ -1011,6 +1011,55 @@
             gap: 8px;
             flex-wrap: wrap;
         }
+        .checkin-thumb {
+            position: relative;
+            width: 76px;
+            height: 76px;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #F2F2F7;
+        }
+        .checkin-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+            display: block;
+        }
+        .checkin-thumb-remove {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 20px;
+            height: 20px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.55);
+            color: #FFF;
+            font-size: 14px;
+            line-height: 20px;
+            text-align: center;
+            cursor: pointer;
+            padding: 0;
+        }
+        .checkin-viewer-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 2;
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.45);
+            color: #FFF;
+            font-size: 22px;
+            line-height: 36px;
+            text-align: center;
+            cursor: pointer;
+            padding: 0;
+        }
+        .checkin-viewer-nav:hover { background: rgba(0,0,0,0.65); }
         .checkin-streak {
             font-size: 13px;
             color: #FF9500;
@@ -7657,14 +7706,14 @@
                     <input type="date" id="checkinPhotoDate" class="form-input" value="" style="width:100%;box-sizing:border-box;"/>
                 </div>
                 <div style="position:relative;display:inline-block;margin-bottom:12px;">
-                    <button type="button" class="toolbar-btn invert" style="pointer-events:none;">📷 选择打卡照片</button>
-                    <input type="file" id="checkinPhotoInput" accept="image/*"
+                    <button type="button" class="toolbar-btn invert" style="pointer-events:none;">📷 选择打卡照片（可多选）</button>
+                    <input type="file" id="checkinPhotoInput" accept="image/*" multiple
                         onchange="onCheckinPhotoSelect()"
                         style="position:absolute;left:0;top:0;width:100%;height:100%;opacity:0;cursor:pointer;"/>
                 </div>
-                <div id="checkinPhotoWrap" style="margin-bottom:12px;">
-                    <img id="checkinPhotoPreview" alt="打卡照片预览" style="display:none;max-width:100%;max-height:240px;border-radius:10px;object-fit:cover;"/>
-                    <div id="checkinPhotoName" style="font-size:12px;color:#8E8E93;margin-top:6px;"></div>
+                <div id="checkinPhotoPreviews" style="margin-bottom:12px;">
+                    <div id="checkinPendingHint" style="font-size:12px;color:#8E8E93;margin-bottom:6px;">尚未选择照片，可一次选择多张</div>
+                    <div id="checkinPendingGrid" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
                 </div>
                 <div style="display:flex;gap:10px;justify-content:flex-end;">
                     <button type="button" class="toolbar-btn invert" onclick="closeCheckinModal()">取消</button>
@@ -7681,8 +7730,15 @@
                 <h2 id="checkinPhotoViewerDate">打卡凭证</h2>
                 <button class="modal-close" onclick="closeCheckinPhotoViewer()">×</button>
             </div>
-            <div class="modal-body" style="text-align:center;">
-                <img id="checkinPhotoViewerImg" alt="打卡照片" style="max-width:100%;max-height:70vh;border-radius:10px;object-fit:contain;"/>
+            <div class="modal-body" style="text-align:center;position:relative;">
+                <div style="position:relative;display:flex;align-items:center;justify-content:center;">
+                    <button class="checkin-viewer-nav" id="checkinPhotoViewerPrev" onclick="viewerPhotoStep(-1)" title="上一张" style="left:-6px;">‹</button>
+                    <div style="flex:1;display:flex;justify-content:center;">
+                        <img id="checkinPhotoViewerImg" alt="打卡照片" style="max-width:100%;max-height:70vh;border-radius:10px;object-fit:contain;"/>
+                    </div>
+                    <button class="checkin-viewer-nav" id="checkinPhotoViewerNext" onclick="viewerPhotoStep(1)" title="下一张" style="right:-6px;">›</button>
+                </div>
+                <div id="checkinPhotoViewerCounter" style="font-size:13px;color:#8E8E93;margin-top:10px;"></div>
                 <div style="margin-top:12px;">
                     <button type="button" class="toolbar-btn invert" onclick="closeCheckinPhotoViewer()">关闭</button>
                 </div>
@@ -7702,8 +7758,9 @@
                     <span style="font-size:13px;color:#8E8E93;">打卡日期：</span>
                     <span id="checkinDetailDate" style="font-size:14px;font-weight:600;"></span>
                 </div>
-                <div id="checkinDetailPhotoArea" style="margin-bottom:12px;text-align:center;">
-                    <img id="checkinDetailPhoto" alt="打卡照片" style="display:none;max-width:100%;max-height:220px;border-radius:10px;object-fit:contain;cursor:pointer;"/>
+                <div id="checkinDetailPhotoArea" style="margin-bottom:12px;">
+                    <div style="font-size:13px;color:#8E8E93;margin-bottom:6px;">打卡照片（<span id="checkinDetailPhotoCount">0 张照片</span>）</div>
+                    <div id="checkinDetailPhotos" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
                     <div id="checkinDetailNoPhoto" style="font-size:13px;color:#8E8E93;padding:14px 0;">该日期暂未上传照片</div>
                 </div>
                 <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;">
@@ -12373,11 +12430,16 @@ CREATE POLICY "allow_all" ON workbench_sync
             } catch (e) { }
             return (map && typeof map === 'object') ? map : {};
         }
-        // 兼容旧数据：旧格式存 true/false 布尔，新格式存 {checked, photo}
+        // 兼容旧数据：旧格式存 true/false 布尔 或 {checked, photo}，新格式存 {checked, photos:[...]}
         function getCheckinInfo(map, date) {
             const v = map[date];
-            if (v && typeof v === 'object') return v;
-            return v ? { checked: true, photo: null } : { checked: false, photo: null };
+            if (v && typeof v === 'object') {
+                // 兼容旧单图：把 photo 迁移为 photos 数组
+                let photos = Array.isArray(v.photos) ? v.photos : [];
+                if ((!Array.isArray(v.photos) || v.photos.length === 0) && v.photo) photos = [v.photo];
+                return { checked: !!v.checked, photos: photos };
+            }
+            return v ? { checked: true, photos: [] } : { checked: false, photos: [] };
         }
         function saveStudyCheckin(map) {
             try { localStorage.setItem(STORAGE_KEY_STUDY_CHECKIN, JSON.stringify(map)); } catch (e) { }
@@ -12416,35 +12478,68 @@ CREATE POLICY "allow_all" ON workbench_sync
             const map = getStudyCheckin();
             const today = fmtDate(new Date());
             const info = getCheckinInfo(map, today);
-            map[today] = { checked: true, photo: info.photo || null };
+            map[today] = { checked: true, photos: info.photos || [] };
             saveStudyCheckin(map);
             showSyncToast('今日打卡成功', 'success');
         }
-        // 弹窗：打开上传照片（默认当天日期）
+        // 上传弹窗当前待保存的照片（dataURL 数组）
+        let checkinPendingPhotos = [];
+
+        // 弹窗：打开上传照片（默认当天日期，多图）
         function openCheckInModal() {
             const dlg = document.getElementById('studyCheckinModal');
             if (!dlg) return;
-            const preview = document.getElementById('checkinPhotoPreview');
+            checkinPendingPhotos = [];
             document.getElementById('checkinPhotoInput').value = '';
             const dateInput = document.getElementById('checkinPhotoDate');
             if (dateInput && !dateInput.value) dateInput.value = fmtDate(new Date());
-            preview.style.display = 'none';
-            preview.src = '';
-            document.getElementById('checkinPhotoName').textContent = '';
+            renderCheckinPendingPhotos();
             dlg.classList.add('active');
         }
+        // 渲染待保存的图片缩略图（可删除）
+        function renderCheckinPendingPhotos() {
+            const wrap = document.getElementById('checkinPhotoPreviews');
+            if (!wrap) return;
+            const grid = document.getElementById('checkinPendingGrid');
+            const hint = document.getElementById('checkinPendingHint');
+            if (!grid) return;
+            if (checkinPendingPhotos.length === 0) {
+                grid.innerHTML = '';
+                if (hint) hint.style.display = 'block';
+                return;
+            }
+            if (hint) hint.style.display = 'none';
+            grid.innerHTML = checkinPendingPhotos.map(function(dataUrl, i) {
+                return '<div class="checkin-thumb">' +
+                    '<img src="' + dataUrl + '" alt="打卡照片预览" onclick="onPreviewPendingPhoto(' + i + ')"/>' +
+                    '<button type="button" class="checkin-thumb-remove" onclick="removeCheckinPendingPhoto(' + i + ')" title="删除">×</button>' +
+                '</div>';
+            }).join('');
+        }
+        function removeCheckinPendingPhoto(i) {
+            checkinPendingPhotos.splice(i, 1);
+            renderCheckinPendingPhotos();
+        }
+        function onPreviewPendingPhoto(i) {
+            if (checkinPendingPhotos[i]) openViewerWith(checkinPendingPhotos[i], checkinPendingPhotos, i);
+        }
+        // 多选照片：逐个压缩后加入待保存列表
         function onCheckinPhotoSelect() {
             const input = document.getElementById('checkinPhotoInput');
-            const file = input.files && input.files[0];
-            if (!file) return;
-            const preview = document.getElementById('checkinPhotoPreview');
-            preview.style.display = 'block';
-            const reader = new FileReader();
-            reader.onload = function(ev) {
-                preview.src = ev.target.result;
-                document.getElementById('checkinPhotoName').textContent = file.name + '（' + (file.size / 1024).toFixed(0) + ' KB）';
-            };
-            reader.readAsDataURL(file);
+            const files = input.files;
+            if (!files || files.length === 0) return;
+            const fileArr = Array.prototype.slice.call(files);
+            let done = 0;
+            fileArr.forEach(function(file) {
+                compressCheckinImage(file, 480, function(dataUrl) {
+                    done++;
+                    if (dataUrl) checkinPendingPhotos.push(dataUrl);
+                    if (done >= fileArr.length) {
+                        input.value = '';
+                        renderCheckinPendingPhotos();
+                    }
+                });
+            });
         }
         function closeCheckinModal() {
             const dlg = document.getElementById('studyCheckinModal');
@@ -12454,28 +12549,47 @@ CREATE POLICY "allow_all" ON workbench_sync
             const map = getStudyCheckin();
             const dateInput = document.getElementById('checkinPhotoDate');
             const dateStr = (dateInput && dateInput.value) ? dateInput.value : fmtDate(new Date());
-            const input = document.getElementById('checkinPhotoInput');
-            const file = input.files && input.files[0];
-            const finish = function(photoData) {
-                const info = getCheckinInfo(map, dateStr);
-                map[dateStr] = { checked: true, photo: photoData || info.photo || null };
-                saveStudyCheckin(map);
-                closeCheckinModal();
-                showSyncToast('照片已保存', 'success');
-            };
-            if (file) { compressCheckinImage(file, 480, finish); }
-            else { finish(null); }
+            const info = getCheckinInfo(map, dateStr);
+            // 保留已有照片，加上本次新增
+            const merged = (info.photos || []).concat(checkinPendingPhotos || []);
+            map[dateStr] = { checked: true, photos: merged };
+            saveStudyCheckin(map);
+            closeCheckinModal();
+            checkinPendingPhotos = [];
+            showSyncToast('已保存 ' + (merged.length) + ' 张照片', 'success');
         }
-        // 查看打卡照片（大图）
-        function viewCheckinPhoto(dateStr) {
+        // 查看打卡照片（大图，多图）
+        let viewerPhotoList = [];
+        let viewerPhotoIndex = 0;
+        function openViewerWith(dataUrl, list, index) {
+            viewerPhotoList = list || [dataUrl];
+            viewerPhotoIndex = (typeof index === 'number') ? index : 0;
+            const view = document.getElementById('checkinPhotoViewer');
+            if (!view) return;
+            const img = document.getElementById('checkinPhotoViewerImg');
+            img.src = viewerPhotoList[viewerPhotoIndex];
+            const counter = document.getElementById('checkinPhotoViewerCounter');
+            const prevBtn = document.getElementById('checkinPhotoViewerPrev');
+            const nextBtn = document.getElementById('checkinPhotoViewerNext');
+            if (counter) counter.textContent = (viewerPhotoIndex + 1) + ' / ' + viewerPhotoList.length;
+            if (prevBtn) prevBtn.style.display = viewerPhotoList.length > 1 ? 'inline-flex' : 'none';
+            if (nextBtn) nextBtn.style.display = viewerPhotoList.length > 1 ? 'inline-flex' : 'none';
+            view.classList.add('active');
+        }
+        function viewerPhotoStep(dir) {
+            if (viewerPhotoList.length === 0) return;
+            viewerPhotoIndex = (viewerPhotoIndex + dir + viewerPhotoList.length) % viewerPhotoList.length;
+            const img = document.getElementById('checkinPhotoViewerImg');
+            img.src = viewerPhotoList[viewerPhotoIndex];
+            const counter = document.getElementById('checkinPhotoViewerCounter');
+            if (counter) counter.textContent = (viewerPhotoIndex + 1) + ' / ' + viewerPhotoList.length;
+        }
+        function viewCheckinPhoto(dateStr, index) {
             const map = getStudyCheckin();
             const info = getCheckinInfo(map, dateStr);
-            const view = document.getElementById('checkinPhotoViewer');
-            const img = document.getElementById('checkinPhotoViewerImg');
-            if (!info.photo || !view) return;
-            img.src = info.photo;
+            if (!info.photos || info.photos.length === 0) return;
+            openViewerWith(info.photos[0], info.photos, typeof index === 'number' ? index : 0);
             document.getElementById('checkinPhotoViewerDate').textContent = dateStr + ' 打卡凭证';
-            view.classList.add('active');
         }
         function closeCheckinPhotoViewer() {
             const view = document.getElementById('checkinPhotoViewer');
@@ -12492,15 +12606,21 @@ CREATE POLICY "allow_all" ON workbench_sync
             const info = getCheckinInfo(map, dateStr);
             document.getElementById('checkinDetailTitle').textContent = '打卡详情';
             document.getElementById('checkinDetailDate').textContent = dateStr;
-            const img = document.getElementById('checkinDetailPhoto');
             const noPhoto = document.getElementById('checkinDetailNoPhoto');
-            if (info.photo) {
-                img.src = info.photo;
-                img.style.display = 'inline-block';
-                noPhoto.style.display = 'none';
-            } else {
-                img.style.display = 'none';
+            const grid = document.getElementById('checkinDetailPhotos');
+            const countEl = document.getElementById('checkinDetailPhotoCount');
+            if (!info.photos || info.photos.length === 0) {
                 noPhoto.style.display = 'block';
+                grid.innerHTML = '';
+                if (countEl) countEl.textContent = '0 张照片';
+            } else {
+                noPhoto.style.display = 'none';
+                grid.innerHTML = info.photos.map(function(dataUrl, i) {
+                    return '<div class="checkin-thumb">' +
+                        '<img src="' + dataUrl + '" alt="打卡照片" onclick="viewCheckinPhoto(\'' + dateStr + '\',' + i + ')"/>' +
+                    '</div>';
+                }).join('');
+                if (countEl) countEl.textContent = info.photos.length + ' 张照片';
             }
             modal.classList.add('active');
         }
@@ -12509,21 +12629,21 @@ CREATE POLICY "allow_all" ON workbench_sync
             if (modal) modal.classList.remove('active');
             currentCheckinDetailDate = null;
         }
-        // 从详情弹窗跳到上传照片弹窗（自动带上该日期）
+        // 从详情弹窗跳到上传照片弹窗（自动带上该日期+已有照片）
         function openReuploadCheckinPhoto() {
             if (!currentCheckinDetailDate) return;
             const targetDate = currentCheckinDetailDate;
             closeCheckinDetailModal();
             const dateInput = document.getElementById('checkinPhotoDate');
             if (dateInput) dateInput.value = targetDate;
+            // 预载已有照片到待保存列表（兼容旧单图 photo）
+            const map = getStudyCheckin();
+            const info = getCheckinInfo(map, targetDate);
+            checkinPendingPhotos = (info.photos || []).slice();
+            document.getElementById('checkinPhotoInput').value = '';
+            renderCheckinPendingPhotos();
             const dlg = document.getElementById('studyCheckinModal');
             if (dlg) dlg.classList.add('active');
-            // 打开时重置文件与预览
-            const preview = document.getElementById('checkinPhotoPreview');
-            document.getElementById('checkinPhotoInput').value = '';
-            preview.style.display = 'none';
-            preview.src = '';
-            document.getElementById('checkinPhotoName').textContent = '';
         }
         // 删除该日期的打卡记录
         function deleteCheckinRecord() {
@@ -12585,7 +12705,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                 const dateStr = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(day).padStart(2, '0');
                 const info = getCheckinInfo(map, dateStr);
                 const checked = info.checked;
-                const hasPhoto = checked && !!info.photo;
+                const hasPhoto = checked && info.photos && info.photos.length > 0;
                 const isToday = dateStr === todayStr;
                 html += '<div class="study-checkin-day' + (checked ? ' checked' : '') + (isToday ? ' today' : '') + '" title="' + dateStr + '"' + (checked ? ' onclick="openCheckinDetail(\'' + dateStr + '\')"' : '') + '>' +
                     '<span class="day-number">' + day + '</span>' +
