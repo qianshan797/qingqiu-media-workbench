@@ -1005,6 +1005,12 @@
             flex-wrap: wrap;
             margin-bottom: 14px;
         }
+        .checkin-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
         .checkin-streak {
             font-size: 13px;
             color: #FF9500;
@@ -7504,10 +7510,13 @@
                             学习进度打卡
                         </div>
                         <div class="checkin-header">
-                            <button class="toolbar-btn primary" onclick="openCheckInModal()" title="记录今天学习打卡（可附照片）">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M20 6L9 17l-5-5"/></svg>
-                                今日打卡
-                            </button>
+                            <div class="checkin-actions">
+                                <button class="toolbar-btn primary" onclick="checkInToday()" title="记录今天学习打卡">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M20 6L9 17l-5-5"/></svg>
+                                    今日打卡
+                                </button>
+                                <button class="toolbar-btn invert" onclick="openCheckInModal()" title="补传/更新某个日期的打卡照片凭证">📷 上传照片</button>
+                            </div>
                             <div class="checkin-streak" id="studyStreak">连续打卡 0 天</div>
                         </div>
                         <div class="study-checkin-calendar">
@@ -7634,15 +7643,19 @@
         </main>
     </div>
 
-    <!-- 打卡弹窗（可附照片） -->
+    <!-- 上传打卡照片弹窗（可补传任意日期） -->
     <div class="modal-overlay" id="studyCheckinModal" onclick="if(event.target===this)closeCheckinModal()">
         <div class="modal" style="max-width: 420px;">
             <div class="modal-header">
-                <h2>今日学习打卡</h2>
+                <h2>上传打卡照片</h2>
                 <button class="modal-close" onclick="closeCheckinModal()">×</button>
             </div>
             <div class="modal-body">
-                <div class="checkin-modal-hint">是否记录今天的学习进度？可附带照片作为打卡凭证。</div>
+                <div class="checkin-modal-hint">选择要补充或更新照片的打卡日期，然后上传图片作为打卡凭证。补传照片的同时会自动补记该日期的打卡。</div>
+                <div style="margin-bottom:12px;">
+                    <label style="font-size:13px;color:#8E8E93;display:block;margin-bottom:6px;">打卡日期</label>
+                    <input type="date" id="checkinPhotoDate" class="form-input" value="" style="width:100%;box-sizing:border-box;"/>
+                </div>
                 <div style="position:relative;display:inline-block;margin-bottom:12px;">
                     <button type="button" class="toolbar-btn invert" style="pointer-events:none;">📷 选择打卡照片</button>
                     <input type="file" id="checkinPhotoInput" accept="image/*"
@@ -7655,7 +7668,7 @@
                 </div>
                 <div style="display:flex;gap:10px;justify-content:flex-end;">
                     <button type="button" class="toolbar-btn invert" onclick="closeCheckinModal()">取消</button>
-                    <button type="button" class="toolbar-btn primary" onclick="confirmStudyCheckin()">确认打卡</button>
+                    <button type="button" class="toolbar-btn primary" onclick="confirmStudyCheckin()">保存照片</button>
                 </div>
             </div>
         </div>
@@ -12371,12 +12384,23 @@ CREATE POLICY "allow_all" ON workbench_sync
             reader.onerror = function() { cb(null); };
             reader.readAsDataURL(file);
         }
-        // 弹窗：打开打卡（可附带照片）
+        // 纯打卡：记录今天（不涉及照片）
+        function checkInToday() {
+            const map = getStudyCheckin();
+            const today = fmtDate(new Date());
+            const info = getCheckinInfo(map, today);
+            map[today] = { checked: true, photo: info.photo || null };
+            saveStudyCheckin(map);
+            showSyncToast('今日打卡成功', 'success');
+        }
+        // 弹窗：打开上传照片（默认当天日期）
         function openCheckInModal() {
             const dlg = document.getElementById('studyCheckinModal');
             if (!dlg) return;
             const preview = document.getElementById('checkinPhotoPreview');
             document.getElementById('checkinPhotoInput').value = '';
+            const dateInput = document.getElementById('checkinPhotoDate');
+            if (dateInput && !dateInput.value) dateInput.value = fmtDate(new Date());
             preview.style.display = 'none';
             preview.src = '';
             document.getElementById('checkinPhotoName').textContent = '';
@@ -12401,13 +12425,16 @@ CREATE POLICY "allow_all" ON workbench_sync
         }
         function confirmStudyCheckin() {
             const map = getStudyCheckin();
-            const today = fmtDate(new Date());
+            const dateInput = document.getElementById('checkinPhotoDate');
+            const dateStr = (dateInput && dateInput.value) ? dateInput.value : fmtDate(new Date());
             const input = document.getElementById('checkinPhotoInput');
             const file = input.files && input.files[0];
             const finish = function(photoData) {
-                map[today] = { checked: true, photo: photoData || null };
+                const info = getCheckinInfo(map, dateStr);
+                map[dateStr] = { checked: true, photo: photoData || info.photo || null };
                 saveStudyCheckin(map);
                 closeCheckinModal();
+                showSyncToast('照片已保存', 'success');
             };
             if (file) { compressCheckinImage(file, 480, finish); }
             else { finish(null); }
