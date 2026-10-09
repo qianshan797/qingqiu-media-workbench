@@ -12512,9 +12512,10 @@ CREATE POLICY "allow_all" ON workbench_sync
         // 从详情弹窗跳到上传照片弹窗（自动带上该日期）
         function openReuploadCheckinPhoto() {
             if (!currentCheckinDetailDate) return;
+            const targetDate = currentCheckinDetailDate;
             closeCheckinDetailModal();
             const dateInput = document.getElementById('checkinPhotoDate');
-            if (dateInput) dateInput.value = currentCheckinDetailDate;
+            if (dateInput) dateInput.value = targetDate;
             const dlg = document.getElementById('studyCheckinModal');
             if (dlg) dlg.classList.add('active');
             // 打开时重置文件与预览
