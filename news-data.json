@@ -1,172 +1,112 @@
 [
   {
-    "id": "news_20261010_001",
-    "date": "2026-10-10",
-    "category": "平台合规",
-    "title": "泰国TISI突查华人电商仓库，扣押超7400件无TIS标识货物",
-    "summary": "泰国工业标准协会（TISI）突查北榄府华人运营的电商仓库，扣押超7400件无TIS标识货物。泰国正加大对中国卖家仓储端的实地抽查力度，涉事商品面临扣押、罚款及销售渠道封禁风险。",
-    "source": "https://www.amz123.com/kx/y6bqHLAq",
-    "tags": [
-      "泰国",
-      "TISI",
-      "合规",
-      "产品认证",
-      "平台合规"
-    ],
-    "read": false,
-    "createdAt": 1791593000000
-  },
-  {
-    "id": "news_20261010_002",
-    "date": "2026-10-10",
+    "id": "news_20261011_001",
+    "date": "2026-10-11",
     "category": "贸易政策",
-    "title": "美国海关开始发放IEEPA关税退款，已受理42.5万票报关单",
-    "summary": "美国海关（CBP）已启动IEEPA关税退款发放，累计受理42.5万票报关单。此前缴纳过高关税的卖家可核对2025年至今的进口报关记录，尽快提交申请以降低成本。",
-    "source": "https://www.amz123.com/kx/7U9dqmSA",
-    "tags": [
-      "美国海关",
-      "关税退款",
-      "IEEPA",
-      "贸易政策",
-      "合规"
-    ],
+    "title": "美国对华关税升至104%，美区卖家利润告急",
+    "summary": "美国对华关税升至104%，叠加同行降价恶性竞争，美区卖家面临成本骤增、售价承压的双重挤压。建议逐SKU核算含税成本，止损负毛利产品，考虑供应链多元化。",
+    "source": "https://www.cifnews.com/article/173371",
+    "tags": ["关税", "美国市场", "成本压力", "定价策略", "合规"],
     "read": false,
-    "createdAt": 1791593000001
+    "createdAt": 1791678677296
   },
   {
-    "id": "news_20261010_003",
-    "date": "2026-10-10",
+    "id": "news_20261011_002",
+    "date": "2026-10-11",
+    "category": "平台动态",
+    "title": "Shopee广告积分10月13日起调整充值费率",
+    "summary": "Shopee将于10月13日起调整广告积分充值费率，旺季前加大投放的卖家需立即核对新费率并规划预算，避免广告成本被动上升。",
+    "source": "https://www.amz123.com/kx/pjv4LxFW",
+    "tags": ["Shopee", "广告费率", "平台政策", "东南亚", "成本控制"],
+    "read": false,
+    "createdAt": 1791678677296
+  },
+  {
+    "id": "news_20261011_003",
+    "date": "2026-10-11",
+    "category": "市场趋势",
+    "title": "美元汇率跌破6.7，头部卖家汇损近亿元",
+    "summary": "美元兑人民币汇率跌破6.7，已有头部跨境卖家汇兑损失近亿元。汇率波动正从背景噪音变成决定利润率的核心变量，建议评估敞口、分批锁汇。",
+    "source": "https://mjzj.com/article/g0rqxyzyglq9",
+    "tags": ["汇率", "结汇", "美元", "利润", "金融风险"],
+    "read": false,
+    "createdAt": 1791678677296
+  },
+  {
+    "id": "news_20261011_004",
+    "date": "2026-10-11",
     "category": "平台合规",
-    "title": "TEMU英代欧代全面强制执行，未合规商品面临下架",
-    "summary": "TEMU已开始对所有商品强制执行英代（UKCA/CE英国授权代表）和欧代（CE欧盟授权代表）要求。未提供有效授权代表信息的商品将面临下架，相关卖家需尽快完成合规。",
+    "title": "TEMU强制英代欧代，所有商品需持合规代表",
+    "summary": "TEMU要求所有商品必须提供英国授权代表和欧盟授权代表，否则面临下架。这是硬性合规门槛，建议立即核查在售Listing，尽快办理合规。",
     "source": "https://www.cifnews.com/article/163455",
-    "tags": [
-      "TEMU",
-      "英代欧代",
-      "合规",
-      "CE认证",
-      "平台政策"
-    ],
+    "tags": ["Temu", "英代欧代", "合规", "欧洲", "产品安全"],
     "read": false,
-    "createdAt": 1791593000002
+    "createdAt": 1791678677296
   },
   {
-    "id": "news_20261010_004",
-    "date": "2026-10-10",
-    "category": "平台动态",
-    "title": "亚马逊美国站10月新规：6条政策齐落地",
-    "summary": "亚马逊美国站10月集中实施6条新政策，涉及产品信息、物流时效、广告投放、退货政策等多个环节。政策密集落地叠加Q4流量高峰，卖家需及时更新运营SOP。",
-    "source": "https://mjzj.com/article/g0ozb486cs8w",
-    "tags": [
-      "亚马逊",
-      "美国站",
-      "平台政策",
-      "旺季运营",
-      "新规"
-    ],
-    "read": false,
-    "createdAt": 1791593000003
-  },
-  {
-    "id": "news_20261010_005",
-    "date": "2026-10-10",
-    "category": "平台功能更新",
-    "title": "亚马逊GWD扩至欧洲五国+日本+加拿大，库存可集中存放免分仓",
-    "summary": "亚马逊全球仓储分销（GWD）扩展至欧洲五国、日本和加拿大，覆盖八国FBA自动补货。卖家可将库存集中存放于单一仓库，由亚马逊统一调拨，降低分仓管理成本。",
-    "source": "https://mjzj.com/article/g0o7k83h5gjk",
-    "tags": [
-      "亚马逊",
-      "GWD",
-      "物流仓储",
-      "FBA",
-      "库存管理"
-    ],
-    "read": false,
-    "createdAt": 1791593000004
-  },
-  {
-    "id": "news_20261010_006",
-    "date": "2026-10-10",
-    "category": "平台动态",
-    "title": "TikTok Shop美区黑五网一参与门槛公布，店铺SPS需≥3.5",
-    "summary": "TikTok Shop美区2026年黑五网一活动（11月11日至11月30日）参与门槛公布，要求店铺体验分SPS≥3.5、AHR高于150、延迟发货率≤20%等，商品需通过单品审核。",
-    "source": "https://www.amz123.com/kx/uWh2Wr8V",
-    "tags": [
-      "TikTok Shop",
-      "美区",
-      "黑五",
-      "大促门槛",
-      "跨境电商"
-    ],
-    "read": false,
-    "createdAt": 1791593000005
-  },
-  {
-    "id": "news_20261010_007",
-    "date": "2026-10-10",
-    "category": "市场趋势",
-    "title": "TikTok Shop欧洲黑五投入10亿欧元补贴，全托管扩至16国",
-    "summary": "TikTok Shop宣布投入10亿欧元补贴发力2026年欧洲黑五，全托管模式首次覆盖16个国家市场。卖家可通过报名全托管活动获取平台补贴与流量支持，备战年终旺季。",
-    "source": "https://www.chwang.com/policy/latest",
-    "tags": [
-      "TikTok Shop",
-      "欧洲",
-      "黑五",
-      "全托管",
-      "市场趋势"
-    ],
-    "read": false,
-    "createdAt": 1791593000006
-  },
-  {
-    "id": "news_20261010_008",
-    "date": "2026-10-10",
-    "category": "市场趋势",
-    "title": "TikTok Shop墨西哥站日均GMV一年暴涨133倍，卖家数扩大59倍",
-    "summary": "TikTok Shop墨西哥站上线一年后，日均GMV较2025年初增长133倍，活跃卖家数量增加59倍。墨西哥站呈现爆发式增长，竞争尚处早期，值得卖家评估入场机会。",
-    "source": "https://aitosea.ai/daily-reports/2026-10-10",
-    "tags": [
-      "TikTok Shop",
-      "墨西哥",
-      "GMV增长",
-      "新兴市场",
-      "跨境电商"
-    ],
-    "read": false,
-    "createdAt": 1791593000007
-  },
-  {
-    "id": "news_20261010_009",
-    "date": "2026-10-10",
-    "category": "市场趋势",
-    "title": "10月海外多平台大促档期重叠，旺季备货需错峰规划",
-    "summary": "10月亚马逊、沃尔玛、Temu等平台大促档期高度重叠，促销周期交叉。旺季备货需错峰规划物流与库存，避免仓储拥堵和运力紧张带来的履约风险与成本上升。",
-    "source": "https://aitosea.ai/daily-reports/2026-10-10",
-    "tags": [
-      "旺季",
-      "大促",
-      "物流规划",
-      "库存管理",
-      "多平台"
-    ],
-    "read": false,
-    "createdAt": 1791593000008
-  },
-  {
-    "id": "news_20261010_010",
-    "date": "2026-10-10",
+    "id": "news_20261011_005",
+    "date": "2026-10-11",
     "category": "平台合规",
-    "title": "德国三大协会呼吁欧盟立法，要求第三国卖家指定境内授权代表",
-    "summary": "德国三大协会呼吁欧盟立法，要求非欧盟第三国卖家必须指定境内授权代表。若法案通过，中国卖家进入欧盟市场的合规成本与法律责任将显著增加，需提前评估影响。",
-    "source": "https://www.amz123.com/kx/erAg8vkf",
-    "tags": [
-      "欧盟",
-      "合规",
-      "授权代表",
-      "德国",
-      "跨境电商"
-    ],
+    "title": "亚马逊危险品Listing新规10月26日生效",
+    "summary": "亚马逊要求10月26日起新建或编辑Listing需先完成危险品合规问答，信息不准确将面临下架。含电池、液体、粉末等品类卖家影响面最大。",
+    "source": "https://mjzj.com/article/g0sa6dl6x4ow",
+    "tags": ["Amazon", "危险品合规", "Listing审核", "安全认证", "FBA"],
     "read": false,
-    "createdAt": 1791593000009
+    "createdAt": 1791678677296
+  },
+  {
+    "id": "news_20261011_006",
+    "date": "2026-10-11",
+    "category": "平台动态",
+    "title": "TikTok Shop欧洲黑五大促开启，全托管覆盖16国",
+    "summary": "TikTok Shop全年最重磅黑五大促季开启，全托管首次覆盖16国，欧洲补贴10亿。同时将上线Sell Across EU功能，英欧卖家可互售12国。",
+    "source": "https://www.cifnews.com/article/188520",
+    "tags": ["TikTok Shop", "黑五", "欧洲市场", "全托管", "大促"],
+    "read": false,
+    "createdAt": 1791678677296
+  },
+  {
+    "id": "news_20261011_007",
+    "date": "2026-10-11",
+    "category": "平台动态",
+    "title": "Shopee台湾站回应率门槛升至70%",
+    "summary": "Shopee台湾站Q4实施7项新规范，其中买家咨询回应率门槛提高至70%，不达标可能影响店铺评分或受罚。卖家需调整客服排班，保证响应速度。",
+    "source": "https://www.amz123.com/kx/BXXP9BpE",
+    "tags": ["Shopee", "台湾站", "客服规范", "店铺评分", "东南亚"],
+    "read": false,
+    "createdAt": 1791678677296
+  },
+  {
+    "id": "news_20261011_008",
+    "date": "2026-10-11",
+    "category": "市场趋势",
+    "title": "TikTok Shop东南亚访问量达Shopee的97.5%",
+    "summary": "2026年9月东南亚六国TikTok Shop访问量达4.62亿，相当于Shopee的97.5%，东南亚电商格局正在被快速改写，流量红利窗口正在转移。",
+    "source": "https://www.amz123.com/kx/oyEzJrVf",
+    "tags": ["TikTok Shop", "Shopee", "东南亚", "流量数据", "市场格局"],
+    "read": false,
+    "createdAt": 1791678677296
+  },
+  {
+    "id": "news_20261011_009",
+    "date": "2026-10-11",
+    "category": "贸易政策",
+    "title": "欧盟碳关税CBAM拟扩围，新增300余种商品",
+    "summary": "欧盟碳关税CBAM计划扩围，拟新增300余种商品，美国USTR正征集意见。出口欧盟的钢铁、铝、化工类卖家需提前评估碳成本影响。",
+    "source": "https://www.amz123.com/kx/2jrkh3LO",
+    "tags": ["碳关税", "CBAM", "欧盟", "合规成本", "政策"],
+    "read": false,
+    "createdAt": 1791678677296
+  },
+  {
+    "id": "news_20261011_010",
+    "date": "2026-10-11",
+    "category": "平台功能更新",
+    "title": "TikTok首次推出搜索广告，已有卖家转化率大涨6倍",
+    "summary": "TikTok首次推出搜索广告投放功能，搜索流量商业化窗口打开。已有卖家测试显示转化率大涨6倍，旺季投流可考虑搜索广告配合。",
+    "source": "https://www.cifnews.com/article/148828",
+    "tags": ["TikTok", "搜索广告", "营销推广", "转化率", "功能更新"],
+    "read": false,
+    "createdAt": 1791678677296
   }
 ]
