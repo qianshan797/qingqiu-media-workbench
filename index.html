@@ -12910,10 +12910,10 @@ CREATE POLICY "allow_all" ON workbench_sync
             });
             document.getElementById(`page-${pageName}`).classList.add('active');
 
-            // 主页不显示全局搜索栏
+            // 主页/个人学习不显示全局搜索栏
             const searchContainer = document.querySelector('.global-search-container');
             if (searchContainer) {
-                searchContainer.style.display = (pageName === 'home') ? 'none' : '';
+                searchContainer.style.display = (pageName === 'home' || pageName === 'study') ? 'none' : '';
             }
 
             document.querySelectorAll('.nav-item').forEach(item => {
