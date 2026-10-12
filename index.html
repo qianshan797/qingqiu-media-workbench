@@ -1463,6 +1463,198 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* ===== 引入界面 (Intro) ===== */
+        .intro-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1c1c2e 0%, #2d1b4e 45%, #6a3fb5 100%);
+            overflow: hidden;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+        .intro-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .intro-bg {
+            position: absolute;
+            top: -20%;
+            left: -20%;
+            width: 140%;
+            height: 140%;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.10) 0%, transparent 40%),
+                        radial-gradient(circle at 75% 70%, rgba(255,255,255,0.08) 0%, transparent 45%);
+            animation: introShift 18s ease-in-out infinite alternate;
+        }
+        @keyframes introShift {
+            from { transform: translate(0, 0) rotate(0deg); }
+            to { transform: translate(-4%, -6%) rotate(3deg); }
+        }
+        .intro-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 24px;
+            max-width: 640px;
+            width: 100%;
+        }
+        .intro-logo {
+            font-size: 54px;
+            line-height: 1;
+            margin-bottom: 10px;
+            animation: introPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes introPop {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .intro-title {
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+        .intro-sub {
+            color: rgba(255,255,255,0.72);
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            margin-bottom: 40px;
+            font-weight: 400;
+        }
+        .intro-quote-card {
+            position: relative;
+            background: rgba(255,255,255,0.07);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.16);
+            border-radius: 20px;
+            padding: 32px 28px;
+            margin-bottom: 36px;
+            animation: quoteFade 1s ease 0.2s both;
+        }
+        .intro-quote-mark {
+            position: absolute;
+            top: 12px;
+            left: 18px;
+            font-size: 48px;
+            color: rgba(255,255,255,0.25);
+            font-family: Georgia, serif;
+            line-height: 1;
+        }
+        .intro-quote-text {
+            font-size: 22px;
+            font-weight: 600;
+            line-height: 1.6;
+            color: #ffffff;
+        }
+        .intro-quote-author {
+            margin-top: 16px;
+            font-size: 14px;
+            color: rgba(255,255,255,0.65);
+            letter-spacing: 0.5px;
+        }
+        .intro-quote-author .separator { margin: 0 8px; opacity: 0.5; }
+        @keyframes quoteFade {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .intro-date {
+            font-size: 13px;
+            color: rgba(255,255,255,0.55);
+            margin-top: 6px;
+            letter-spacing: 0.5px;
+        }
+        .intro-enter-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.14);
+            color: #ffffff;
+            border: 1px solid rgba(255,255,255,0.35);
+            border-radius: 999px;
+            padding: 12px 30px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            margin-top: 8px;
+            outline: none;
+        }
+        .intro-enter-btn:hover {
+            background: rgba(255,255,255,0.26);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+        }
+        /* 悬浮导航按钮列 */
+        .intro-nav-dock {
+            position: fixed;
+            right: 22px;
+            bottom: 28px;
+            z-index: 10001;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-end;
+        }
+        .intro-nav-fab {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.28);
+            background: rgba(255,255,255,0.10);
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        .intro-nav-fab:hover {
+            background: rgba(255,255,255,0.28);
+            transform: translateY(-2px) scale(1.05);
+        }
+        .intro-nav-fab .fab-icon { font-size: 18px; line-height: 1; }
+        .intro-nav-fab:hover .fab-label {
+            opacity: 1;
+            transform: translateX(-6px);
+        }
+        .fab-label {
+            position: absolute;
+            right: 54px;
+            top: 50%;
+            transform: translateY(-50%) translateX(4px);
+            background: rgba(0,0,0,0.72);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 8px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: all 0.2s ease;
+            pointer-events: none;
+        }
+        .intro-nav-dock .intro-nav-fab .fab-icon:last-child {
+            color: #fff;
+        }
+        body.dark-mode .intro-overlay { background: linear-gradient(135deg, #111122 0%, #201238 45%, #4b2d83 100%); }
+        @media (max-width: 720px) {
+            .intro-nav-dock { right: 16px; bottom: 20px; gap: 8px; }
+            .intro-logo { font-size: 42px; }
+            .intro-title { font-size: 22px; }
+            .intro-quote-text { font-size: 17px; }
+            .intro-quote-card { padding: 24px 18px; }
+        }
+
         .page-header {
             margin-bottom: 32px;
         }
@@ -7281,6 +7473,25 @@
         <div class="loading-icon"></div>
         <div class="loading-text">正在加载工作台...</div>
     </div>
+
+    <!-- 引入界面 -->
+    <div class="intro-overlay" id="introOverlay">
+        <div class="intro-bg"></div>
+        <div class="intro-content">
+            <div class="intro-logo">✨</div>
+            <div class="intro-title" id="introTitle">个人工作台</div>
+            <div class="intro-sub">个人增长与发展</div>
+            <div class="intro-quote-card">
+                <div class="intro-quote-mark">“</div>
+                <div class="intro-quote-text" id="introQuoteText"></div>
+                <div class="intro-quote-author" id="introQuoteAuthor"></div>
+            </div>
+            <div class="intro-date" id="introDate"></div>
+            <button class="intro-enter-btn" onclick="enterWorkbench()">进入工作台 →</button>
+        </div>
+        <div class="intro-nav-dock" id="introNavDock"></div>
+    </div>
+
     <div class="app-layout">
         <div class="mobile-header">
             <button class="mobile-menu-btn" onclick="toggleMobileSidebar()">
@@ -15852,7 +16063,122 @@ CREATE POLICY "allow_all" ON workbench_sync
             } catch (e) { console.error('[终极修复] 执行失败:', e); }
         })();
 
+        // ===== 引入界面 =====
+        const INTRO_QUOTES = [
+            { text: "种一棵树最好的时间是十年前，其次是现在。", author: "谚语" },
+            { text: "根，建党伟业靠坚定理想；踏上新程，靠每一步踏实的努力。", author: "奋进语录" },
+            { text: "不积跬步，无以至千里；不积小流，无以成江海。", author: "荀子" },
+            { text: "成功不是将来才有的，而是从决定去做的那一刻起，持续累积而成。", author: "佚名" },
+            { text: "For getting real value out of every day, start before sunrise. / 每天真正有所值的开始，是在日出之前。", author: "佚名" },
+            { text: "日日行，不怕千万里；常常做，不怕千万事。", author: "谚语" },
+            { text: "学习如春起之苗，不见其增，日有所长。", author: "陶渊明" },
+            { text: "做难而正确的事，时间会给你答案。", author: "佚名" },
+            { text: "卓越不是一种行为，而是一种习惯。", author: "亚里士多德" },
+            { text: "你所付出的每一分努力，都在悄悄塑造未来的自己。", author: "佚名" },
+            { text: "志之所趋，无远弗届；穷山距海，不能限也。", author: "《格言联璧》" },
+            { text: "自律给我自由。自律越是坚定，选择越是广阔。", author: "佚名" },
+            { text: "不要假装努力，结果不会陪你演戏。", author: "佚名" },
+            { text: "The journey of a thousand miles begins with a single step. / 千里之行，始于足下。", author: "老子" },
+            { text: "把每一天都当作礼物，认真对待当下。", author: "佚名" },
+            { text: "真正的胜利，是战胜昨天的自己。", author: "佚名" },
+            { text: "纸上得来终觉浅，绝知此事要躬行。", author: "陆游" },
+            { text: "慢慢来，比较快。稳扎稳打，方能行稳致远。", author: "佚名" },
+            { text: "You are the average of the five people you spend the most time with. / 你的水平约等于你最常相处的五个人的平均水平。", author: "Jim Rohn" },
+            { text: "博观而约取，厚积而薄发。", author: "苏轼" },
+            { text: "专注做好每一件小事，就是最大的不平凡。", author: "佚名" },
+            { text: "The secret of getting ahead is getting started. / 领先的秘诀，是开始去做。", author: "Mark Twain" },
+            { text: "凡事预则立，不预则废。", author: "《礼记》" },
+            { text: "今天不走，明天要跑。", author: "佚名" },
+            { text: "A goal without a plan is just a wish. / 没有计划的目标，只是空想。", author: "Antoine de Saint-Exupéry" },
+            { text: "千里马常有，而伯乐不常有。先做自己的伯乐。", author: "佚名" },
+            { text: "此刻打盹，你将做梦；此刻学习，你将圆梦。", author: "哈佛校训" },
+            { text: "Don't watch the clock; do what it does. Keep going. / 别盯着时钟，学习它永不停歇地前行。", author: "Sam Levenson" },
+            { text: "滴水穿石，不是力量大，而是功夫深。", author: "谚语" },
+            { text: "向最好的自己看齐，与更优秀的灵魂同行。", author: "佚名" },
+            { text: "Yesterday I was clever, so I wanted to change the world. Today I am wise, so I am changing myself. / 昨天我聪明，想改变世界；今天我明智，只改变自己。", author: "Rumi" },
+            { text: "路虽远，行则将至；事虽难，做则必成。", author: "《荀子·修身》" },
+            { text: "If you can dream it, you can do it. / 你能梦想，就能实现。", author: "Walt Disney" },
+            { text: "耐心和持久，胜过激烈和狂热。", author: "拉·封丹" },
+            { text: "真正让你发生改变的，是你重复做的小事。", author: "佚名" },
+            { text: "Begin again. Every day is a chance to start over. / 重新开始，每天都是重启的机会。", author: "佚名" },
+            { text: "乘风破浪会有时，直挂云帆济沧海。", author: "李白" },
+            { text: "把时间用在刀刃上，把精力留给最重要的事。", author: "佚名" },
+            { text: "Success is not final, failure is not fatal: it is the courage to continue that counts. / 成功非终点，失败非末日，重要的是继续前行的勇气。", author: "Winston Churchill" },
+            { text: "学而不思则罔，思而不学则殆。", author: "孔子" },
+            { text: "做自己的光，不需要太亮，足以照亮脚下的路。", author: "佚名" },
+            { text: "The best time to plant a tree was 20 years ago. The second best time is now. / 种树最好的时机是二十年前，其次就是现在。", author: "谚语" },
+            { text: "行有不得，反求诸己。", author: "《孟子》" },
+            { text: "当你觉得为时已晚，恰恰是最早的时候。", author: "佚名" },
+            { text: "Whatever you do, do it with all your might. / 无论做什么，都要全力以赴。", author: "佚名" },
+            { text: "自律、坚持、专注，是通往自由的阶梯。", author: "佚名" },
+            { text: "九层之台，起于累土；千里之行，始于足下。", author: "老子" },
+            { text: "Believe you can and you're halfway there. / 相信你能做到，你就已经成功了一半。", author: "Theodore Roosevelt" }
+        ];
+
+        // 引入界面悬浮导航配置（图标 + 键）
+        const INTRO_NAV_ITEMS = [
+            { page: 'account', icon: '👤', desc: '账号管理' },
+            { page: 'kanban', icon: '📋', desc: '工作任务' },
+            { page: 'workflow', icon: '📊', desc: '数据看板' },
+            { page: 'materials', icon: '🗂️', desc: '素材筛选池' },
+            { page: 'calendar', icon: '🗓️', desc: '工作日历' },
+            { page: 'news', icon: '📰', desc: '每日快讯' },
+            { page: 'study', icon: '📚', desc: '个人学习' }
+        ];
+
+        function initIntroScreen() {
+            // 每日名言：按一年中的第几天取（保证每天不同）
+            const now = new Date();
+            const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+            const quote = INTRO_QUOTES[(dayOfYear - 1 + INTRO_QUOTES.length) % INTRO_QUOTES.length];
+            const qText = document.getElementById('introQuoteText');
+            const qAuth = document.getElementById('introQuoteAuthor');
+            const qDate = document.getElementById('introDate');
+            if (qText) qText.textContent = quote.text;
+            if (qAuth) qAuth.textContent = '—— ' + quote.author + ' · 每日一言';
+            if (qDate) {
+                const weekNames = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+                qDate.textContent = now.getFullYear() + '年' + (now.getMonth()+1) + '月' + now.getDate() + '日 ' + weekNames[now.getDay()];
+            }
+
+            // 悬浮导航按钮（使用已保存的自定义目录名）
+            const dock = document.getElementById('introNavDock');
+            if (dock) {
+                const labels = (typeof getNavLabels === 'function') ? getNavLabels() : {};
+                dock.innerHTML = INTRO_NAV_ITEMS.map(function(item) {
+                    const label = (labels && labels[item.page]) ? labels[item.page] : item.desc;
+                    return '<button class="intro-nav-fab" title="前往：' + label + '" onclick="enterViaNav(\'' + item.page + '\')">' +
+                        '<span class="fab-icon">' + item.icon + '</span>' +
+                        '<span class="fab-label">' + label + '</span>' +
+                    '</button>';
+                }).join('');
+            }
+
+            // 显示引入界面
+            const overlay = document.getElementById('introOverlay');
+            if (overlay) overlay.classList.remove('hidden');
+        }
+
+        // 从悬浮按钮进入：跳到对应页面并关闭引入界面
+        function enterViaNav(pageName) {
+            closeIntro();
+            switchPage(pageName);
+        }
+
+        // 从"进入工作台"进入：跳转到账号管理并关闭
+        function enterWorkbench() {
+            closeIntro();
+        }
+
+        function closeIntro() {
+            const overlay = document.getElementById('introOverlay');
+            if (!overlay) return;
+            overlay.classList.add('hidden');
+            document.body.classList.remove('intro-open'); // 释放滚动锁
+        }
+
         deduplicateTasks(); // 清理重复任务
+        initIntroScreen(); // 初始化引入界面（每日名言 + 悬浮导航）
         initDarkMode(); // 初始化深色模式
         renderNavLabels(); // v35 应用已保存的侧边栏目录名称
         initNavReorder(); // v37 应用目录排序并启用拖动
