@@ -7508,8 +7508,7 @@
                 <div class="home-welcome">
                     <div class="home-greet">
                         <div class="home-logo">✨</div>
-                        <div class="home-title">个人工作台</div>
-                        <div class="home-sub">个人增长与发展</div>
+                        <div class="home-title">每日一言</div>
                     </div>
                     <div class="home-quote-card">
                         <div class="home-quote-blocks">
@@ -16075,7 +16074,7 @@ CREATE POLICY "allow_all" ON workbench_sync
             const qAuth = document.getElementById('introQuoteAuthor');
             const qDate = document.getElementById('introDate');
             if (qText) qText.textContent = quote.text;
-            if (qAuth) qAuth.textContent = '—— ' + quote.author + ' · 每日一言';
+            if (qAuth) qAuth.textContent = '—— ' + quote.author;
             if (qDate) {
                 const weekNames = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
                 qDate.textContent = now.getFullYear() + '年' + (now.getMonth()+1) + '月' + now.getDate() + '日 ' + weekNames[now.getDay()];
