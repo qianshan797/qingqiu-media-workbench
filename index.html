@@ -903,12 +903,18 @@
         }
         .add-study-form {
             display: flex;
-            gap: 8px;
+            flex-direction: column;
+            gap: 10px;
             margin-bottom: 14px;
+            padding: 16px;
+            border: 1px solid #E5E5EA;
+            border-radius: 12px;
+            background: #F9F9FB;
         }
         .add-study-form input {
-            flex: 1;
-            padding: 8px 12px;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px 12px;
             border: 1px solid #E5E5EA;
             border-radius: 8px;
             font-size: 14px;
@@ -917,6 +923,21 @@
             color: #1C1C1E;
         }
         .add-study-form input:focus { border-color: #007AFF; }
+        .study-form-type-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .study-deadline-wrap {
+            flex: 1;
+        }
+        .study-deadline-wrap input {
+            width: 100%;
+        }
+        .add-study-form .add-task-btn {
+            align-self: stretch;
+            margin-top: 2px;
+        }
         .study-task-list {
             min-height: 80px;
         }
@@ -1126,6 +1147,9 @@
 
         /* v38 学习任务：短/长期任务 */
         .study-type-select {
+            flex: none;
+            width: auto;
+            min-width: 130px;
             padding: 8px 10px;
             border: 1px solid #E5E5EA;
             border-radius: 8px;
@@ -7691,12 +7715,16 @@
                             学习任务清单
                         </div>
                         <div class="add-study-form">
-                            <input type="text" id="newStudyTitle" placeholder="输入学习任务，如 复习英语单词..." maxlength="50" onkeydown="if(event.key==='Enter')addStudyTask()">
-                            <select id="newStudyType" class="study-type-select" title="选择任务性质" onchange="onStudyTypeChange()">
-                                <option value="short">短期任务</option>
-                                <option value="long">长期任务</option>
-                            </select>
-                            <input type="date" id="newStudyDeadline" class="study-deadline-input" title="短期任务截止日期" value="" onkeydown="if(event.key==='Enter')addStudyTask()">
+                            <input type="text" id="newStudyTitle" placeholder="输入任务标题..." maxlength="50" onkeydown="if(event.key==='Enter')addStudyTask()">
+                            <div class="study-form-type-row">
+                                <select id="newStudyType" class="study-type-select" title="选择任务性质" onchange="onStudyTypeChange()">
+                                    <option value="short">短期任务</option>
+                                    <option value="long">长期任务</option>
+                                </select>
+                                <div class="study-deadline-wrap" id="studyDeadlineWrap">
+                                    <input type="date" id="newStudyDeadline" class="study-deadline-input" title="短期任务截止日期" value="" onkeydown="if(event.key==='Enter')addStudyTask()">
+                                </div>
+                            </div>
                             <button class="add-task-btn" onclick="addStudyTask()">添加任务</button>
                         </div>
                         <div class="study-type-hint" id="studyTypeHint"><span class="type-badge short">短期</span>任务需设定截止日期，期限内每天出现；<span class="type-badge long">长期</span>任务每天出现，无截止日期。</div>
@@ -12471,9 +12499,16 @@ CREATE POLICY "allow_all" ON workbench_sync
         }
         function onStudyTypeChange() {
             const type = document.getElementById('newStudyType').value;
-            const dlWrap = document.getElementById('newStudyDeadline');
-            if (type === 'long') { dlWrap.disabled = true; dlWrap.value = ''; }
-            else { dlWrap.disabled = false; hlStudyDeadline(); }
+            const dl = document.getElementById('newStudyDeadline');
+            const dlWrap = document.getElementById('studyDeadlineWrap');
+            if (type === 'long') {
+                if (dl) { dl.disabled = true; dl.value = ''; }
+                if (dlWrap) dlWrap.style.display = 'none';
+            } else {
+                if (dl) dl.disabled = false;
+                if (dlWrap) dlWrap.style.display = '';
+                hlStudyDeadline();
+            }
         }
         // 短期任务未设截止日期时高亮提示
         function hlStudyDeadline() {
@@ -16105,6 +16140,7 @@ CREATE POLICY "allow_all" ON workbench_sync
             // v38 学习任务：默认短期任务，截止日期默认今天
             const dl = document.getElementById('newStudyDeadline');
             if (dl && !dl.value) dl.value = fmtDate(new Date());
+            onStudyTypeChange(); // 根据当前类型同步日期域显示
         })();
         renderStudyCheckin(); // v36 渲染学习进度打卡
 
