@@ -7512,7 +7512,12 @@
                 </div>
             </div>
             <nav class="sidebar-nav">
-                <button class="nav-item active" data-page="account" onclick="switchPage('account', this)">
+                <button class="nav-item active" data-page="home" onclick="switchPage('home', this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    <span class="nav-label" id="navLabel_home">主页</span>
+                    <span class="nav-edit-btn" data-nav="home" title="编辑目录名称" onclick="event.stopPropagation();startNavEdit('home')">✎</span>
+                </button>
+                <button class="nav-item" data-page="account" onclick="switchPage('account', this)">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                     <span class="nav-label" id="navLabel_account">账号管理</span>
                     <span class="nav-edit-btn" data-nav="account" title="编辑目录名称" onclick="event.stopPropagation();startNavEdit('account')">✎</span>
@@ -8712,6 +8717,7 @@ CREATE POLICY "allow_all" ON workbench_sync
         // v37 新增：侧边栏目录排序（可拖动排序，同步到云端）
         const STORAGE_KEY_NAV_ORDER = 'media_workflow_nav_order';
         const NAV_DEFAULT_LABELS = {
+            home: '主页',
             account: '账号管理',
             kanban: '工作任务',
             workflow: '数据看板',
@@ -12927,6 +12933,24 @@ CREATE POLICY "allow_all" ON workbench_sync
         }
 
         function switchPage(pageName, navEl) {
+            // 主页：显示引入界面（而非普通页面）
+            if (pageName === 'home') {
+                document.querySelectorAll('.page-section').forEach(page => page.classList.remove('active'));
+                document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+                if (navEl) navEl.classList.add('active');
+                else {
+                    const hn = document.querySelector('.sidebar-nav .nav-item[data-page="home"]');
+                    if (hn) hn.classList.add('active');
+                }
+                const navLabels2 = getNavLabels();
+                const titleEl2 = document.getElementById('mobileHeaderTitle');
+                if (titleEl2) titleEl2.textContent = navLabels2.home || '主页';
+                if (dingtalkReady) { try { setDingTalkTitle(navLabels2.home || '主页'); } catch (e) {} }
+                closeMobileSidebar();
+                const overlay = document.getElementById('introOverlay');
+                if (overlay) overlay.classList.remove('hidden');
+                return;
+            }
             document.querySelectorAll('.page-section').forEach(page => {
                 page.classList.remove('active');
             });
@@ -16165,9 +16189,12 @@ CREATE POLICY "allow_all" ON workbench_sync
             switchPage(pageName);
         }
 
-        // 从"进入工作台"进入：跳转到账号管理并关闭
+        // 从"进入工作台"进入：隐藏引入界面，进入账号管理页
         function enterWorkbench() {
-            closeIntro();
+            const overlay = document.getElementById('introOverlay');
+            if (overlay) overlay.classList.add('hidden');
+            document.body.classList.remove('intro-open');
+            switchPage('account');
         }
 
         function closeIntro() {
