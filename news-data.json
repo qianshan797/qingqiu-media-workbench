@@ -1,112 +1,352 @@
 [
   {
-    "id": "news_20261013_001",
-    "date": "2026-10-13",
+    "id": "news_20261012_001",
+    "date": "2026-10-12",
     "category": "平台动态",
-    "title": "TikTok Shop美区上半年GMV达118亿美元同比翻倍，黑五首度覆盖16国",
-    "summary": "TikTok Shop美国市场2026年上半年GMV达118亿美元，同比直接翻倍；全球上半年GMV突破503亿美元，美国首次取代印尼成为第一大市场。平台官方宣布今年黑五大促将首次覆盖16个国家，全球化扩张提速。",
-    "source": "https://www.chwang.com/policy/latest",
-    "tags": ["TikTok Shop", "美区", "GMV", "黑五"],
+    "title": "TikTok Shop全托管首次覆盖16国，黑五大促报名开启",
+    "summary": "TikTok Shop全托管业务首次扩展至16国，并启动全年力度最大的黑五大促季。卖家可借助平台流量和补贴快速起量，建议立即完成报名，制定促销价格和库存计划，重点布局服装、美妆、配饰等高转化类目。",
+    "source": "https://www.cifnews.com/article/188520",
+    "tags": [
+      "TikTok Shop",
+      "全托管",
+      "黑五",
+      "大促",
+      "平台动态"
+    ],
     "read": false,
-    "createdAt": 1791851490477
+    "createdAt": 1765603200000,
+    "addedToPool": false
   },
   {
-    "id": "news_20261013_002",
-    "date": "2026-10-13",
-    "category": "平台功能更新",
-    "title": "亚马逊GWD全球仓储配送服务年底前扩容欧洲七国",
-    "summary": "亚马逊官宣2026年年底前将GWD全球仓储与配送服务拓展至欧洲市场，新增德、法、意、西、英、日、加七大核心站点，整合欧亚北美主流跨境市场，为出海卖家打造一体化、智能化全球库存调配体系。",
-    "source": "http://fw-kj.com/news.html",
-    "tags": ["亚马逊", "GWD", "欧洲", "海外仓"],
+    "id": "news_20261012_002",
+    "date": "2026-10-12",
+    "category": "平台合规",
+    "title": "亚马逊危险品合规新规10月26日生效，新建/编辑Listing需先“答题”",
+    "summary": "亚马逊要求2026年10月26日起，卖家新建或编辑Listing需先完成危险品合规答题，未通过可能导致Listing被暂停或下架。涉及电池、化学品、含液体等品类的卖家风险最高，建议提前熟悉流程并备好SDS等合规资料。",
+    "source": "https://mjzj.com/article/g0sa6dl6x4ow",
+    "tags": [
+      "亚马逊",
+      "危险品合规",
+      "Listing",
+      "合规新规",
+      "平台合规"
+    ],
     "read": false,
-    "createdAt": 1791851490477
+    "createdAt": 1765603200001,
+    "addedToPool": false
   },
   {
-    "id": "news_20261013_003",
-    "date": "2026-10-13",
+    "id": "news_20261012_003",
+    "date": "2026-10-12",
     "category": "贸易政策",
-    "title": "财政部、税务总局调整部分产品出口退税，新能源汽车2027年退税率下调至9%",
-    "summary": "10月12日财政部、税务总局发布公告，自2027年4月1日起将新能源汽车增值税出口退税率由13%下调至9%，并取消电子烟设备装置等产品的增值税出口退税，对消费税应税产品出口消费税政策维持不变。",
-    "source": "http://m.toutiao.com/group/7695943061234254379/",
-    "tags": ["出口退税", "新能源汽车", "电子烟", "贸易政策"],
+    "title": "美区关税暴涨104%叠加同行降价，卖家需立即核算关税并调整定价/供应链",
+    "summary": "美国关税暴涨104%，叠加同行降价，美区卖家成本压力剧增。建议立即核算含关税后的真实利润，调整定价或砍掉无利润SKU；优化供应链，考虑海外仓、第三国中转；避免价格战，转向差异化、高客单或内容驱动型产品。",
+    "source": "https://www.cifnews.com/article/173371",
+    "tags": [
+      "美国关税",
+      "美区",
+      "成本控制",
+      "供应链",
+      "贸易政策"
+    ],
     "read": false,
-    "createdAt": 1791851490477
+    "createdAt": 1765603200002,
+    "addedToPool": false
   },
   {
-    "id": "news_20261013_004",
-    "date": "2026-10-13",
+    "id": "news_20261012_004",
+    "date": "2026-10-12",
+    "category": "平台动态",
+    "title": "TikTok Shop美区跨境POP定档2026黑五网一，六大核心玩法报名通道开启",
+    "summary": "TikTok Shop美区跨境POP已确定2026黑五网一大促时间，六大核心玩法报名通道全面开启。卖家需及时报名并规划促销策略，结合短视频、直播和货架场制定组合打法，以免错过平台流量倾斜和活动资源位。",
+    "source": "https://mjzj.com/article/g0sbvggf56o0",
+    "tags": [
+      "TikTok Shop",
+      "黑五网一",
+      "跨境POP",
+      "大促报名",
+      "平台动态"
+    ],
+    "read": false,
+    "createdAt": 1765603200003,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20261012_005",
+    "date": "2026-10-12",
     "category": "市场趋势",
-    "title": "TikTok在西班牙市场暴涨150%，内容电商渗透率持续提升",
-    "summary": "2026年TikTok在西班牙市场表现亮眼，平台活跃度与GMV同比暴涨150%，成为欧洲最具增长潜力的内容电商市场之一。跨境卖家正加速布局西语品类与本地化内容投放，抢占增量红利窗口。",
-    "source": "https://m.amz123.com/tiktoklm/news",
-    "tags": ["TikTok", "西班牙", "欧洲市场", "内容电商"],
+    "title": "东南亚TikTok Shop访问量逼近Shopee，9月达4.62亿相当于Shopee的97.5%",
+    "summary": "2026年9月东南亚六国TikTok Shop月访问量达4.62亿，已逼近Shopee的97.5%，流量差距快速缩小。卖家应重视TikTok Shop渠道，优化内容与直播电商布局，抢占东南亚增量市场。",
+    "source": "https://www.tt123.com/kx/rv9bcLmQ",
+    "tags": [
+      "东南亚",
+      "TikTok Shop",
+      "Shopee",
+      "流量对比",
+      "市场趋势"
+    ],
     "read": false,
-    "createdAt": 1791851490477
+    "createdAt": 1765603200004,
+    "addedToPool": false
   },
   {
-    "id": "news_20261013_005",
-    "date": "2026-10-13",
-    "category": "平台合规",
-    "title": "TikTok Shop将于10月14日移除部分EU本土3PL承运商名单",
-    "summary": "TikTok Shop官方更新Shipped by Seller(3PL)履约方式批准承运商列表，自2026年10月14日起移除多家承运商在欧盟本土订单的适用范围，本地履约(L2L)卖家需尽快切换合规承运商以避免发货被拒。",
-    "source": "https://partner.tiktokshop.com/docv2/changelog",
-    "tags": ["TikTok Shop", "EU", "3PL", "合规"],
-    "read": false,
-    "createdAt": 1791851490477
-  },
-  {
-    "id": "news_20261013_006",
-    "date": "2026-10-13",
-    "category": "平台合规",
-    "title": "亚马逊商业责任险新规11月2日生效：含增强安全商品分类强制100万美元保额",
-    "summary": "亚马逊更新商业责任险要求，自2026年11月2日起，含增强安全商品信息要求的分类无论卖家销售额均须投保每次事故及累计赔偿限额100万美元保险，中国大陆卖家须重点关注ASIN级合规与续保。",
-    "source": "https://sellercentral.amazon.com/help/hub/reference/external/200386300",
-    "tags": ["亚马逊", "商业责任险", "合规", "保险"],
-    "read": false,
-    "createdAt": 1791851490477
-  },
-  {
-    "id": "news_20261013_007",
-    "date": "2026-10-13",
-    "category": "技术动态",
-    "title": "TikTok上线AI购物助手Shopping Assistant与Buy Direct，推动AI决策成交",
-    "summary": "TikTok推出AI购物助手Shopping Assistant和Buy Direct功能，消费者可通过AI了解商品详情、尺码与库存并直接结账，平台从内容种草向AI决策成交升级，跨境商家需提前优化结构化商品数据与AI可读素材。",
-    "source": "https://oauth.ziniao.com/blog/6421.html",
-    "tags": ["TikTok", "AI", "Shopping Assistant", "Buy Direct"],
-    "read": false,
-    "createdAt": 1791851490477
-  },
-  {
-    "id": "news_20261013_008",
-    "date": "2026-10-13",
+    "id": "news_20261012_006",
+    "date": "2026-10-12",
     "category": "平台功能更新",
-    "title": "TikTok美区10月5日起旺季运费上调，1磅内直播间订单涨0.3美元",
-    "summary": "TikTok Shop美区官宣10月5日起Standard Delivery旺季运费上调，1磅以内直播间订单运费涨0.30美元，1-5磅涨0.50美元，5磅以上梯度同步调整，跨境卖家需重新核算客单价与物流定价策略。",
-    "source": "https://oauth.ziniao.com/blog/6421.html",
-    "tags": ["TikTok Shop", "美区", "旺季运费", "物流"],
+    "title": "TikTok上线AI购物助手与Buy Direct一键结账，推进代理式商务",
+    "summary": "TikTok于10月5日推出AI购物助手与Buy Direct一键结账，为首批代理式商务功能。购物助手为可对话AI智能体，能理解语境、记住需求，在对话中解答商品详情、物流、尺码与库存并引导下单。",
+    "source": "http://m.toutiao.com/group/7695381301628551689/",
+    "tags": [
+      "TikTok",
+      "AI购物助手",
+      "Buy Direct",
+      "代理式商务",
+      "平台功能更新"
+    ],
     "read": false,
-    "createdAt": 1791851490477
+    "createdAt": 1765603200005,
+    "addedToPool": false
   },
   {
-    "id": "news_20261013_009",
-    "date": "2026-10-13",
-    "category": "技术动态",
-    "title": "Shopify发布2026假日季AI购物方案，正式开启智能电商代理时代",
-    "summary": "Shopify通过Newsroom发布2026假日季专属AI购物解决方案，推出代理式智能购物系统，覆盖黑五、网络星期一与圣诞季，可实现AI个性化导购、动态库存调度、自动化营销与跨境结算优化，帮助独立站商家应对大流量挑战。",
-    "source": "http://news.iresearch.cn/content/202610/568020.shtml",
-    "tags": ["Shopify", "AI", "独立站", "黑五"],
+    "id": "news_20261012_007",
+    "date": "2026-10-12",
+    "category": "平台动态",
+    "title": "亚马逊AGL扩大中国至美国空运，新增Air SMP和Economy Air两类服务",
+    "summary": "亚马逊全球物流（AGL）扩大中国至美国空运服务，新增Air SMP和Economy Air。Air SMP支持在中国发货地拆分库存，7至10天送达美国5大区域指定履约中心，不收FBA入库配置费；Economy Air成本低于标准空运，降低卖家补货成本。",
+    "source": "http://m.toutiao.com/group/7695381301628551689/",
+    "tags": [
+      "亚马逊",
+      "AGL",
+      "空运物流",
+      "FBA",
+      "平台动态"
+    ],
     "read": false,
-    "createdAt": 1791851490477
+    "createdAt": 1765603200006,
+    "addedToPool": false
   },
   {
-    "id": "news_20261013_010",
-    "date": "2026-10-13",
-    "category": "技术动态",
-    "title": "阿里千问Qwen-Audio-3.1音频模型矩阵上线，最高降价95%赋能电商卖家",
-    "summary": "2026年9月阿里千问推出Qwen-Audio-3.1模型阵列，覆盖语音识别、文本转语音、实时交互三大场景，AI音频服务最高降价95%，为跨境客服外呼、短视频配音与内容制作提供低成本AI工具，全面降低运营成本。",
-    "source": "http://www.shuaishou.com/News/list5_1.html",
-    "tags": ["阿里千问", "Qwen-Audio", "AI", "降本增效"],
+    "id": "news_20261012_008",
+    "date": "2026-10-12",
+    "category": "贸易政策",
+    "title": "美国CBP拟收紧低价值货物清关规则，申报时效提前至抵达前或当天",
+    "summary": "美国海关与边境保护局发布《低价值货物拟议规则》，准备调整2500美元及以下货物的非正式申报程序。Type 11申报截止时间将提前至货物抵达美国之前或当天，邮政渠道也将建立新的Type 13电子申报类型，增加发件人身份、地址及追踪号码要求。",
+    "source": "http://m.toutiao.com/group/7695381301628551689/",
+    "tags": [
+      "美国海关",
+      "低价值货物",
+      "清关规则",
+      "T86",
+      "贸易政策"
+    ],
     "read": false,
-    "createdAt": 1791851490477
+    "createdAt": 1765603200007,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20261012_009",
+    "date": "2026-10-12",
+    "category": "平台合规",
+    "title": "Temu英代欧代全面强制执行，未合规商品面临下架",
+    "summary": "Temu强制要求英代欧代全面执行，未合规商品将面临下架。相关卖家需尽快完成英代欧代注册及信息上传，确保商品符合欧洲市场合规要求，避免销售受影响。",
+    "source": "https://aitosea.ai/daily-reports/2026-10-10",
+    "tags": [
+      "Temu",
+      "英代欧代",
+      "欧洲合规",
+      "下架风险",
+      "平台合规"
+    ],
+    "read": false,
+    "createdAt": 1765603200008,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20261012_010",
+    "date": "2026-10-12",
+    "category": "市场趋势",
+    "title": "Shopify报告：AI代理购物首次成为2026假日季主流趋势",
+    "summary": "Shopify发布《2026全球假日零售报告》显示，AI代理购物首次成为主流趋势，65%消费者会在假日季使用AI辅助购物，主要用于查找折扣、寻找灵感和发掘新品，但仅29%消费者信任AI代理付款。",
+    "source": "http://m.toutiao.com/group/7695381301628551689/",
+    "tags": [
+      "Shopify",
+      "AI代理购物",
+      "假日季",
+      "消费趋势",
+      "市场趋势"
+    ],
+    "read": false,
+    "createdAt": 1765603200009,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20260904_001",
+    "date": "2026-09-04",
+    "category": "平台动态",
+    "title": "Temu联手罗马尼亚邮政构建本土物流网络，加速深耕东南欧市场",
+    "summary": "Temu与罗马尼亚国家邮政达成合作，为当地卖家提供从上门取件、分拣到末端配送的一站式物流服务，支持送货上门、自提点、智能快递柜或邮局自取。双方还将共同支持罗马尼亚企业在Temu平台上拓展业务。目前Temu本地卖家计划已覆盖全球35多个国家，标志其欧洲战略从跨境直邮转向本土卖家+国有邮政基础设施的深度融合。",
+    "source": "https://m.10100.com/zb",
+    "tags": [
+      "Temu",
+      "罗马尼亚邮政",
+      "本土物流",
+      "东南欧",
+      "供应链"
+    ],
+    "read": false,
+    "createdAt": 1788483600000
+  },
+  {
+    "id": "news_20260904_002",
+    "date": "2026-09-04",
+    "category": "平台合规",
+    "title": "Shopee台湾站10月5日新规：发票逾期7周扣3分，11周直接封号",
+    "summary": "Shopee中国台湾站宣布自2026年10月5日起将发票与对账单合规缴回纳入卖家考核。逾期7周扣3分，逾期9周再扣3分，逾期11周直接冻结账号。累计扣分达6分将限制店铺活动权限。税务凭证合规性已成为与发货时效、订单完成率同等关键的店铺生死指标。",
+    "source": "https://m.10100.com/zb",
+    "tags": [
+      "Shopee",
+      "台湾站",
+      "发票合规",
+      "扣分",
+      "封号"
+    ],
+    "read": false,
+    "createdAt": 1788483600000
+  },
+  {
+    "id": "news_20260904_003",
+    "date": "2026-09-04",
+    "category": "贸易政策",
+    "title": "巴西对华家电钢化玻璃启动反倾销调查，追溯期涵盖2020-2025年",
+    "summary": "巴西政府9月1日正式宣布对原产于中国的家用钢化玻璃启动反倾销调查，聚焦烤箱、洗碗机等高温潮湿环境用钢化玻璃。调查涵盖2024年10月至2025年9月核实倾销行为，以及2020年10月至2025年9月评估对巴西本土产业损害，自公布之日起立即生效。",
+    "source": "https://m.10100.com/zb",
+    "tags": [
+      "巴西",
+      "反倾销",
+      "钢化玻璃",
+      "家电",
+      "贸易调查"
+    ],
+    "read": false,
+    "createdAt": 1788483600000
+  },
+  {
+    "id": "news_20260904_004",
+    "date": "2026-09-04",
+    "category": "政策动态",
+    "title": "泰国新政9月1日生效：中欧美等60国游客免签停留期缩至30天",
+    "summary": "泰国内政部确认新版外国游客免签政策9月1日正式生效，取代此前面向93个国家和地区、单次停留最长60天的旧规。包括中国、美国、英国、法国、德国、日本、韩国等60国的免签停留期缩短至30天，跨境采购及商务出行时间收紧。",
+    "source": "https://m.10100.com/zb",
+    "tags": [
+      "泰国",
+      "免签新政",
+      "停留期",
+      "30天",
+      "跨境商务"
+    ],
+    "read": false,
+    "createdAt": 1788483600000
+  },
+  {
+    "id": "news_20260904_005",
+    "date": "2026-09-04",
+    "category": "市场趋势",
+    "title": "TikTok Shop上半年直播销售额翻倍，但单位时长销售效率仅增11%",
+    "summary": "各大平台表现分化明显：TikTok Shop上半年直播销售额翻倍，直播总时长激增80%，但单位时间销售效率仅微增11%，增长主要靠拉长直播时间驱动。新兴平台Whatnot估值已达200亿美元，上半年GMV突破80亿美元。典型品牌通过直播每小时可创收约2000美元，需向平台支付6%佣金。",
+    "source": "https://m.10100.com/zb",
+    "tags": [
+      "TikTok Shop",
+      "直播电商",
+      "销售效率",
+      "Whatnot",
+      "市场趋势"
+    ],
+    "read": false,
+    "createdAt": 1788483600000
+  },
+  {
+    "id": "news_20260904_006",
+    "date": "2026-09-04",
+    "category": "平台合规",
+    "title": "9月跨境新规密集生效：亚马逊Pan-EU、FBA、退货期全面收紧",
+    "summary": "9月起跨境电商平台新规密集生效：亚马逊9月1日起FBA合规要求MRN+EORI、法国站需提供SIREN/SIRET、欧洲五国FBA送达窗口缩至7天、FBM备货时间自动校准、德国站16品类退货期缩至14天；9月3日起Pan-EU强制纳入荷兰站；9月7日起德国站提高Prime配送要求。卖家需提前核查各SKU备货时间与ASIN状态。",
+    "source": "https://m.sohu.com/a/1071486040_121810763/",
+    "tags": [
+      "亚马逊",
+      "9月新规",
+      "Pan-EU",
+      "FBA",
+      "退货期"
+    ],
+    "read": false,
+    "createdAt": 1788483600000
+  },
+  {
+    "id": "news_20260904_007",
+    "date": "2026-09-04",
+    "category": "平台功能更新",
+    "title": "TikTok Shop马来西亚运费SST 9月1日生效，9月7日起由卖家承担",
+    "summary": "TikTok Shop马来西亚站点运费SST（销售服务税）9月1日正式生效，对跨境商家本地段尾程运费征收6%服务税。平台在9月1日至6日期间代卖家承担此费用，9月7日起由卖家自行承担。卖家需及时调整定价策略以应对成本上升。",
+    "source": "https://m.sohu.com/a/1071486040_121810763/",
+    "tags": [
+      "TikTok Shop",
+      "马来西亚",
+      "SST",
+      "运费",
+      "成本上升"
+    ],
+    "read": false,
+    "createdAt": 1788483600000
+  },
+  {
+    "id": "news_20260904_008",
+    "date": "2026-09-04",
+    "category": "平台动态",
+    "title": "TikTok Shop东南亚9.9超级狂欢大促开幕，旺季流量窗口开启",
+    "summary": "TikTok Shop东南亚9.9超级狂欢大促正式开幕，覆盖马来西亚、泰国、菲律宾、越南、新加坡等站点。大促期间平台将提供亿级流量扶持、跨店满减、直播达人对接等资源，为跨境卖家提供旺季流量窗口。卖家需提前备货、优化直播内容、设置营销工具以最大化承接大促流量。",
+    "source": "https://m.sohu.com/a/1071486040_121810763/",
+    "tags": [
+      "TikTok Shop",
+      "9.9大促",
+      "东南亚",
+      "旺季",
+      "流量扶持"
+    ],
+    "read": false,
+    "createdAt": 1788483600000
+  },
+  {
+    "id": "news_20260904_009",
+    "date": "2026-09-04",
+    "category": "技术动态",
+    "title": "谷歌发布Gemini 3.8 Flash，支持百万级上下文，主打低成本智能体部署",
+    "summary": "9月2日谷歌通过DeepMind官网推出Gemini 3.8 Flash模型，显著提升软件工程及智能体工作流处理能力，支持100万token超长上下文窗口，文本输出上限64K token。在编程辅助、知识处理、多模态识别、长文本理解等领域表现优异，主打低成本大规模部署，适合构建可直接投入生产的通用型智能体。",
+    "source": "https://m.10100.com/zb",
+    "tags": [
+      "谷歌",
+      "Gemini 3.8 Flash",
+      "AI模型",
+      "智能体",
+      "技术动态"
+    ],
+    "read": false,
+    "createdAt": 1788483600000
+  },
+  {
+    "id": "news_20260904_010",
+    "date": "2026-09-04",
+    "category": "平台合规",
+    "title": "亚马逊9月8日Prime秋季大促Deal提报截止，FBA到仓时间分批倒计时",
+    "summary": "2026年亚马逊秋季会员日（Prime Big Deal Days）预计10月7日至8日开跑。美国站Deal提报截止9月8日，FBA到仓截止时间分批：AWD货件9月2日前到仓、最少货件拆分9月9日前到仓、亚马逊优化货件拆分9月16日前到仓。同时9月14日起分批恢复FBA热敏商品销售，卖家需按ASIN核查批次归属。",
+    "source": "https://m.sohu.com/a/1071486040_121810763/",
+    "tags": [
+      "亚马逊",
+      "Prime秋季大促",
+      "Deal提报",
+      "FBA到仓",
+      "热敏商品"
+    ],
+    "read": false,
+    "createdAt": 1788483600000
   }
 ]
