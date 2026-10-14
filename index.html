@@ -11505,6 +11505,8 @@ CREATE POLICY "allow_all" ON workbench_sync
 
             // 4. ✅ 迁移旧日常任务：为没有模板的旧日常任务自动创建模板
             //    旧版本日常任务没有分离模板和实例，需要迁移到新结构
+            //    ⚠️ 关键修复：仅为「仍处于待处理」的旧实例转为模板，
+            //    已归档/已完成的实例绝不创建模板，否则已完成的任务会在刷新后重新出现（bug 根因）
             {
                 const dailyTasks = tasks.filter(t => t.isDaily === true);
                 const titlesWithTemplate = new Set();
@@ -11526,28 +11528,15 @@ CREATE POLICY "allow_all" ON workbench_sync
                         const db = b.dueDate || b.completedDate || '';
                         return db.localeCompare(da);
                     })[0];
-                    if (latest && (latest.status === 'archived' || latest.status === 'completed')) {
-                        // 已归档的旧任务：创建一个模板（dueDate=null, pending）
-                        const newTemplate = {
-                            id: generateId(),
-                            title: latest.title,
-                            priority: latest.priority || 'medium',
-                            platform: latest.platform || '',
-                            status: 'pending',
-                            isDaily: true,
-                            dueDate: null
-                        };
-                        tasks.push(newTemplate);
-                        migratedTitles.add(t.title);
-                        changed = true;
-                        console.log('[每日任务] 迁移：为旧日常任务创建模板:', t.title);
-                    } else if (latest && latest.status === 'pending' && latest.dueDate && latest.dueDate !== todayStr) {
+                    if (latest && latest.status === 'pending' && latest.dueDate && latest.dueDate !== todayStr) {
                         // 旧 pending 任务但 dueDate 不是今天：将其转为模板（清空 dueDate）
                         latest.dueDate = null;
                         migratedTitles.add(t.title);
                         changed = true;
                         console.log('[每日任务] 迁移：将旧任务转为模板:', t.title);
                     }
+                    // ✅ 不再为 archived/completed 的旧任务创建模板，
+                    //   否则已完成的任务会在刷新后被重新生成（bug 根因）
                 });
             }
 
@@ -11566,6 +11555,16 @@ CREATE POLICY "allow_all" ON workbench_sync
                     if (isInstance) return false;
                     // 同标题去重
                     if (seenTemplateTitle[t.title]) return false;
+                    // ✅ 关键修复：若该标题下已存在任何已归档/已完成实例，
+                    // 说明这个日常任务已经被完成过，绝不为其重新生成今日待办，
+                    // 否则"已完成的任务刷新后又出现"（清理此前迁移逻辑留下的残留模板）
+                    const hasDoneInstance = tasks.some(o =>
+                        o.title === t.title &&
+                        o.isDaily === true &&
+                        o.id !== t.id &&
+                        (o.status === 'archived' || o.status === 'completed')
+                    );
+                    if (hasDoneInstance) return false;
                     seenTemplateTitle[t.title] = true;
                     return true;
                 });
