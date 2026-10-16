@@ -11555,16 +11555,9 @@ CREATE POLICY "allow_all" ON workbench_sync
                     if (isInstance) return false;
                     // 同标题去重
                     if (seenTemplateTitle[t.title]) return false;
-                    // ✅ 关键修复：若该标题下已存在任何已归档/已完成实例，
-                    // 说明这个日常任务已经被完成过，绝不为其重新生成今日待办，
-                    // 否则"已完成的任务刷新后又出现"（清理此前迁移逻辑留下的残留模板）
-                    const hasDoneInstance = tasks.some(o =>
-                        o.title === t.title &&
-                        o.isDaily === true &&
-                        o.id !== t.id &&
-                        (o.status === 'archived' || o.status === 'completed')
-                    );
-                    if (hasDoneInstance) return false;
+                    // ✅ 日常任务应每个工作日都自动生成一条当日实例（即使此前完成过），
+                    //    因此这里不再因为"已存在已归档/已完成实例"而跳过模板，
+                    //    否则日常任务完成一次后就不会在新日期自动刷新了
                     seenTemplateTitle[t.title] = true;
                     return true;
                 });
