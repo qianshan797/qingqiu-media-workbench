@@ -13103,7 +13103,19 @@ CREATE POLICY "allow_all" ON workbench_sync
         async function deleteTask(taskId) {
             const confirmed = await showConfirm('确定要删除这个任务吗？');
             if (!confirmed) return;
+            // ✅ 删除实例的同时，一并删除同标题的隐藏"日常模板"，
+            //    否则模板会在每个工作日继续自动生成新的实例，导致"删了又出现"
+            const delTarget = tasks.find(t => t.id === taskId || String(t.id) === String(taskId));
+            const delTitle = delTarget ? delTarget.title : null;
             tasks = tasks.filter(t => t.id !== taskId && String(t.id) !== String(taskId));
+            if (delTitle) {
+                tasks = tasks.filter(t => !(
+                    t.isDaily === true &&
+                    !t.dueDate &&
+                    t.status === 'pending' &&
+                    t.title === delTitle
+                ));
+            }
             saveData(STORAGE_KEY_TASKS, tasks);
             // v31 修复：记录已删除的任务ID，防止刷新后被 preloadData 重新注入
             try {
@@ -13157,6 +13169,7 @@ CREATE POLICY "allow_all" ON workbench_sync
             const task = tasks.find(t => t.id === id || String(t.id) === String(id));
             if (task) {
                 const wasDaily = task.isDaily === true;
+                const originalTitle = task.title; // 编辑前的标题，用于稳健匹配旧的隐藏模板
                 task.title = title;
                 task.priority = priority;
                 task.platform = platform;
@@ -13179,8 +13192,8 @@ CREATE POLICY "allow_all" ON workbench_sync
                     };
                     tasks.push(todayInstance);
                 } else if (!isDaily && wasDaily) {
-                    // 取消日常任务：删除同标题的模板
-                    tasks = tasks.filter(t => !(t.isDaily === true && !t.dueDate && t.status === 'pending' && t.title === title));
+                    // 取消日常任务：删除同标题的模板（同时匹配编辑前的原标题，避免改过标题的模板残留）
+                    tasks = tasks.filter(t => !(t.isDaily === true && !t.dueDate && t.status === 'pending' && (t.title === title || t.title === originalTitle)));
                     // 同时确保当前实例不再是 daily
                     task.isDaily = false;
                     task.dueDate = dueDate || getTodayDate();
