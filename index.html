@@ -9033,7 +9033,24 @@ CREATE POLICY "allow_all" ON workbench_sync
                             }
                         });
                         // 清理自动生成的更新数据任务
-                        const cleaned = merged.filter(t => !(t && t.title && t.title.indexOf('更新')===0 && t.title.indexOf(')数据')!==-1));
+                        let cleaned = merged.filter(t => !(t && t.title && t.title.indexOf('更新')===0 && t.title.indexOf(')数据')!==-1));
+                        // ✅ 多端去重防御：按 title + isDaily + dueDate 去重，
+                        //    两个设备各自生成"今日日常实例"后云端按 id 合并会产生重复，这里兜底
+                        const dupCountBefore = cleaned.length;
+                        const dailyKey = {};
+                        cleaned = cleaned.filter(t => {
+                            if (!t || !t.title) return false;
+                            // 只对 pending 状态、有 dueDate 的日常实例去重
+                            if (t.isDaily !== true || !t.dueDate || t.status !== 'pending') return true;
+                            const key = t.title + '|' + t.dueDate;
+                            if (dailyKey[key]) return false; // 重复，丢弃
+                            dailyKey[key] = true;
+                            return true;
+                        });
+                        const dupRemoved = dupCountBefore - cleaned.length;
+                        if (dupRemoved > 0) {
+                            console.warn('[restoreFromCloudData] 多端日常实例去重：移除', dupRemoved, '条重复（同 title+dueDate+isDaily 的 pending 任务只保留一条）');
+                        }
                         console.log('[restoreFromCloudData] tasks 智能合并：本地', safeLocal.length, '条 + 云端', safeRemote.length, '条 = 合并后', cleaned.length, '条（跳过已删任务', skippedDelTasks, '个）');
                         localStorage.setItem(k, JSON.stringify(cleaned));
                         return;
@@ -11592,6 +11609,26 @@ CREATE POLICY "allow_all" ON workbench_sync
                 createdTasks,
                 totalTasksCount: tasks.length
             });
+
+            // ✅ 函数级去重防御：同 title + dueDate + isDaily 的 pending 日常实例只保留一条，
+            //    防止多设备各自生成或多次调用 generateDailyAccountTasks 造成重复
+            {
+                const beforeDedup = tasks.length;
+                const dailyKey = {};
+                tasks = tasks.filter(t => {
+                    if (!t || !t.title) return false;
+                    if (t.isDaily !== true || !t.dueDate || t.status !== 'pending') return true;
+                    const key = t.title + '|' + t.dueDate;
+                    if (dailyKey[key]) return false;
+                    dailyKey[key] = true;
+                    return true;
+                });
+                const removed = beforeDedup - tasks.length;
+                if (removed > 0) {
+                    console.warn('[每日任务] 去重防御：移除', removed, '条重复日常实例（同 title+dueDate+isDaily 的 pending 任务只保留一条）');
+                    changed = true;
+                }
+            }
 
             if (changed || lastGeneratedDate !== todayStr) {
                 saveData(STORAGE_KEY_TASKS, tasks);
