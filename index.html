@@ -12736,24 +12736,49 @@ CREATE POLICY "allow_all" ON workbench_sync
                 pushToCloud().catch(function(e){ console.warn('[saveStudyCheckin] 云同步失败:', e); });
             }
         }
-        // 图片压缩：读文件 -> canvas 缩放（最长边 maxSize）-> 输出 JPEG dataURL
-        function compressCheckinImage(file, maxSize, cb) {
+        // 图片压缩：读文件 -> canvas 高质量缩放 -> 优先 WebP（同体积下清晰度远高于 JPEG）
+        // 先用 1440px/0.85 档，若体积过大再逐级降级，兼顾"高清"与 localStorage/云端容量上限
+        function compressCheckinImage(file, cb) {
             if (!file) { cb(null); return; }
+            // 候选档位：从高清到保底
+            var LV = [
+                { size: 1440, q: 0.85 },
+                { size: 1280, q: 0.82 },
+                { size: 1080, q: 0.78 },
+                { size: 900, q: 0.74 },
+                { size: 720, q: 0.68 }
+            ];
+            var MAX_CHARS = 190000; // 单张 dataURL 上限（约 140KB），避免把存储/同步撑爆
             const reader = new FileReader();
             reader.onload = function(ev) {
                 const img = new Image();
                 img.onload = function() {
                     const w = img.width, h = img.height;
-                    let nw = w, nh = h;
-                    if (w > maxSize || h > maxSize) {
-                        if (w >= h) { nw = maxSize; nh = Math.round(h * maxSize / w); }
-                        else { nh = maxSize; nw = Math.round(w * maxSize / h); }
+                    var best = null;
+                    for (var i = 0; i < LV.length; i++) {
+                        var maxSize = LV[i].size, q = LV[i].q;
+                        var nw = w, nh = h;
+                        if (w > maxSize || h > maxSize) {
+                            if (w >= h) { nw = maxSize; nh = Math.round(h * maxSize / w); }
+                            else { nh = maxSize; nw = Math.round(w * maxSize / h); }
+                        }
+                        var canvas = document.createElement('canvas');
+                        canvas.width = nw; canvas.height = nh;
+                        var ctx = canvas.getContext('2d');
+                        ctx.imageSmoothingEnabled = true;
+                        ctx.imageSmoothingQuality = 'high';
+                        ctx.drawImage(img, 0, 0, nw, nh);
+                        var out = null;
+                        try {
+                            out = canvas.toDataURL('image/webp', q);
+                            // 浏览器不支持 webp 时会回退成 png（体积大），此时改用 jpeg
+                            if (out.indexOf('data:image/webp') !== 0) out = canvas.toDataURL('image/jpeg', q);
+                        } catch (e) { out = null; }
+                        if (!out) continue;
+                        best = out;
+                        if (out.length <= MAX_CHARS) break; // 达标即停止降级
                     }
-                    const canvas = document.createElement('canvas');
-                    canvas.width = nw; canvas.height = nh;
-                    canvas.getContext('2d').drawImage(img, 0, 0, nw, nh);
-                    try { cb(canvas.toDataURL('image/jpeg', 0.72)); }
-                    catch (e) { cb(null); }
+                    cb(best);
                 };
                 img.onerror = function() { cb(null); };
                 img.src = ev.target.result;
@@ -12819,7 +12844,7 @@ CREATE POLICY "allow_all" ON workbench_sync
             const fileArr = Array.prototype.slice.call(files);
             let done = 0;
             fileArr.forEach(function(file) {
-                compressCheckinImage(file, 480, function(dataUrl) {
+                compressCheckinImage(file, function(dataUrl) {
                     done++;
                     if (dataUrl) checkinPendingPhotos.push(dataUrl);
                     if (done >= fileArr.length) {
