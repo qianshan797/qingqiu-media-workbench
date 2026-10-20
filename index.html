@@ -8705,6 +8705,18 @@ CREATE POLICY "allow_all" ON workbench_sync
         // 原因：原代码 lastSyncTime=0 导致每次刷新 silentPull 都触发 restoreFromCloudData
         let lastSyncTime = parseInt(localStorage.getItem('media_workflow_last_sync_time') || '0', 10) || 0;
         let isSyncing = false;
+        // ✅ 同步中再次请求推送时置位，等当前同步结束后自动补推，
+        //    避免"打卡照片刚保存时正好在拉取/同步，push 被跳过导致照片只存在本地甚至被云端旧数据覆盖"
+        let pendingPush = false;
+
+        function schedulePendingPushIfAny() {
+            if (!pendingPush) return;
+            pendingPush = false;
+            setTimeout(function() {
+                try { pushToCloud().catch(function(e){ console.warn('[pendingPush] 补推失败:', e); }); }
+                catch (e) { console.warn('[pendingPush] 补推异常:', e); }
+            }, 60);
+        }
 
         // 设置 lastSyncTime 并持久化到 localStorage
         function setLastSyncTime(timestamp) {
@@ -9111,6 +9123,52 @@ CREATE POLICY "allow_all" ON workbench_sync
                         return;
                     }
                 }
+                // ✅ 学习打卡记录采用"按日期并集合并"，照片取并集绝不丢失
+                //    原因：打卡照片体积大，push 失败或被跳过时云端仍是旧数据，
+                //    直接覆盖本地会把刚上传的照片抹掉（"打卡图片丢失"根因）
+                if (k === STORAGE_KEY_STUDY_CHECKIN) {
+                    try {
+                        var localCi = {};
+                        var localCiStr = localStorage.getItem(k);
+                        if (localCiStr) { try { localCi = JSON.parse(localCiStr); } catch(e) { localCi = {}; } }
+                        var remoteCi = (typeof val === 'string') ? JSON.parse(val) : (val && typeof val === 'object' ? val : {});
+                        if (!localCi || typeof localCi !== 'object') localCi = {};
+                        if (!remoteCi || typeof remoteCi !== 'object') remoteCi = {};
+                        var mergedCi = {};
+                        var dateKeys = Object.keys(remoteCi);
+                        Object.keys(localCi).forEach(function(dk) { if (dateKeys.indexOf(dk) === -1) dateKeys.push(dk); });
+                        var addedPhotos = 0;
+                        dateKeys.forEach(function(dk) {
+                            var lv = localCi[dk], rv = remoteCi[dk];
+                            function norm(v) {
+                                if (!v) return { checked: false, photos: [] };
+                                if (typeof v === 'object') {
+                                    var ps = Array.isArray(v.photos) ? v.photos.slice() : [];
+                                    if (ps.length === 0 && v.photo) ps = [v.photo];
+                                    return { checked: !!v.checked, photos: ps };
+                                }
+                                return { checked: true, photos: [] };
+                            }
+                            var ln = norm(lv), rn = norm(rv);
+                            // 照片并集：以本地为基础，补充云端独有的（用内容前缀判重，避免同一张图重复）
+                            var photos = ln.photos.slice();
+                            var seen = {};
+                            photos.forEach(function(p) { if (p) seen[String(p).slice(0, 120)] = true; });
+                            rn.photos.forEach(function(p) {
+                                if (!p) return;
+                                var fp = String(p).slice(0, 120);
+                                if (!seen[fp]) { photos.push(p); seen[fp] = true; addedPhotos++; }
+                            });
+                            mergedCi[dk] = { checked: (ln.checked === true) || (rn.checked === true), photos: photos };
+                        });
+                        localStorage.setItem(k, JSON.stringify(mergedCi));
+                        console.log('[restoreFromCloudData] study_checkin 并集合并：本地', Object.keys(localCi).length, '天 + 云端', Object.keys(remoteCi).length, '天 = 合并后', Object.keys(mergedCi).length, '天，补回照片', addedPhotos, '张');
+                        return;
+                    } catch (eCi) {
+                        console.error('[restoreFromCloudData] study_checkin 合并异常:', eCi);
+                        return;
+                    }
+                }
                 // v32 新增：每日快讯采用并集合并，按 id 去重，本地已读状态优先，避免不同 origin 数据互相覆盖
                 if (k === STORAGE_KEY_NEWS) {
                     try {
@@ -9358,7 +9416,9 @@ CREATE POLICY "allow_all" ON workbench_sync
 
         // 推送数据到云端
         async function pushToCloud() {
-            if (!syncEnabled || !supabaseClient || isSyncing) return false;
+            if (!syncEnabled || !supabaseClient) return false;
+            // ✅ 正在同步时不直接放弃，而是标记"待补推"，当前同步结束后自动重推
+            if (isSyncing) { pendingPush = true; return false; }
             isSyncing = true;
             updateSyncButton('syncing', '同步中...');
             showSyncToast('正在上传数据...', 'loading');
@@ -9383,6 +9443,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                 return false;
             } finally {
                 isSyncing = false;
+                schedulePendingPushIfAny();
             }
         }
 
@@ -9468,6 +9529,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                 return false;
             } finally {
                 isSyncing = false;
+                schedulePendingPushIfAny();
             }
         }
 
@@ -9876,6 +9938,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                 console.error('静默拉取失败:', e);
             } finally {
                 isSyncing = false;
+                schedulePendingPushIfAny();
             }
         }
 
@@ -12660,7 +12723,14 @@ CREATE POLICY "allow_all" ON workbench_sync
             return v ? { checked: true, photos: [] } : { checked: false, photos: [] };
         }
         function saveStudyCheckin(map) {
-            try { localStorage.setItem(STORAGE_KEY_STUDY_CHECKIN, JSON.stringify(map)); } catch (e) { }
+            try {
+                localStorage.setItem(STORAGE_KEY_STUDY_CHECKIN, JSON.stringify(map));
+            } catch (e) {
+                // ✅ 不再静默失败：本地存储写满时照片会丢，必须明确告知用户
+                console.error('[saveStudyCheckin] 本地保存失败（可能存储空间已满）:', e);
+                showSyncToast('打卡照片保存失败：浏览器存储空间不足，请先导出数据或删除部分旧照片', 'error');
+                return;
+            }
             renderStudyCheckin();
             if (typeof pushToCloud === 'function' && syncEnabled) {
                 pushToCloud().catch(function(e){ console.warn('[saveStudyCheckin] 云同步失败:', e); });
