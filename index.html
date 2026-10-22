@@ -7512,6 +7512,11 @@
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                     导出完整HTML
                 </button>
+                <button class="export-btn" onclick="document.getElementById('importDataFileInput').click()" title="导入 JSON 数据文件，内容会自动合并到对应板块">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    导入数据
+                </button>
+                <input type="file" id="importDataFileInput" accept=".json,application/json" style="display:none" onchange="importDataFile(this)">
                 <div class="date-display" id="sidebarDate"></div>
             </div>
         </aside>
@@ -16349,6 +16354,102 @@ CREATE POLICY "allow_all" ON workbench_sync
                 console.error('导出失败:', error);
                 alert('导出失败：' + error.message);
             }
+        }
+
+        // ========== 通用数据文件导入 ==========
+        // 支持两种 JSON 格式：
+        //   1) 全量备份对象：{ "media_workflow_tasks": [...], "media_workflow_materials": [...], ... }
+        //   2) 单板块数组：自动按字段识别属于哪个板块（任务/素材/账号/新闻/学习任务）
+        function importDataFile(input) {
+            const file = input && input.files && input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                try {
+                    let data = JSON.parse(ev.target.result);
+                    const stats = {};
+
+                    function mergeArray(key, arr) {
+                        if (!Array.isArray(arr)) return;
+                        let cur = [];
+                        try { cur = JSON.parse(localStorage.getItem(key) || '[]'); } catch (e) { cur = []; }
+                        if (!Array.isArray(cur)) cur = [];
+                        // 按 id 或 title 去重合并
+                        const byKey = {};
+                        cur.forEach(function(x) { if (x && (x.id || x.title)) byKey[String(x.id || x.title)] = x; });
+                        let added = 0;
+                        arr.forEach(function(x) {
+                            if (!x) return;
+                            const k = String(x.id || x.title || Math.random());
+                            if (!byKey[k]) { byKey[k] = x; added++; }
+                        });
+                        const merged = Object.values(byKey);
+                        localStorage.setItem(key, JSON.stringify(merged));
+                        stats[key] = (stats[key] || 0) + added;
+                    }
+
+                    if (Array.isArray(data)) {
+                        // 单板块数组：按首条字段自动识别
+                        const first = data[0] || {};
+                        let key = null;
+                        if (first.status !== undefined && first.priority !== undefined && first.title !== undefined) key = STORAGE_KEY_TASKS;
+                        else if (Array.isArray(first.tags) && (first.score !== undefined || first.totalScore !== undefined)) key = STORAGE_KEY_MATERIALS;
+                        else if (first.name !== undefined && first.platform !== undefined) key = STORAGE_KEY_ACCOUNTS;
+                        else if (first.date !== undefined && first.title !== undefined) key = STORAGE_KEY_NEWS;
+                        else if (first.title !== undefined && (first.subject !== undefined || first.type !== undefined)) key = STORAGE_KEY_STUDY_TASKS;
+                        if (!key) { alert('无法识别文件内容类型，请确认字段结构'); input.value = ''; return; }
+                        mergeArray(key, data);
+                    } else if (data && typeof data === 'object') {
+                        // 全量备份对象：按键名合并
+                        const knownKeys = [STORAGE_KEY_TASKS, STORAGE_KEY_MATERIALS, STORAGE_KEY_ACCOUNTS, STORAGE_KEY_ACCOUNT_DATA, STORAGE_KEY_TAGS, STORAGE_KEY_NEWS, STORAGE_KEY_STUDY_TASKS, STORAGE_KEY_STUDY_CHECKIN, STORAGE_KEY_NAV_LABELS, STORAGE_KEY_NAV_ORDER];
+                        let handled = false;
+                        Object.keys(data).forEach(function(k) {
+                            if (knownKeys.indexOf(k) !== -1) {
+                                const val = data[k];
+                                if (Array.isArray(val)) { mergeArray(k, val); handled = true; }
+                                else if (val && typeof val === 'object') {
+                                    // 非数组对象（如 study_checkin 按日期映射）：直接并集合并
+                                    let cur = {};
+                                    try { cur = JSON.parse(localStorage.getItem(k) || '{}'); } catch (e) { cur = {}; }
+                                    Object.assign(cur, val);
+                                    localStorage.setItem(k, JSON.stringify(cur));
+                                    stats[k] = (stats[k] || 0) + Object.keys(val).length;
+                                    handled = true;
+                                }
+                            }
+                        });
+                        if (!handled) { alert('未找到可识别的数据板块'); input.value = ''; return; }
+                    } else {
+                        alert('文件格式不支持，请提供 JSON 数组或对象');
+                        input.value = '';
+                        return;
+                    }
+
+                    // 刷新所有板块（因为数据存在 localStorage，各板块重新读取即可"跨任务"生效）
+                    tasks = getStoredData(STORAGE_KEY_TASKS, initialTasks);
+                    materials = getStoredData(STORAGE_KEY_MATERIALS, initialMaterials);
+                    accounts = getStoredData(STORAGE_KEY_ACCOUNTS, initialAccounts);
+                    tags = getStoredData(STORAGE_KEY_TAGS, initialTags);
+                    news = getStoredData(STORAGE_KEY_NEWS, []);
+                    refreshPageData();
+                    if (typeof renderTasks === 'function') renderTasks();
+                    if (typeof renderMaterials === 'function') renderMaterials();
+                    if (typeof renderAccounts === 'function') renderAccounts();
+                    if (typeof updateDashboardStats === 'function') updateDashboardStats();
+                    if (typeof renderStudyCheckin === 'function') renderStudyCheckin();
+                    if (typeof pushToCloud === 'function' && syncEnabled) pushToCloud().catch(function(){});
+
+                    const lines = Object.keys(stats).map(function(k) { return k.replace('media_workflow_', '') + ': +' + stats[k]; });
+                    alert('导入完成！\n' + lines.join('\n'));
+                } catch (e) {
+                    console.error('[importDataFile] 解析失败:', e);
+                    alert('导入失败：' + e.message);
+                } finally {
+                    input.value = '';
+                }
+            };
+            reader.onerror = function() { alert('读取文件失败'); input.value = ''; };
+            reader.readAsText(file);
         }
 
         function doExportDownload(htmlContent) {
