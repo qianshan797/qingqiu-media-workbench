@@ -3005,35 +3005,38 @@
             flex-direction: column;
             gap: 12px;
         }
+        .news-group {
+            margin-bottom: 20px;
+        }
         .news-group-title {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin: 8px 0 0;
-            padding: 6px 0 2px;
+            gap: 10px;
+            margin: 0 0 12px 0;
+            padding: 6px 12px;
+            border-left: 4px solid #007AFF;
             font-size: 15px;
             font-weight: 600;
-            color: #1C1C1E;
         }
-        .news-group-title:first-child { margin-top: 0; }
-        .news-group-title .news-group-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #007AFF;
+        .news-group-badge {
+            display: inline-block;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
         }
-        .news-group-title.ai .news-group-dot { background: #7C3AED; }
-        .news-group-title .news-group-count {
+        .news-group-count {
+            color: #8E8E93;
             font-size: 12px;
             font-weight: 400;
-            color: #8E8E93;
         }
-        .news-group-empty {
-            padding: 14px 16px;
-            border-radius: 12px;
-            background: #F2F2F7;
-            color: #8E8E93;
-            font-size: 13px;
+        .news-group .news-card {
+            border-left: none;
+            margin-left: 4px;
+        }
+        .news-group .news-card-category {
+            display: none; /* 分组后卡片上的小标签就不需要了，避免重复 */
         }
         .news-card {
             display: flex;
@@ -7694,7 +7697,7 @@
                 <div class="page-header" style="display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
                     <div>
                         <h1>每日快讯</h1>
-                        <div class="subtitle">TRAE 定时任务每日自动抓取外贸跨境与 AI 热点（各 7-8 条），按两大类分组展示，打开页面即同步加载</div>
+                        <div class="subtitle">TRAE 定时任务每日自动抓取真实行业热点写入本地，打开页面即同步加载，无需手动更新</div>
                     </div>
                     <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                         <button class="toolbar-btn primary" onclick="syncDailyNews(true)" title="从 preloadData 重新加载今日快讯（preloadData 由 TRAE 定时任务每日更新）">
@@ -7726,7 +7729,7 @@
                     <div class="news-empty" id="newsEmpty" style="display: none;">
                         <div class="news-empty-icon">📰</div>
                         <div class="news-empty-title">暂无可显示的快讯</div>
-                        <div class="news-empty-hint">打开页面时会自动联网抓取今日外贸跨境与 AI 热点，如仍为空，可点顶部「在线抓取今日内容」强制刷新，或点「本地兜底同步」回退到打包新闻。</div>
+                        <div class="news-empty-hint">打开页面时会自动联网抓取今日跨境/外贸热点，如仍为空，可点顶部「在线抓取今日内容」强制刷新，或点「本地兜底同步」回退到打包新闻。</div>
                     </div>
                 </div>
             </div>
@@ -11026,9 +11029,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                 todayNews = todayNews.filter(n => n.category === categoryFilter);
             }
 
-            const crossNews = todayNews.filter(n => !isAiNewsItem(n));
-            const aiNews = todayNews.filter(n => isAiNewsItem(n));
-            countEl.textContent = `共 ${todayNews.length} 条快讯（外贸跨境 ${crossNews.length} · AI ${aiNews.length}）`;
+            countEl.textContent = `共 ${todayNews.length} 条快讯`;
 
             if (todayNews.length === 0) {
                 listEl.style.display = 'none';
@@ -11039,55 +11040,51 @@ CREATE POLICY "allow_all" ON workbench_sync
             listEl.style.display = '';
             emptyEl.style.display = 'none';
 
-            const cardHtml = n => {
-                const unreadBadge = !n.read ? '<span style="color:#FF9500;font-size:12px;">●</span>' : '';
-                const categoryStyle = getCategoryStyle(n.category);
-                const tagsHtml = (n.tags && n.tags.length)
-                    ? n.tags.slice(0, 4).map(t => `<span class="news-card-tag">${t}</span>`).join('')
-                    : '';
-                return `
-                    <div class="news-card" id="news-${n.id}">
-                        <span class="news-card-category" style="background:${categoryStyle.bg};">${n.category}</span>
-                        <div class="news-card-content">
-                            <div class="news-card-title">
-                                ${unreadBadge}
-                                <a href="${n.source}" target="_blank" rel="noopener noreferrer">${n.title}</a>
-                            </div>
-                            <div class="news-card-summary">${n.summary || ''}</div>
-                            <div class="news-card-meta">
-                                <span>${n.source ? new URL(n.source).hostname.replace('www.', '') : ''}</span>
-                                <div class="news-card-tags">${tagsHtml}</div>
-                            </div>
-                        </div>
-                        <div class="news-card-actions">
-                            <button class="news-card-action primary" onclick="addNewsToMaterials('${n.id}')">${n.addedToPool ? '已加入' : '加入素材池'}</button>
-                            <button class="news-card-action secondary" onclick="shareNews('${n.id}')">分享</button>
-                        </div>
-                    </div>
-                `;
-            };
+            // ✅ 按大类分组渲染，不再平铺
+            // 分组优先级：按该类数量多寡排序（多的排前面）
+            var groups = {};
+            todayNews.forEach(function(n) {
+                var cat = n.category || '其他';
+                if (!groups[cat]) groups[cat] = [];
+                groups[cat].push(n);
+            });
+            var groupKeys = Object.keys(groups).sort(function(a,b) { return groups[b].length - groups[a].length; });
 
-            // 全部视图：按「外贸/跨境电商」与「AI 资讯」两大类分组展示
-            if (categoryFilter === 'all') {
-                const renderGroup = (title, items, isAi) => `
-                    <div class="news-group-title${isAi ? ' ai' : ''}">
-                        <span class="news-group-dot"></span>${title}
-                        <span class="news-group-count">${items.length} 条</span>
-                    </div>
-                    ${items.length ? items.map(cardHtml).join('') : `<div class="news-group-empty">今日暂无${title}快讯</div>`}
-                `;
-                listEl.innerHTML = renderGroup('外贸 / 跨境电商', crossNews, false) + renderGroup('AI 资讯', aiNews, true);
-            } else {
-                listEl.innerHTML = todayNews.map(cardHtml).join('');
-            }
+            listEl.innerHTML = groupKeys.map(function(cat) {
+                var catNews = groups[cat];
+                var catStyle = getCategoryStyle(cat);
+                var cardsHtml = catNews.map(function(n) {
+                    var unreadBadge = !n.read ? '<span style="color:#FF9500;font-size:12px;">●</span>' : '';
+                    var tagsHtml = (n.tags && n.tags.length)
+                        ? n.tags.slice(0, 4).map(function(t){ return '<span class="news-card-tag">' + t + '</span>'; }).join('')
+                        : '';
+                    return '\n                <div class="news-card" id="news-' + n.id + '">' +
+                        '<div class="news-card-content">' +
+                            '<div class="news-card-title">' + unreadBadge +
+                                '<a href="' + n.source + '" target="_blank" rel="noopener noreferrer">' + n.title + '</a>' +
+                            '</div>' +
+                            (n.summary ? '<div class="news-card-summary">' + n.summary + '</div>' : '') +
+                            '<div class="news-card-meta">' +
+                                '<span>' + (n.source ? new URL(n.source).hostname.replace('www.', '') : '') + '</span>' +
+                                '<div class="news-card-tags">' + tagsHtml + '</div>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="news-card-actions">' +
+                            '<button class="news-card-action primary" onclick="addNewsToMaterials(\'' + n.id + '\')">' + (n.addedToPool ? '已加入' : '加入素材池') + '</button>' +
+                            '<button class="news-card-action secondary" onclick="shareNews(\'' + n.id + '\')">分享</button>' +
+                        '</div>' +
+                    '</div>';
+                }).join('');
+                return '\n            <div class="news-group">' +
+                    '<h3 class="news-group-title" style="border-left-color:' + catStyle.bg + ';">' +
+                        '<span class="news-group-badge" style="background:' + catStyle.bg + ';">' + cat + '</span>' +
+                        '<span class="news-group-count">' + catNews.length + ' 条</span>' +
+                    '</h3>' +
+                    cardsHtml +
+                '</div>';
+            }).join('');
 
             updateNewsBadge();
-        }
-
-        // AI 资讯统一归类：分类以 AI 开头（AI模型更新/AI功能更新/AI行业动态/AI动态）
-        function isAiNewsItem(n) {
-            const c = String((n && n.category) || '');
-            return c.indexOf('AI') === 0 || c.indexOf('ai') === 0;
         }
 
         function getCategoryStyle(category) {
@@ -11112,12 +11109,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                 '平台功能更新': { bg: '#007AFF', color: '#fff' },
                 '平台监管':   { bg: '#B71C1C', color: '#fff' },
                 '产品物流':   { bg: '#00796B', color: '#fff' },
-                '平台热点':   { bg: '#F5A623', color: '#fff' },
-                // AI 资讯分类
-                'AI模型更新': { bg: '#7C3AED', color: '#fff' },
-                'AI功能更新': { bg: '#0EA5E9', color: '#fff' },
-                'AI行业动态': { bg: '#10B981', color: '#fff' },
-                'AI动态':     { bg: '#7C3AED', color: '#fff' }
+                '平台热点':   { bg: '#F5A623', color: '#fff' }
             };
             return styles[category] || { bg: '#8E8E93', color: '#fff' };
         }
@@ -11188,11 +11180,6 @@ CREATE POLICY "allow_all" ON workbench_sync
         // 根据标题里的关键词推断跨境/外贸快讯的分类（与 getCategoryStyle 一一对应）
         function classifyNewsCategory(title) {
             const t = String(title || '');
-            // AI 资讯优先归类：融资/IPO → 模型版本更新 → 新功能发布 → 行业动态
-            if (/(OpenAI|Anthropic|DeepSeek|英伟达|NVIDIA).*(融资|IPO|估值|营收|上市)/i.test(t)) return 'AI行业动态';
-            if (/(GPT-?\d|ChatGPT|Claude|Gemini|Llama|Grok|DeepSeek|Qwen|通义千问|豆包|混元|Kimi|GLM|MiniMax|大模型|模型发布|模型更新|开源模型)/i.test(t)) return 'AI模型更新';
-            if (/(Sora|Veo|Midjourney|可灵|即梦|文生图|文生视频|AI智能体|AI Agent|Agent模式|AI编程|AI搜索|AI办公|AI写作|AI生成)/i.test(t)) return 'AI功能更新';
-            if (/(OpenAI|Anthropic|Google\s*AI|英伟达|NVIDIA|AI融资|AI监管|人工智能|AI芯片)/i.test(t)) return 'AI行业动态';
             // 匹配顺序：从"强专属词→弱通用词"，避免"不合规/停店"等词误伤 PPWR/INFORM/关税等专属分类
             if (/(INFORM法案|INFORM认证|INFORM|法案认证|扫号|冻结资金|KYC审核|e-KYC)/.test(t)) return '平台合规';
             if (/(PPWR|关税|加征关税|加征.*税|出口管制|进出口政策|退税政策|跨境电商零售进口|(进口|出口).*(政策|新规|措施|调整))/.test(t)) return '进出口政策';
@@ -11209,18 +11196,6 @@ CREATE POLICY "allow_all" ON workbench_sync
         function extractTagsFromNews(item) {
             const t = (item.title || '') + ' ' + (item.summary || '') + ' ' + (item.category || '');
             const tagPool = [
-                // AI 资讯标签
-                [/ChatGPT|OpenAI|GPT-?\d/, 'OpenAI'],
-                [/Claude|Anthropic/, 'Claude'],
-                [/Gemini|Google\s*AI|谷歌/, 'Gemini'],
-                [/DeepSeek/, 'DeepSeek'],
-                [/Qwen|通义千问/, '通义千问'],
-                [/豆包|字节/, '豆包'],
-                [/Kimi|月之暗面/, 'Kimi'],
-                [/大模型|模型更新|模型发布/, '大模型'],
-                [/AI Agent|智能体|Agent模式/, 'AI Agent'],
-                [/Sora|Veo|可灵|即梦|文生视频/, 'AI视频'],
-                [/文生图|Midjourney/, 'AI绘画'],
                 [/特朗普|美国|美区|美线/, '美国'],
                 [/半导体|芯片|笔记本|游戏机|服务器|电子/, '半导体'],
                 [/台风|港口|上海|宁波|华东|TEU|海运|舱位|运费/, '港口'],
@@ -11254,20 +11229,15 @@ CREATE POLICY "allow_all" ON workbench_sync
         }
 
         // ===== 在线抓取今日快讯 =====
-        // 走 TRAE 提供的公开搜索接口：抓当日外贸/跨境 + AI 资讯各 7-8 条，按日期替换写入 localStorage
+        // 走 TRAE 提供的公开搜索接口：抓当日外贸/跨境热点 8-10 条，按日期替换写入 localStorage
         const DAILY_NEWS_SEARCH_ENDPOINT = 'https://trae-api-cn.mchost.guru/api/ide/v1/web_search';
         // 当日自动抓取冷却：打开页面只自动抓一次，避免重复请求
         const DAILY_NEWS_AUTO_FLAG_KEY = 'media_workflow_daily_news_auto_fetch';
         const DAILY_NEWS_CATEGORY_QUERIES = [
-            // 外贸/跨境线：平台动态/政策变动/物流/爆款趋势/营销
+            // 关键词组合按 import-daily-news skill 要求：平台动态/政策变动/物流/爆款趋势/营销
             '{YEAR}年{MONTH}月{DAY}日 跨境电商 外贸 热点 新闻 平台动态',
             '{YEAR}年{MONTH}月{DAY}日 亚马逊 TikTok Shop Temu 速卖通 SHEIN 政策 变更',
             '{YEAR}年{MONTH}月{DAY}日 关税 进出口政策 物流 港口 合规 最新'
-        ];
-        // AI 资讯线：主流大模型版本更新、新功能发布、行业动态
-        const DAILY_NEWS_AI_QUERIES = [
-            '{YEAR}年{MONTH}月{DAY}日 AI 大模型 发布 更新 GPT Claude Gemini DeepSeek',
-            '{YEAR}年{MONTH}月{DAY}日 AI 新功能 发布 OpenAI 谷歌 阿里 字节 智能体'
         ];
 
         // 调用接口执行一次 Web 搜索（带 CORS 模式，失败不抛致命错误）
@@ -11312,39 +11282,24 @@ CREATE POLICY "allow_all" ON workbench_sync
             const queries = DAILY_NEWS_CATEGORY_QUERIES.map(q =>
                 q.replace('{YEAR}', Y).replace('{MONTH}', M).replace('{DAY}', D)
             );
-            const aiQueries = DAILY_NEWS_AI_QUERIES.map(q =>
-                q.replace('{YEAR}', Y).replace('{MONTH}', M).replace('{DAY}', D)
-            );
 
-            // 并行搜索：外贸/跨境 3 组 + AI 2 组，每组取 8 条，去重后两类各取 8 条
-            const groups = await Promise.all([...queries, ...aiQueries].map(q => runDailyNewsWebSearch(q, 8)));
-            const crossGroups = groups.slice(0, queries.length);
-            const aiGroups = groups.slice(queries.length);
-
-            const collect = (groupList, limit) => {
-                const out = [];
-                const seen = new Set();
-                groupList.forEach(list => {
-                    list.forEach(item => {
-                        if (out.length >= limit) return;
-                        const key = item.title.replace(/\s+/g, '').slice(0, 40);
-                        if (seen.has(key)) return;
-                        seen.add(key);
-                        // 过滤明显非今日、非行业相关的结果：标题太短
-                        if (item.title.length < 10) return;
-                        out.push(item);
-                    });
+            // 并行发 3 组搜索，每组取 8 条，再去重合并 → 最终取 TOP 10
+            const groups = await Promise.all(queries.map(q => runDailyNewsWebSearch(q, 8)));
+            const all = [];
+            const seenTitles = new Set();
+            groups.forEach(list => {
+                list.forEach(item => {
+                    const key = item.title.replace(/\s+/g, '').slice(0, 40);
+                    if (seenTitles.has(key)) return;
+                    seenTitles.add(key);
+                    // 过滤明显非今日、非外贸/跨境行业相关的结果：标题太短 / 含广告字眼
+                    if (item.title.length < 10) return;
+                    all.push(item);
                 });
-                return out;
-            };
-
-            const crossItems = collect(crossGroups, 8);
-            const aiItems = collect(aiGroups, 8);
-            const all = [...crossItems, ...aiItems];
+            });
 
             // 如果结果 <6 条，再一次 fallback：不拼具体日期，只拼当月
             if (all.length < 6) {
-                const seenTitles = new Set(all.map(x => x.title.replace(/\s+/g, '').slice(0, 40)));
                 const fb = await runDailyNewsWebSearch(`${Y}年${M}月 跨境电商 外贸 热点 最新 新闻`, 10);
                 fb.forEach(item => {
                     const key = item.title.replace(/\s+/g, '').slice(0, 40);
@@ -11360,8 +11315,8 @@ CREATE POLICY "allow_all" ON workbench_sync
                 return { count: 0, reason: 'empty' };
             }
 
-            // 截取外贸/跨境 8 条 + AI 8 条 → 包装成 news schema
-            const top = all.slice(0, 16);
+            // 截取前 10 条 → 包装成 news schema
+            const top = all.slice(0, 10);
             const newItems = top.map((r, idx) => {
                 const category = classifyNewsCategory(r.title);
                 const obj = {
