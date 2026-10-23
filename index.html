@@ -684,6 +684,10 @@
     localStorage.setItem('media_workflow_news', JSON.stringify(mergedArr));
     console.log('[v30自动快讯] 已从 news-data.json 并集合并新闻：remote', newsArr.length, '条 + local', localArr.length, '条 = 合并后', mergedArr.length, '条，最新日期:', latestRemote);
 
+    // ✅ 用标志位代替直接调函数——因为此 IIFE 在 <head> 里执行，
+    //    pushToCloud/scheduleAutoSync 还没定义。等主同步模块初始化后会检查此标志位并推云端。
+    window.__newsDataUpdated = true;
+    // 兜底：即使同步模块已就绪（极少见），也直接触发
     try { if (typeof scheduleAutoSync === 'function') scheduleAutoSync(); } catch (e) {}
     if (typeof renderNews === 'function') {
       try { renderNews(); } catch(e) { console.warn('[v30自动快讯] renderNews 失败', e); }
@@ -9997,6 +10001,15 @@ CREATE POLICY "allow_all" ON workbench_sync
             } finally {
                 isSyncing = false;
                 schedulePendingPushIfAny();
+                // ✅ 如果 <head> 里的 news-data.json fetch 已更新本地新闻，
+                //    在同步模块 ready 后立刻推到云端（之前因 IIFE 先执行、同步模块后定义而跳过）
+                if (window.__newsDataUpdated) {
+                    window.__newsDataUpdated = false;
+                    setTimeout(function() {
+                        try { pushToCloud().catch(function(e){ console.warn('[initCloudSync] news 更新补推失败:', e); }); }
+                        catch (e) { console.warn('[initCloudSync] news 更新补推异常:', e); }
+                    }, 200);
+                }
             }
         }
 
