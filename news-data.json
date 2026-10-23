@@ -90,23 +90,89 @@
   {
     "id": "news_20261023_009",
     "date": "2026-10-23",
-    "category": "平台合规",
-    "title": "亚马逊2026年美国站FBA费用调整：平均每件上涨0.08美元",
-    "summary": "亚马逊公布2026年美国站销售佣金与亚马逊物流费用更新：平均每件售出商品的FBA费用增加0.08美元，涨幅低于商品平均售价的0.5%。卖家需结合新品入仓优惠与仓储费率变化，重新核算旺季定价与利润模型。",
-    "source": "https://sellercentral.amazon.com/help/hub/reference/external/G201411300?locale=en-US",
-    "tags": ["亚马逊", "美国站", "FBA费用", "成本核算"],
+    "category": "AI功能更新",
+    "title": "OpenAI全面开放决策API，基于GPT-6 Luna提供准实时决策",
+    "summary": "当地时间10月22日，OpenAI宣布全面开放决策API（Decisions API），基于GPT-6 Luna构建，聚焦有明确答案的问题，支持文本、图像与结构化输入，为应用和智能体提供准实时决策。定价为输入每百万token 0.10美元，缓存输入0.01美元。",
+    "source": "http://m.toutiao.com/group/7699643533711491622/",
+    "tags": ["OpenAI", "GPT-6 Luna", "API", "AI Agent"],
     "read": false,
-    "createdAt": 1792740000000
+    "createdAt": 1792740100000
   },
   {
     "id": "news_20261023_010",
     "date": "2026-10-23",
-    "category": "市场趋势",
-    "title": "深圳前三季度外贸4.65万亿元，规模超去年全年",
-    "summary": "深圳海关数据显示，2026年前三季度深圳外贸进出口总值4.65万亿元，同比增长38.8%，规模已超2025年全年并创历史新高，继续居内地城市首位。其中出口2.41万亿元增长18.5%，民营企业贡献近九成增量。",
-    "source": "https://kuajing.baijing.cn/newsflashes/",
-    "tags": ["深圳", "外贸数据", "出口", "民营企业"],
+    "category": "AI功能更新",
+    "title": "Anthropic推出Claude Duet预览版，面向小企业的AI代理",
+    "summary": "Anthropic宣布推出Claude Duet预览版，这是一款面向小企业和专业人士的AI代理产品，依托Claude在代码、办公与企业协作上的能力，将与OpenAI Dots、Meta Muse等同类产品竞争，进一步补齐企业级Agent产品矩阵。",
+    "source": "http://m.toutiao.com/group/7699290960165667366/",
+    "tags": ["Anthropic", "Claude", "AI Agent", "企业服务"],
     "read": false,
-    "createdAt": 1792740000000
+    "createdAt": 1792740100000
+  },
+  {
+    "id": "news_20261023_011",
+    "date": "2026-10-23",
+    "category": "AI功能更新",
+    "title": "ChatGPT升级GPT-6 Astra Pro：多智能体可并行处理任务",
+    "summary": "OpenAI升级ChatGPT中的GPT-6 Astra Pro，响应速度更快，插件与工具调用能力增强，并支持多个智能体分头处理同一项任务、分别汇报进度。ChatGPT正从单轮助手转向可组队协作的Agent工作流。",
+    "source": "http://m.toutiao.com/group/7698177609415066127/",
+    "tags": ["OpenAI", "ChatGPT", "GPT-6 Astra Pro", "多智能体"],
+    "read": false,
+    "createdAt": 1792740100000
+  },
+  {
+    "id": "news_20261023_012",
+    "date": "2026-10-23",
+    "category": "AI模型更新",
+    "title": "Google Gemini 4 Argon正式版GA，主打复杂编程与Agent",
+    "summary": "Google在Gemini API版本说明中宣布Gemini 4 Argon（gemini-4-argon）正式发布GA，定位其迄今最强模型，专为复杂编程、代理、数学与科学等任务设计，开发者已可通过Gemini API调用。",
+    "source": "https://ai.google.dev/gemini-api/docs/changelog?hl=zh-cn",
+    "tags": ["Google", "Gemini 4 Argon", "模型发布", "API"],
+    "read": false,
+    "createdAt": 1792740100000
+  },
+  {
+    "id": "news_20261023_013",
+    "date": "2026-10-23",
+    "category": "AI模型更新",
+    "title": "GPT-6智能界面在全球ChatGPT陆续推送",
+    "summary": "OpenAI产品更新页显示，配备智能界面的GPT-6正在全球ChatGPT中陆续推出，带来更快的回答速度，并可直接在对话中探索、使用可视化内容与交互体验，标志ChatGPT向多模态交互界面进一步升级。",
+    "source": "https://openai.com/zh-Hans-CN/news/product-releases/?display=list",
+    "tags": ["OpenAI", "ChatGPT", "GPT-6", "多模态"],
+    "read": false,
+    "createdAt": 1792740100000
+  },
+  {
+    "id": "news_20261023_014",
+    "date": "2026-10-23",
+    "category": "AI模型更新",
+    "title": "快手可灵Kling 4.0内测：单次30秒、4K画质",
+    "summary": "快手可灵AI开启Kling 4.0内测，单次原生视频时长提升至30秒、画质达4K，同时上线轻量版Kling 4.0 Flash，主打出片速度与更低价格。AI视频竞争正从画质转向时长、成本与可控性。",
+    "source": "https://36kr.com/p/4025642512896130",
+    "tags": ["可灵", "Kling 4.0", "AI视频", "快手"],
+    "read": false,
+    "createdAt": 1792740100000
+  },
+  {
+    "id": "news_20261023_015",
+    "date": "2026-10-23",
+    "category": "AI行业动态",
+    "title": "Anthropic冲刺IPO：三季度营收达168亿美元",
+    "summary": "多家媒体报道，Anthropic已向投资者披露2026年第三季度营收达168亿美元，并推进上市进程，市场关注其S-1文件提交与估值。Claude Code、Claude Cowork等企业产品成为主要增长引擎，或缔造史上最大IPO之一。",
+    "source": "http://m.toutiao.com/group/7699290960165667366/",
+    "tags": ["Anthropic", "IPO", "营收", "Claude Code"],
+    "read": false,
+    "createdAt": 1792740100000
+  },
+  {
+    "id": "news_20261023_016",
+    "date": "2026-10-23",
+    "category": "AI行业动态",
+    "title": "OpenAI新一轮融资最高300亿美元，估值约1.25万亿美元",
+    "summary": "据市场消息，OpenAI正推进新一轮融资，规模最高达300亿美元，估值约1.25万亿美元，由阿联酋投资者领投。资金预计用于算力与基础设施扩张，反映头部AI公司的资本开支与估值仍在快速抬升。",
+    "source": "https://aitoolsrecap.com/Blog/ai-news-october-23-2026",
+    "tags": ["OpenAI", "融资", "估值", "AI算力"],
+    "read": false,
+    "createdAt": 1792740100000
   }
 ]
