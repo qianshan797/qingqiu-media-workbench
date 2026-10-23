@@ -3005,38 +3005,52 @@
             flex-direction: column;
             gap: 12px;
         }
-        .news-group {
-            margin-bottom: 20px;
+        .news-big-group {
+            margin-bottom: 24px;
         }
-        .news-group-title {
+        .news-big-title {
             display: flex;
             align-items: center;
             gap: 10px;
-            margin: 0 0 12px 0;
-            padding: 6px 12px;
-            border-left: 4px solid #007AFF;
-            font-size: 15px;
+            color: #fff;
+            font-size: 17px;
+            font-weight: 700;
+            margin: 0 0 14px 0;
+            padding: 10px 16px;
+            border-radius: 10px;
+            letter-spacing: 0.5px;
+        }
+        .news-big-count {
+            font-size: 13px;
+            font-weight: 400;
+            opacity: 0.85;
+            margin-left: auto;
+        }
+        .news-sub-group {
+            margin-bottom: 14px;
+        }
+        .news-sub-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 0 10px 4px;
+            padding: 4px 0 4px 10px;
+            border-left: 3px solid #007AFF;
+            font-size: 14px;
             font-weight: 600;
         }
         .news-group-badge {
             display: inline-block;
             color: #fff;
-            padding: 3px 10px;
-            border-radius: 6px;
-            font-size: 13px;
+            padding: 2px 9px;
+            border-radius: 5px;
+            font-size: 12px;
             font-weight: 600;
         }
         .news-group-count {
             color: #8E8E93;
             font-size: 12px;
             font-weight: 400;
-        }
-        .news-group .news-card {
-            border-left: none;
-            margin-left: 4px;
-        }
-        .news-group .news-card-category {
-            display: none; /* 分组后卡片上的小标签就不需要了，避免重复 */
         }
         .news-card {
             display: flex;
@@ -11040,48 +11054,75 @@ CREATE POLICY "allow_all" ON workbench_sync
             listEl.style.display = '';
             emptyEl.style.display = 'none';
 
-            // ✅ 按大类分组渲染，不再平铺
-            // 分组优先级：按该类数量多寡排序（多的排前面）
-            var groups = {};
-            todayNews.forEach(function(n) {
-                var cat = n.category || '其他';
-                if (!groups[cat]) groups[cat] = [];
-                groups[cat].push(n);
-            });
-            var groupKeys = Object.keys(groups).sort(function(a,b) { return groups[b].length - groups[a].length; });
+            // ✅ 固定两大类分组：外贸/跨境 + AI 资讯
+            // 先把具体 category 映射到大类，再在大类内部按原 category 细分小标题展示
+            function getBigGroup(category) {
+                if (!category) return '其他';
+                var aiKws = ['AI', 'ai', '模型', '智能体', 'Agent', 'agent', 'LLM', '大模型'];
+                for (var i = 0; i < aiKws.length; i++) if (category.indexOf(aiKws[i]) !== -1) return 'AI 资讯';
+                return '外贸/跨境';
+            }
+            var bigGroupOrder = ['外贸/跨境', 'AI 资讯', '其他'];
+            var bigGroupColors = { '外贸/跨境': '#007AFF', 'AI 资讯': '#AF52DE', '其他': '#8E8E93' };
 
-            listEl.innerHTML = groupKeys.map(function(cat) {
-                var catNews = groups[cat];
-                var catStyle = getCategoryStyle(cat);
-                var cardsHtml = catNews.map(function(n) {
-                    var unreadBadge = !n.read ? '<span style="color:#FF9500;font-size:12px;">●</span>' : '';
-                    var tagsHtml = (n.tags && n.tags.length)
-                        ? n.tags.slice(0, 4).map(function(t){ return '<span class="news-card-tag">' + t + '</span>'; }).join('')
-                        : '';
-                    return '\n                <div class="news-card" id="news-' + n.id + '">' +
-                        '<div class="news-card-content">' +
-                            '<div class="news-card-title">' + unreadBadge +
-                                '<a href="' + n.source + '" target="_blank" rel="noopener noreferrer">' + n.title + '</a>' +
+            // 两大组各自内部再按原 category 细分小标题
+            var bigGroups = {};
+            todayNews.forEach(function(n) {
+                var bg = getBigGroup(n.category);
+                if (!bigGroups[bg]) bigGroups[bg] = {};
+                var sub = n.category || '其他';
+                if (!bigGroups[bg][sub]) bigGroups[bg][sub] = [];
+                bigGroups[bg][sub].push(n);
+            });
+
+            listEl.innerHTML = bigGroupOrder.filter(function(bg) { return !!bigGroups[bg]; }).map(function(bg) {
+                var subGroups = bigGroups[bg];
+                var total = 0;
+                Object.keys(subGroups).forEach(function(s) { total += subGroups[s].length; });
+                var bgColor = bigGroupColors[bg];
+                // 大类下先按原 category 条数排序
+                var subKeys = Object.keys(subGroups).sort(function(a,b) { return subGroups[b].length - subGroups[a].length; });
+
+                var subSectionsHtml = subKeys.map(function(sub) {
+                    var subNews = subGroups[sub];
+                    var subStyle = getCategoryStyle(sub);
+                    var cardsHtml = subNews.map(function(n) {
+                        var unreadBadge = !n.read ? '<span style="color:#FF9500;font-size:12px;">●</span>' : '';
+                        var tagsHtml = (n.tags && n.tags.length)
+                            ? n.tags.slice(0, 4).map(function(t){ return '<span class="news-card-tag">' + t + '</span>'; }).join('')
+                            : '';
+                        return '\n                <div class="news-card" id="news-' + n.id + '">' +
+                            '<div class="news-card-content">' +
+                                '<div class="news-card-title">' + unreadBadge +
+                                    '<a href="' + n.source + '" target="_blank" rel="noopener noreferrer">' + n.title + '</a>' +
+                                '</div>' +
+                                (n.summary ? '<div class="news-card-summary">' + n.summary + '</div>' : '') +
+                                '<div class="news-card-meta">' +
+                                    '<span>' + (n.source ? new URL(n.source).hostname.replace('www.', '') : '') + '</span>' +
+                                    '<div class="news-card-tags">' + tagsHtml + '</div>' +
+                                '</div>' +
                             '</div>' +
-                            (n.summary ? '<div class="news-card-summary">' + n.summary + '</div>' : '') +
-                            '<div class="news-card-meta">' +
-                                '<span>' + (n.source ? new URL(n.source).hostname.replace('www.', '') : '') + '</span>' +
-                                '<div class="news-card-tags">' + tagsHtml + '</div>' +
+                            '<div class="news-card-actions">' +
+                                '<button class="news-card-action primary" onclick="addNewsToMaterials(\'' + n.id + '\')">' + (n.addedToPool ? '已加入' : '加入素材池') + '</button>' +
+                                '<button class="news-card-action secondary" onclick="shareNews(\'' + n.id + '\')">分享</button>' +
                             '</div>' +
-                        '</div>' +
-                        '<div class="news-card-actions">' +
-                            '<button class="news-card-action primary" onclick="addNewsToMaterials(\'' + n.id + '\')">' + (n.addedToPool ? '已加入' : '加入素材池') + '</button>' +
-                            '<button class="news-card-action secondary" onclick="shareNews(\'' + n.id + '\')">分享</button>' +
-                        '</div>' +
+                        '</div>';
+                    }).join('');
+                    return '\n            <div class="news-sub-group">' +
+                        '<h4 class="news-sub-title" style="border-left-color:' + subStyle.bg + ';">' +
+                            '<span class="news-group-badge" style="background:' + subStyle.bg + ';">' + sub + '</span>' +
+                            '<span class="news-group-count">' + subNews.length + ' 条</span>' +
+                        '</h4>' +
+                        cardsHtml +
                     '</div>';
                 }).join('');
-                return '\n            <div class="news-group">' +
-                    '<h3 class="news-group-title" style="border-left-color:' + catStyle.bg + ';">' +
-                        '<span class="news-group-badge" style="background:' + catStyle.bg + ';">' + cat + '</span>' +
-                        '<span class="news-group-count">' + catNews.length + ' 条</span>' +
-                    '</h3>' +
-                    cardsHtml +
-                '</div>';
+
+                return '\n        <div class="news-big-group">' +
+            '<h2 class="news-big-title" style="background:' + bgColor + ';">' +
+                bg + ' <span class="news-big-count">共 ' + total + ' 条</span>' +
+            '</h2>' +
+            subSectionsHtml +
+        '</div>';
             }).join('');
 
             updateNewsBadge();
