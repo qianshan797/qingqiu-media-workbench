@@ -651,7 +651,9 @@
 <script>
 // v30 自动快讯：异步加载外部 news-data.json（定时任务每天通过 GitHub API 更新此文件）
 // 如果 news-data.json 的日期比 preloadData/localStorage 更新，自动覆盖并重新渲染
-(function() {
+// ✅ 返回 Promise，让主同步模块可以 await 它再 restoreFromCloudData，
+//    避免 silentPull 比 fetch 先完成 → 用旧 Supabase 数据污染 localStorage → pushToCloud 再推回去
+window.__newsFetchPromise = (function() {
   function applyRemoteNews(newsArr) {
     if (!Array.isArray(newsArr) || newsArr.length === 0) return false;
     var latestRemote = '';
@@ -670,39 +672,34 @@
     }
     if (!latestRemote) return false;
 
-    // ✅ 改为并集合并：remote 和 local 的新闻按 id 去重合并，
-    //    remote 同日期同 id 的覆盖 local，避免上游 news-data.json 多脚本交替写导致本地数据跳变
+    // ✅ 并集合并：remote 按 id 覆盖 local，旧日期历史新闻保留
     var mergedMap = {};
-    // 先加本地
     localArr.forEach(function(n) { if (n && n.id) mergedMap[String(n.id)] = n; });
-    // 再用 remote 覆盖同 id（remote 更新）
     newsArr.forEach(function(n) { if (n && n.id) mergedMap[String(n.id)] = n; });
     var mergedArr = Object.values(mergedMap);
-    // 按日期倒序
     mergedArr.sort(function(a,b) { return (b.date||'').localeCompare(a.date||''); });
 
     localStorage.setItem('media_workflow_news', JSON.stringify(mergedArr));
     console.log('[v30自动快讯] 已从 news-data.json 并集合并新闻：remote', newsArr.length, '条 + local', localArr.length, '条 = 合并后', mergedArr.length, '条，最新日期:', latestRemote);
 
-    // ✅ 用标志位代替直接调函数——因为此 IIFE 在 <head> 里执行，
-    //    pushToCloud/scheduleAutoSync 还没定义。等主同步模块初始化后会检查此标志位并推云端。
-    window.__newsDataUpdated = true;
-    // 兜底：即使同步模块已就绪（极少见），也直接触发
-    try { if (typeof scheduleAutoSync === 'function') scheduleAutoSync(); } catch (e) {}
     if (typeof renderNews === 'function') {
       try { renderNews(); } catch(e) { console.warn('[v30自动快讯] renderNews 失败', e); }
     }
     return true;
   }
 
-  fetch('news-data.json', { cache: 'no-store' })
+  return fetch('news-data.json', { cache: 'no-store' })
     .then(function(r) {
       if (!r.ok) throw new Error('HTTP ' + r.status);
       return r.json();
     })
-    .then(function(data) { applyRemoteNews(data); })
+    .then(function(data) {
+      applyRemoteNews(data);
+      return data;
+    })
     .catch(function(e) {
       console.log('[v30自动快讯] news-data.json 加载失败，使用 preloadData 兜底:', e.message);
+      return null;
     });
 })();
 </script>
@@ -9923,6 +9920,9 @@ CREATE POLICY "allow_all" ON workbench_sync
         async function silentPull() {
             if (!syncEnabled || !supabaseClient || isSyncing) return;
             isSyncing = true;
+            // ✅ 关键修复：等 news-data.json fetch 完成再 restoreFromCloudData
+            // 避免 silentPull 比 fetch 先完成 → 用 Supabase 旧数据污染 localStorage → pushToCloud 再推回去
+            try { if (window.__newsFetchPromise) await window.__newsFetchPromise; } catch(e) {}
             // ✅ 防御性保护1：拉取前保存本地 used=true 的素材列表（按 title 索引）
             // 防止 restoreFromCloudData 在边缘情况下丢失 used 状态
             let localUsedSnapshot = null;
@@ -10001,15 +10001,6 @@ CREATE POLICY "allow_all" ON workbench_sync
             } finally {
                 isSyncing = false;
                 schedulePendingPushIfAny();
-                // ✅ 如果 <head> 里的 news-data.json fetch 已更新本地新闻，
-                //    在同步模块 ready 后立刻推到云端（之前因 IIFE 先执行、同步模块后定义而跳过）
-                if (window.__newsDataUpdated) {
-                    window.__newsDataUpdated = false;
-                    setTimeout(function() {
-                        try { pushToCloud().catch(function(e){ console.warn('[initCloudSync] news 更新补推失败:', e); }); }
-                        catch (e) { console.warn('[initCloudSync] news 更新补推异常:', e); }
-                    }, 200);
-                }
             }
         }
 
