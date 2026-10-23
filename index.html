@@ -13362,19 +13362,13 @@ CREATE POLICY "allow_all" ON workbench_sync
         async function deleteTask(taskId) {
             const confirmed = await showConfirm('确定要删除这个任务吗？');
             if (!confirmed) return;
-            // ✅ 删除实例的同时，一并删除同标题的隐藏"日常模板"，
-            //    否则模板会在每个工作日继续自动生成新的实例，导致"删了又出现"
+            // ✅ v36：只删点的那张卡片，不再连带删同标题模板
+            //    用户想要的行为：
+            //      - 直接删 = 删今日实例，模板保留，明天继续生成
+            //      - 要彻底停掉日常 → 编辑 → 取消勾选日常 → 保存（saveEditedTask 已自动删模板）
             const delTarget = tasks.find(t => t.id === taskId || String(t.id) === String(taskId));
-            const delTitle = delTarget ? delTarget.title : null;
+            const wasDailyTemplate = delTarget && delTarget.isDaily === true && !delTarget.dueDate && delTarget.status === 'pending';
             tasks = tasks.filter(t => t.id !== taskId && String(t.id) !== String(taskId));
-            if (delTitle) {
-                tasks = tasks.filter(t => !(
-                    t.isDaily === true &&
-                    !t.dueDate &&
-                    t.status === 'pending' &&
-                    t.title === delTitle
-                ));
-            }
             saveData(STORAGE_KEY_TASKS, tasks);
             // v31 修复：记录已删除的任务ID，防止刷新后被 preloadData 重新注入
             try {
