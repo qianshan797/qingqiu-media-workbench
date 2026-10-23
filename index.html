@@ -658,26 +658,37 @@
     newsArr.forEach(function(n) { if (n && n.date && n.date > latestRemote) latestRemote = n.date; });
     var stored = localStorage.getItem('media_workflow_news');
     var latestLocal = '';
+    var localArr = [];
     if (stored) {
       try {
         var parsed = JSON.parse(stored);
         if (Array.isArray(parsed)) {
+          localArr = parsed;
           parsed.forEach(function(n) { if (n && n.date && n.date > latestLocal) latestLocal = n.date; });
         }
       } catch(e) {}
     }
-    if (latestRemote && latestRemote >= latestLocal) {
-      localStorage.setItem('media_workflow_news', JSON.stringify(newsArr));
-      console.log('[v30自动快讯] 已从 news-data.json 更新新闻，日期:', latestRemote, '共', newsArr.length, '条');
-      // v32 新增：从 news-data.json 更新后也触发云同步推送，保证其他 origin 也能拉到最新快讯
-      try { if (typeof scheduleAutoSync === 'function') scheduleAutoSync(); } catch (e) {}
-      if (typeof renderNews === 'function') {
-        try { renderNews(); } catch(e) { console.warn('[v30自动快讯] renderNews 失败', e); }
-      }
-      return true;
+    if (!latestRemote) return false;
+
+    // ✅ 改为并集合并：remote 和 local 的新闻按 id 去重合并，
+    //    remote 同日期同 id 的覆盖 local，避免上游 news-data.json 多脚本交替写导致本地数据跳变
+    var mergedMap = {};
+    // 先加本地
+    localArr.forEach(function(n) { if (n && n.id) mergedMap[String(n.id)] = n; });
+    // 再用 remote 覆盖同 id（remote 更新）
+    newsArr.forEach(function(n) { if (n && n.id) mergedMap[String(n.id)] = n; });
+    var mergedArr = Object.values(mergedMap);
+    // 按日期倒序
+    mergedArr.sort(function(a,b) { return (b.date||'').localeCompare(a.date||''); });
+
+    localStorage.setItem('media_workflow_news', JSON.stringify(mergedArr));
+    console.log('[v30自动快讯] 已从 news-data.json 并集合并新闻：remote', newsArr.length, '条 + local', localArr.length, '条 = 合并后', mergedArr.length, '条，最新日期:', latestRemote);
+
+    try { if (typeof scheduleAutoSync === 'function') scheduleAutoSync(); } catch (e) {}
+    if (typeof renderNews === 'function') {
+      try { renderNews(); } catch(e) { console.warn('[v30自动快讯] renderNews 失败', e); }
     }
-    console.log('[v30自动快讯] news-data.json 日期不比本地新，跳过 (remote:', latestRemote, ' local:', latestLocal, ')');
-    return false;
+    return true;
   }
 
   fetch('news-data.json', { cache: 'no-store' })
