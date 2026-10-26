@@ -15851,15 +15851,32 @@ CREATE POLICY "allow_all" ON workbench_sync
             // 清掉之前插入的 custom nav（带 data-custom="true"）
             nav.querySelectorAll('.nav-item[data-custom="true"]').forEach(function(el){ el.remove(); });
             var list = getCustomNav();
+            if (!Array.isArray(list)) return;
             list.forEach(function(item) {
-                var btn = document.createElement('button');
-                btn.className = 'nav-item';
-                btn.setAttribute('data-custom', 'true');
-                var clickParam = item.type === 'url' ? ('url:' + item.url) : item.page;
-                btn.setAttribute('data-page', clickParam);
-                btn.onclick = function() { switchPage(clickParam, btn); };
-                btn.innerHTML = renderNavIcon(item.icon) + '<span class="nav-label">' + String(item.title).replace(/</g,'&lt;').replace(/"/g,'&quot;') + '</span>';
-                nav.appendChild(btn);
+                try {
+                    if (!item || typeof item !== 'object') return;
+                    var title = item.title || item.name || '未命名';
+                    var icon  = item.icon || 'home';
+                    // type 兼容：url/link/page 统一处理
+                    var type = item.type || (item.url ? 'url' : 'page');
+                    var clickParam;
+                    if (type === 'url' || type === 'link') {
+                        var u = item.url || '';
+                        clickParam = 'url:' + u;
+                    } else {
+                        clickParam = item.page || '';
+                    }
+                    var btn = document.createElement('button');
+                    btn.className = 'nav-item';
+                    btn.setAttribute('data-custom', 'true');
+                    btn.setAttribute('data-page', clickParam);
+                    btn.onclick = function() { switchPage(clickParam, btn); };
+                    var safeTitle = String(title).replace(/</g,'&lt;').replace(/"/g,'&quot;');
+                    btn.innerHTML = renderNavIcon(icon) + '<span class="nav-label">' + safeTitle + '</span>';
+                    nav.appendChild(btn);
+                } catch(e) {
+                    console.warn('[renderCustomNav] 跳过脏数据:', e.message, item);
+                }
             });
         }
         function applyHiddenNav() {
