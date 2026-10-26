@@ -15828,6 +15828,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                     }
                 });
                 if (migrated) { localStorage.setItem('media_workbench_custom_nav', JSON.stringify(arr)); }
+                return arr;
             } catch(e) { return []; }
         }
         function saveCustomNav(arr) {
