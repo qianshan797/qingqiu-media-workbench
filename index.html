@@ -1861,6 +1861,11 @@ window.__newsFetchPromise = (function() {
             margin-bottom: 32px;
         }
 
+        .page-header > div {
+            min-width: 0;
+            flex: 1 1 auto;
+        }
+
         .page-header h1 {
             font-size: 28px;
             font-weight: 700;
@@ -1872,6 +1877,37 @@ window.__newsFetchPromise = (function() {
         .page-header .subtitle {
             font-size: 15px;
             color: #8E8E93;
+        }
+
+        /* v46 页面副标题就地编辑 */
+        .page-header .subtitle[data-editable] {
+            display: inline-block;
+            max-width: 100%;
+            min-width: 0;
+            padding: 2px 6px;
+            margin: -2px -6px;
+            border-radius: 6px;
+            cursor: text;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            vertical-align: bottom;
+            transition: background 0.15s, box-shadow 0.15s;
+        }
+        .page-header .subtitle.editing {
+            white-space: nowrap;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+        .page-header .subtitle[data-editable]:hover {
+            background: rgba(0, 122, 255, 0.06);
+            box-shadow: inset 0 0 0 1px rgba(0, 122, 255, 0.18);
+        }
+        .page-header .subtitle.editing {
+            background: #FFFFFF;
+            box-shadow: inset 0 0 0 1.5px #007AFF;
+            outline: none;
+            color: #1C1C1E;
         }
 
         .stats-row {
@@ -6074,6 +6110,11 @@ window.__newsFetchPromise = (function() {
             color: rgba(235, 235, 245, 0.6);
         }
 
+        body.dark-mode .page-header .subtitle.editing {
+            background: rgba(255, 255, 255, 0.08);
+            color: #FFFFFF;
+        }
+
         body.dark-mode .stat-card {
             background: #1C1C1E;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
@@ -9022,6 +9063,8 @@ CREATE POLICY "allow_all" ON workbench_sync
         const STORAGE_KEY_NAV_ORDER = 'media_workflow_nav_order';
         // v43 新增：个人健康管理数据
         const STORAGE_KEY_HEALTH = 'media_workflow_health';
+        // v46 新增：页面副标题自定义文案（同步到云端）
+        const STORAGE_KEY_PAGE_SUBTITLES = 'media_workflow_page_subtitles';
         const NAV_DEFAULT_LABELS = {
             home: '主页',
             account: '账号管理',
@@ -9085,6 +9128,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                 STORAGE_KEY_STUDY_CHECKIN, // v36 新增：学习进度打卡纳入云同步
                 STORAGE_KEY_NAV_ORDER, // v37 新增：侧边栏目录排序纳入云同步
                 STORAGE_KEY_HEALTH, // v45 新增：个人健康管理数据纳入云同步，多端记录一致
+                STORAGE_KEY_PAGE_SUBTITLES, // v46 新增：页面副标题自定义文案纳入云同步
                 'media_workbench_custom_nav', // v41 新增：自定义导航项目纳入云同步
                 'media_workflow_deleted_seeds', // v30 修复：删除记录也同步，避免新设备/刷新后被删账号被云端或种子补回
                 'media_workflow_deleted_tasks' // v31 修复：任务删除记录也同步，避免刷新后被删任务被重新注入
@@ -9620,6 +9664,8 @@ CREATE POLICY "allow_all" ON workbench_sync
                 }
                 localStorage.setItem(k, val);
             });
+            // v46：副标题文案从云端恢复后立即生效
+            try { if (typeof applyPageSubtitles === 'function') applyPageSubtitles(); } catch (e) {}
             // ✅ 保护 4：同步覆盖完成后，强制触发 getStoredData 的修复逻辑 + 终极素材兜底函数 + syncInitialData
             //    这样即使云端偷偷覆盖了，也会被立刻重新注入帝王蝶/7账号等种子数据
             try {
@@ -13571,6 +13617,78 @@ CREATE POLICY "allow_all" ON workbench_sync
             var gb = document.getElementById('healthGoalsEdit');
             if (gb) gb.innerHTML = gHtml;
         }
+        // ============ v46 页面副标题就地编辑 ============
+        function getPageSubtitles() {
+            try {
+                var raw = localStorage.getItem(STORAGE_KEY_PAGE_SUBTITLES);
+                var map = raw ? JSON.parse(raw) : {};
+                return (map && typeof map === 'object' && !Array.isArray(map)) ? map : {};
+            } catch (e) { return {}; }
+        }
+        function savePageSubtitle(pageKey, text) {
+            var map = getPageSubtitles();
+            var clean = (text || '').replace(/\s+/g, ' ').trim();
+            if (clean) map[pageKey] = clean; else delete map[pageKey];
+            try { localStorage.setItem(STORAGE_KEY_PAGE_SUBTITLES, JSON.stringify(map)); } catch (e) {}
+            if (typeof pushToCloud === 'function' && syncEnabled) pushToCloud().catch(function() {});
+        }
+        function applyPageSubtitles() {
+            var map = getPageSubtitles();
+            document.querySelectorAll('.page-section[id^="page-"] .page-header .subtitle').forEach(function(el) {
+                var section = el.closest('.page-section');
+                if (!section) return;
+                var key = section.id.replace(/^page-/, '');
+                if (!el.dataset.defaultText) el.dataset.defaultText = el.textContent;
+                el.dataset.editable = '1';
+                el.dataset.subpage = key;
+                el.textContent = map[key] || el.dataset.defaultText;
+                el.title = el.textContent;
+            });
+        }
+        function editPageSubtitle(el) {
+            if (el.classList.contains('editing')) return;
+            var key = el.dataset.subpage;
+            var original = el.textContent;
+            el.classList.add('editing');
+            el.setAttribute('contenteditable', 'true');
+            el.focus();
+            try {
+                var range = document.createRange();
+                range.selectNodeContents(el);
+                var sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(range);
+            } catch (e) {}
+            function finish(save) {
+                el.removeEventListener('keydown', onKey);
+                el.removeEventListener('blur', onBlur);
+                el.removeAttribute('contenteditable');
+                el.classList.remove('editing');
+                if (save) {
+                    var text = el.textContent.replace(/\s+/g, ' ').trim();
+                    savePageSubtitle(key, text);
+                    el.textContent = text || el.dataset.defaultText;
+                } else {
+                    el.textContent = original;
+                }
+            }
+            function onKey(ev) {
+                if (ev.key === 'Enter') { ev.preventDefault(); finish(true); }
+                else if (ev.key === 'Escape') { ev.preventDefault(); finish(false); }
+            }
+            function onBlur() { finish(true); }
+            el.addEventListener('keydown', onKey);
+            el.addEventListener('blur', onBlur);
+        }
+        function initPageSubtitleEditing() {
+            applyPageSubtitles();
+            document.addEventListener('click', function(ev) {
+                if (!ev.target.closest) return;
+                var el = ev.target.closest('.page-header .subtitle[data-editable]');
+                if (el) editPageSubtitle(el);
+            });
+        }
+
         function switchPage(pageName, navEl) {
             // v43: page 归一化（迁移旧的 c_home → health）
             if (pageName === 'c_home') pageName = 'health';
@@ -17362,6 +17480,7 @@ CREATE POLICY "allow_all" ON workbench_sync
         initIntroScreen(); // 初始化主页（每日名言 + 日期）
         initDarkMode(); // 初始化深色模式
         renderNavLabels(); // v35 应用已保存的侧边栏目录名称
+        initPageSubtitleEditing(); // v46 页面副标题可点击就地编辑
         initNavReorder(); // v37 应用目录排序并启用拖动
         renderTasks();
         renderMaterials();
