@@ -15721,7 +15721,7 @@ CREATE POLICY "allow_all" ON workbench_sync
         // - data:image/ 或 http URL → <img>
         // - 其他（emoji 字符 / 原始 <svg ...> 字符串）→ 直接渲染
         function renderNavIcon(iconStr) {
-            if (!iconStr) iconStr = 'home';
+            if (!iconStr || typeof iconStr !== 'string') iconStr = 'home';
             // 已经是 SVG HTML
             if (iconStr.indexOf('<svg') === 0) {
                 return '<span class="nav-emoji">' + iconStr + '</span>';
@@ -15739,7 +15739,7 @@ CREATE POLICY "allow_all" ON workbench_sync
         }
         function _defaultNavIconSvg() { return SVG_ICON_MAP.home; }
         function _resolveNavIconSvg(value) {
-            if (!value) return SVG_ICON_MAP.home;
+            if (!value || typeof value !== 'string') return SVG_ICON_MAP.home;
             if (SVG_ICON_MAP[value]) return SVG_ICON_MAP[value];
             if (value.indexOf('<svg') === 0) return value;
             if (value.indexOf('data:image/') === 0 || /^https?:\/\//.test(value)) {
