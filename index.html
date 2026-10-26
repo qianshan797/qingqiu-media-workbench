@@ -8974,6 +8974,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                 STORAGE_KEY_STUDY_TASKS, // v36 新增：个人学习任务清单纳入云同步
                 STORAGE_KEY_STUDY_CHECKIN, // v36 新增：学习进度打卡纳入云同步
                 STORAGE_KEY_NAV_ORDER, // v37 新增：侧边栏目录排序纳入云同步
+                'media_workbench_custom_nav', // v41 新增：自定义导航项目纳入云同步
                 'media_workflow_deleted_seeds', // v30 修复：删除记录也同步，避免新设备/刷新后被删账号被云端或种子补回
                 'media_workflow_deleted_tasks' // v31 修复：任务删除记录也同步，避免刷新后被删任务被重新注入
             ];
@@ -9420,6 +9421,26 @@ CREATE POLICY "allow_all" ON workbench_sync
                         return;
                     } catch (eCi) {
                         console.error('[restoreFromCloudData] study_checkin 合并异常:', eCi);
+                        return;
+                    }
+                }
+                // v41 新增：自定义导航项目采用按 id 并集合并，本地+云端都保留，避免多端互相覆盖
+                if (k === 'media_workbench_custom_nav') {
+                    try {
+                        var localCnRaw = localStorage.getItem(k);
+                        var localCn = localCnRaw ? JSON.parse(localCnRaw) : [];
+                        var remoteCn = (typeof val === 'string') ? JSON.parse(val) : (Array.isArray(val) ? val : []);
+                        if (!Array.isArray(localCn)) localCn = [];
+                        if (!Array.isArray(remoteCn)) remoteCn = [];
+                        var cnById = {};
+                        remoteCn.forEach(function(x){ if (x && x.id) cnById[String(x.id)] = x; });
+                        localCn.forEach(function(x){ if (x && x.id && !cnById[String(x.id)]) cnById[String(x.id)] = x; });
+                        var mergedCn = Object.keys(cnById).map(function(id){ return cnById[id]; });
+                        localStorage.setItem(k, JSON.stringify(mergedCn));
+                        console.log('[restoreFromCloudData] custom_nav 并集合并：本地', localCn.length, '条 + 云端', remoteCn.length, '条 =', mergedCn.length, '条');
+                        return;
+                    } catch (eCn) {
+                        console.error('[restoreFromCloudData] custom_nav 合并异常:', eCn);
                         return;
                     }
                 }
