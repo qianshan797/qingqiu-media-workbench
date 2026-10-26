@@ -894,17 +894,16 @@ window.__newsFetchPromise = (function() {
             padding: 8px; display: grid; grid-template-columns: repeat(5, 1fr);
             gap: 4px; width: 220px;
         }
-        .custom-nav-emoji-panel span {
-            font-size: 20px; text-align: center; padding: 4px 0; cursor: pointer;
-            border-radius: 6px; transition: background 0.1s; line-height: 1;
+        .custom-nav-icon-item {
+            background: none; border: none; cursor: pointer; padding: 6px;
+            border-radius: 6px; display: flex; align-items: center; justify-content: center;
+            width: 100%; height: 36px; color: #3C3C43; transition: all 0.12s;
         }
-        .custom-nav-emoji-panel span:hover { background: #E8F2FF; }
-        body.dark-mode .custom-nav-icon-preview { background: #2C2C2E; }
-        body.dark-mode .custom-nav-icon-preview:hover { background: #0A84FF33; border-color: #0A84FF; }
-        body.dark-mode .custom-nav-icon-up-btn { background: #2C2C2E; }
-        body.dark-mode .custom-nav-icon-up-btn:hover { background: #0A84FF; }
+        .custom-nav-icon-item svg { width: 20px; height: 20px; stroke: currentColor; }
+        .custom-nav-icon-item:hover { background: #E8F2FF; color: #007AFF; }
         body.dark-mode .custom-nav-emoji-panel { background: #1C1C1E; box-shadow: 0 6px 24px rgba(0,0,0,0.5); }
-        body.dark-mode .custom-nav-emoji-panel span:hover { background: #0A84FF33; }
+        body.dark-mode .custom-nav-icon-item { color: rgba(235,235,245,0.8); }
+        body.dark-mode .custom-nav-icon-item:hover { background: #0A84FF33; color: #0A84FF; }
         .settings-custom-nav-add #settingsCustomNavType { width: auto !important; flex: 0 0 auto; min-width: 100px; }
         .settings-custom-nav-add #settingsCustomNavUrl { flex: 1 1 100%; }
         .settings-custom-nav-add .toolbar-btn { flex: 0 0 auto; white-space: nowrap; }
@@ -15693,49 +15692,88 @@ CREATE POLICY "allow_all" ON workbench_sync
 
 
         // ==================== v41 设置弹窗 ====================
-        // 当前自定义导航图标状态（emoji 或 dataURL 或 http URL）
-        var _customNavIconValue = '📍';
-        // 统一渲染导航图标：emoji → <span class="nav-emoji">emoji</span>
-        //                图片URL → <span class="nav-emoji"><img src=...></span>
+        // 当前自定义导航图标 key（SVG icon key 或 dataURL 或 emoji）
+        var _customNavIconValue = 'home';
+        var SVG_ICON_MAP = {
+            'home': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
+            'file': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
+            'folder': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>',
+            'grid': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>',
+            'calendar': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+            'bell': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>',
+            'settings': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
+            'user': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+            'briefcase': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>',
+            'link': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
+            'rocket': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>',
+            'star': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+            'target': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',
+            'chart': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',
+            'palette': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="0.5"/><circle cx="17.5" cy="10.5" r="0.5"/><circle cx="8.5" cy="7.5" r="0.5"/><circle cx="6.5" cy="12.5" r="0.5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>',
+            'message': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+            'wrench': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>',
+            'package': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>',
+            'heart': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
+            'zap': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+        };
+        // 统一渲染导航图标
+        // - SVG icon key (home/folder...) → <svg> 图标
+        // - data:image/ 或 http URL → <img>
+        // - 其他（emoji 字符 / 原始 <svg ...> 字符串）→ 直接渲染
         function renderNavIcon(iconStr) {
-            if (!iconStr) iconStr = '📍';
-            if (iconStr.indexOf('data:image/') === 0 || /^https?:\/\//.test(iconStr)) {
-                return '<span class="nav-emoji"><img src="' + iconStr + '" alt="icon" onerror="this.parentElement.textContent=\'📍\'"></span>';
+            if (!iconStr) iconStr = 'home';
+            // 已经是 SVG HTML
+            if (iconStr.indexOf('<svg') === 0) {
+                return '<span class="nav-emoji">' + iconStr + '</span>';
             }
+            // SVG icon key
+            if (SVG_ICON_MAP[iconStr]) {
+                return '<span class="nav-emoji">' + SVG_ICON_MAP[iconStr] + '</span>';
+            }
+            // 图片 URL
+            if (iconStr.indexOf('data:image/') === 0 || /^https?:\/\//.test(iconStr)) {
+                return '<span class="nav-emoji"><img src="' + iconStr + '" alt="icon" onerror="this.parentElement.innerHTML=SVG_ICON_MAP.home"></span>';
+            }
+            // emoji 字符或其他
             return '<span class="nav-emoji">' + iconStr + '</span>';
+        }
+        function _defaultNavIconSvg() { return SVG_ICON_MAP.home; }
+        function _resolveNavIconSvg(value) {
+            if (!value) return SVG_ICON_MAP.home;
+            if (SVG_ICON_MAP[value]) return SVG_ICON_MAP[value];
+            if (value.indexOf('<svg') === 0) return value;
+            if (value.indexOf('data:image/') === 0 || /^https?:\/\//.test(value)) {
+                return '<img src="' + value + '" alt="icon" onerror="this.parentElement.innerHTML=SVG_ICON_MAP.home">';
+            }
+            return value;
         }
         function updateCustomNavIconPreview() {
             var prev = document.getElementById('customNavIconPreview');
             if (!prev) return;
-            var v = _customNavIconValue || '📍';
-            if (v.indexOf('data:image/') === 0 || /^https?:\/\//.test(v)) {
-                prev.innerHTML = '<img src="' + v + '" alt="icon" onerror="this.parentElement.textContent=\'📍\'">';
-            } else {
-                prev.textContent = v;
-            }
+            prev.innerHTML = _resolveNavIconSvg(_customNavIconValue);
         }
-        function toggleCustomNavEmojiPicker() {
+        function toggleCustomNavIconPanel() {
             var panel = document.getElementById('customNavEmojiPanel');
             if (!panel) return;
             var hidden = panel.style.display === 'none';
             panel.style.display = hidden ? 'grid' : 'none';
             if (hidden) {
                 setTimeout(function() {
-                    document.addEventListener('click', _closeEmojiPanelOnOutside, { once: true });
+                    document.addEventListener('click', _closeIconPanelOnOutside, { once: true });
                 }, 10);
             }
         }
-        function _closeEmojiPanelOnOutside(e) {
+        function _closeIconPanelOnOutside(e) {
             var wrap = document.getElementById('customNavIconWrap');
             if (wrap && !wrap.contains(e.target)) {
                 var panel = document.getElementById('customNavEmojiPanel');
                 if (panel) panel.style.display = 'none';
             } else {
-                document.addEventListener('click', _closeEmojiPanelOnOutside, { once: true });
+                document.addEventListener('click', _closeIconPanelOnOutside, { once: true });
             }
         }
-        function pickCustomNavEmoji(e) {
-            _customNavIconValue = e;
+        function pickCustomNavIcon(key) {
+            _customNavIconValue = key;
             updateCustomNavIconPreview();
             var panel = document.getElementById('customNavEmojiPanel');
             if (panel) panel.style.display = 'none';
@@ -15769,14 +15807,27 @@ CREATE POLICY "allow_all" ON workbench_sync
             input.value = '';
         }
         function clearCustomNavIcon() {
-            _customNavIconValue = '📍';
+            _customNavIconValue = 'home';
             updateCustomNavIconPreview();
         }
+
         function getCustomNav() {
             try {
                 const raw = localStorage.getItem('media_workbench_custom_nav');
-                const arr = raw ? JSON.parse(raw) : [];
-                return Array.isArray(arr) ? arr : [];
+                let arr = raw ? JSON.parse(raw) : [];
+                if (!Array.isArray(arr)) arr = [];
+                // v41 兼容：旧 emoji 值迁移到 SVG icon key
+                var migrated = false;
+                arr.forEach(function(item) {
+                    if (item && item.icon) {
+                        var oldMap = { '📍':'home','🏠':'home','📋':'file','🎯':'target','📅':'calendar',
+                                       '📰':'bell','📚':'book','👤':'user','💼':'briefcase','⚙️':'settings',
+                                       '🔗':'link','🚀':'rocket','⭐':'star','🔥':'zap','💡':'palette',
+                                       '📊':'chart','🎨':'palette','💬':'message','🛠️':'wrench','📦':'package' };
+                        if (oldMap[item.icon]) { item.icon = oldMap[item.icon]; migrated = true; }
+                    }
+                });
+                if (migrated) { localStorage.setItem('media_workbench_custom_nav', JSON.stringify(arr)); }
             } catch(e) { return []; }
         }
         function saveCustomNav(arr) {
@@ -15829,7 +15880,7 @@ CREATE POLICY "allow_all" ON workbench_sync
             var at = document.getElementById('settingsAvatarText');
             if (at) at.value = '';
             // 重置自定义导航图标
-            _customNavIconValue = '📍';
+            _customNavIconValue = 'home';
             setTimeout(updateCustomNavIconPreview, 0);
             document.getElementById('settingsModal').classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -15967,7 +16018,7 @@ CREATE POLICY "allow_all" ON workbench_sync
         }
         function addCustomNavItem() {
             var title = document.getElementById('settingsCustomNavTitle').value.trim();
-            var icon = _customNavIconValue || '📍';
+            var icon = _customNavIconValue || 'home';
             var typeSel = document.getElementById('settingsCustomNavType');
             var selVal = typeSel.value; // home|account|...|study|__url__
             var url = '', pageName = '', normType = 'page';
@@ -17046,30 +17097,30 @@ CREATE POLICY "allow_all" ON workbench_sync
                         <div class="settings-custom-nav-add">
                             <input type="text" id="settingsCustomNavTitle" class="form-input" placeholder="项目名称" maxlength="12">
                             <div class="custom-nav-icon-wrap" id="customNavIconWrap">
-                                <div class="custom-nav-icon-preview" id="customNavIconPreview" onclick="toggleCustomNavEmojiPicker()" title="选图标">📍</div>
+                                <div class="custom-nav-icon-preview" id="customNavIconPreview" onclick="toggleCustomNavIconPanel()" title="选图标"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
                                 <button type="button" class="custom-nav-icon-up-btn" onclick="triggerCustomNavIconUpload()" title="上传图片">📷</button>
                                 <input type="file" id="settingsCustomNavIconFile" class="hidden" accept="image/*" onchange="handleCustomNavIconUpload(this)">
                                 <div class="custom-nav-emoji-panel" id="customNavEmojiPanel" style="display:none;">
-                                    <span onclick="pickCustomNavEmoji('📍')">📍</span>
-                                    <span onclick="pickCustomNavEmoji('🏠')">🏠</span>
-                                    <span onclick="pickCustomNavEmoji('📋')">📋</span>
-                                    <span onclick="pickCustomNavEmoji('🎯')">🎯</span>
-                                    <span onclick="pickCustomNavEmoji('📅')">📅</span>
-                                    <span onclick="pickCustomNavEmoji('📰')">📰</span>
-                                    <span onclick="pickCustomNavEmoji('📚')">📚</span>
-                                    <span onclick="pickCustomNavEmoji('👤')">👤</span>
-                                    <span onclick="pickCustomNavEmoji('💼')">💼</span>
-                                    <span onclick="pickCustomNavEmoji('⚙️')">⚙️</span>
-                                    <span onclick="pickCustomNavEmoji('🔗')">🔗</span>
-                                    <span onclick="pickCustomNavEmoji('🚀')">🚀</span>
-                                    <span onclick="pickCustomNavEmoji('⭐')">⭐</span>
-                                    <span onclick="pickCustomNavEmoji('🔥')">🔥</span>
-                                    <span onclick="pickCustomNavEmoji('💡')">💡</span>
-                                    <span onclick="pickCustomNavEmoji('📊')">📊</span>
-                                    <span onclick="pickCustomNavEmoji('🎨')">🎨</span>
-                                    <span onclick="pickCustomNavEmoji('💬')">💬</span>
-                                    <span onclick="pickCustomNavEmoji('🛠️')">🛠️</span>
-                                    <span onclick="pickCustomNavEmoji('📦')">📦</span>
+<button type="button" class="custom-nav-icon-item" onclick="pickCustomNavIcon('home')" title="主页"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></button>
+                                    <button type="button" class="custom-nav-icon-item" onclick="pickCustomNavIcon('file')" title="file"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></button>
+                                    <button type="button" class="custom-nav-icon-item" onclick="pickCustomNavIcon('folder')" title="folder"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></button>
+                                    <button type="button" class="custom-nav-icon-item" onclick="pickCustomNavIcon('grid')" title="grid"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></button>
+                                    <button type="button" class="custom-nav-icon-item" onclick="pickCustomNavIcon('calendar')" title="calendar"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></button>
+                                    <button type="button" class="custom-nav-icon-item" onclick="pickCustomNavIcon('bell')" title="bell"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>
+                                    <button type="button" class="custom-nav-icon-item" onclick="pickCustomNavIcon('settings')" title="settings"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+                                    <button type="button" class="custom-nav-icon-item" onclick="pickCustomNavIcon('user')" title="user"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+                                    <button type="button" class="custom-nav-icon-item" onclick="pickCustomNavIcon('briefcase')" title="briefcase"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></button>
+                                    <button type="button" class="custom-nav-icon-item" onclick="pickCustomNavIcon('link')" title="link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></button>
+                                    <button type="button" class="custom-nav-icon-item" onclick="pickCustomNavIcon('rocket')" title="rocket"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg></button>
+                                    <button type="button" class="custom-nav-icon-item" onclick="pickCustomNavIcon('star')" title="star"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+                                    <button type="button" class="custom-nav-icon-item" onclick="pickCustomNavIcon('target')" title="target"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></button>
+                                    <button type="button" class="custom-nav-icon-item" onclick="pickCustomNavIcon('chart')" title="chart"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></button>
+                                    <button type="button" class="custom-nav-icon-item" onclick="pickCustomNavIcon('palette')" title="palette"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="0.5"/><circle cx="17.5" cy="10.5" r="0.5"/><circle cx="8.5" cy="7.5" r="0.5"/><circle cx="6.5" cy="12.5" r="0.5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg></button>
+                                    <button type="button" class="custom-nav-icon-item" onclick="pickCustomNavIcon('message')" title="message"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+                                    <button type="button" class="custom-nav-icon-item" onclick="pickCustomNavIcon('wrench')" title="wrench"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></button>
+                                    <button type="button" class="custom-nav-icon-item" onclick="pickCustomNavIcon('package')" title="package"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></button>
+                                    <button type="button" class="custom-nav-icon-item" onclick="pickCustomNavIcon('heart')" title="heart"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+                                    <button type="button" class="custom-nav-icon-item" onclick="pickCustomNavIcon('zap')" title="zap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></button>
                                 </div>
                             </div>
                             <select id="settingsCustomNavType" class="form-input" onchange="onCustomNavTypeChange(this)">
