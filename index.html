@@ -841,6 +841,36 @@ window.__newsFetchPromise = (function() {
 
         .settings-nav-title { flex: 1; font-weight: 500; color: #1C1C1E; }
         body.dark-mode .settings-nav-title { color: #F2F2F7; }
+        .settings-nav-label-input {
+            flex: 1; font-weight: 500; font-size: 13px; color: #1C1C1E;
+            border: 1px solid transparent; border-radius: 4px;
+            padding: 4px 6px; background: transparent; outline: none;
+            transition: border-color 0.15s, background 0.15s;
+            min-width: 0;
+        }
+        .settings-nav-label-input:hover { border-color: #E5E5EA; }
+        .settings-nav-label-input:focus { border-color: #007AFF; background: #fff; }
+        body.dark-mode .settings-nav-label-input { color: #F2F2F7; }
+        body.dark-mode .settings-nav-label-input:hover { border-color: #38383A; }
+        body.dark-mode .settings-nav-label-input:focus { border-color: #0A84FF; background: #2C2C2E; }
+        .settings-nav-badge {
+            font-size: 10px; padding: 1px 6px; border-radius: 10px;
+            line-height: 1.4; flex-shrink: 0; margin-right: 4px;
+        }
+        .settings-nav-badge.builtin { background: #E8F2FF; color: #007AFF; }
+        .settings-nav-badge.custom { background: #FFF3E0; color: #E67E22; }
+        body.dark-mode .settings-nav-badge.builtin { background: #0A84FF33; color: #0A84FF; }
+        body.dark-mode .settings-nav-badge.custom { background: #FF950033; color: #FF9500; }
+
+        .settings-nav-move {
+            background: transparent; border: none; cursor: pointer;
+            color: #8E8E93; font-size: 11px; padding: 2px 5px;
+            border-radius: 4px; line-height: 1;
+            transition: all 0.15s;
+        }
+        .settings-nav-move:hover:not(:disabled) { background: #E8F2FF; color: #007AFF; }
+        .settings-nav-move:disabled { opacity: 0.25; cursor: not-allowed; }
+        body.dark-mode .settings-nav-move:hover:not(:disabled) { background: #0A84FF33; color: #0A84FF; }
         .settings-nav-key.muted { font-size: 11px; color: #8E8E93; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
         .settings-nav-toggle { position: relative; width: 34px; height: 20px; flex-shrink: 0; display: inline-block; }
@@ -1006,37 +1036,6 @@ window.__newsFetchPromise = (function() {
             height: 20px;
             flex-shrink: 0;
             stroke-width: 1.8;
-        }
-
-        /* v35 功能：侧边栏目录名称就地编辑 */
-        .nav-edit-btn {
-            margin-left: auto;
-            opacity: 0;
-            font-size: 13px;
-            color: #999;
-            cursor: pointer;
-            padding: 2px 4px;
-            border-radius: 4px;
-            transition: opacity 0.2s;
-            user-select: none;
-        }
-        .nav-item:hover .nav-edit-btn {
-            opacity: 0.7;
-        }
-        .nav-edit-btn:hover {
-            opacity: 1 !important;
-            color: #007AFF;
-            background: rgba(0, 122, 255, 0.1);
-        }
-        .nav-edit-input {
-            width: 90px;
-            font-size: 13px;
-            border: 1px solid #007AFF;
-            border-radius: 5px;
-            padding: 2px 5px;
-            outline: none;
-            background: #fff;
-            color: #1C1C1E;
         }
 
         /* v36 个人学习模块 */
@@ -1393,10 +1392,6 @@ window.__newsFetchPromise = (function() {
             opacity: 0.5;
             transform: scale(0.98);
         }
-        .sidebar-nav.nav-drag-over .nav-item {
-            transition: transform 0.15s ease;
-        }
-
         .nav-badge {
             margin-left: auto;
             background: #007AFF;
@@ -7688,45 +7683,37 @@ window.__newsFetchPromise = (function() {
                 <button class="nav-item active" data-page="home" onclick="switchPage('home', this)">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                     <span class="nav-label" id="navLabel_home">主页</span>
-                    <span class="nav-edit-btn" data-nav="home" title="编辑目录名称" onclick="event.stopPropagation();startNavEdit('home')">✎</span>
                 </button>
                 <button class="nav-item" data-page="account" onclick="switchPage('account', this)">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                     <span class="nav-label" id="navLabel_account">账号管理</span>
-                    <span class="nav-edit-btn" data-nav="account" title="编辑目录名称" onclick="event.stopPropagation();startNavEdit('account')">✎</span>
                 </button>
                 <button class="nav-item" data-page="kanban" onclick="switchPage('kanban', this)">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="5" height="18" rx="1"/><rect x="9.5" y="3" width="5" height="12" rx="1"/><rect x="16" y="3" width="5" height="8" rx="1"/></svg>
                     <span class="nav-label" id="navLabel_kanban">工作任务</span>
-                    <span class="nav-edit-btn" data-nav="kanban" title="编辑目录名称" onclick="event.stopPropagation();startNavEdit('kanban')">✎</span>
                     <span class="nav-badge" id="navKanbanBadge">3</span>
                 </button>
                 <button class="nav-item" data-page="workflow" onclick="switchPage('workflow', this)">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
                     <span class="nav-label" id="navLabel_workflow">数据看板</span>
-                    <span class="nav-edit-btn" data-nav="workflow" title="编辑目录名称" onclick="event.stopPropagation();startNavEdit('workflow')">✎</span>
                 </button>
                 <button class="nav-item" data-page="materials" onclick="switchPage('materials', this)">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
                     <span class="nav-label" id="navLabel_materials">素材筛选池</span>
-                    <span class="nav-edit-btn" data-nav="materials" title="编辑目录名称" onclick="event.stopPropagation();startNavEdit('materials')">✎</span>
                     <span class="nav-badge" id="navMaterialsBadge" style="display: none;">0</span>
                 </button>
                 <button class="nav-item" data-page="calendar" onclick="switchPage('calendar', this)">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                     <span class="nav-label" id="navLabel_calendar">工作日历</span>
-                    <span class="nav-edit-btn" data-nav="calendar" title="编辑目录名称" onclick="event.stopPropagation();startNavEdit('calendar')">✎</span>
                 </button>
                 <button class="nav-item" data-page="news" onclick="switchPage('news', this)">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
                     <span class="nav-label" id="navLabel_news">每日快讯</span>
-                    <span class="nav-edit-btn" data-nav="news" title="编辑目录名称" onclick="event.stopPropagation();startNavEdit('news')">✎</span>
                     <span class="nav-badge" id="navNewsBadge" style="display: none;">0</span>
                 </button>
                 <button class="nav-item" data-page="study" onclick="switchPage('study', this)">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
                     <span class="nav-label" id="navLabel_study">个人学习</span>
-                    <span class="nav-edit-btn" data-nav="study" title="编辑目录名称" onclick="event.stopPropagation();startNavEdit('study')">✎</span>
                 </button>
             </nav>
             <div class="sidebar-footer">
@@ -12753,52 +12740,38 @@ CREATE POLICY "allow_all" ON workbench_sync
         }
 
         // 点击 ✎ 启动就地编辑
-        function startNavEdit(navKey) {
-            const el = document.getElementById('navLabel_' + navKey);
-            if (!el || el.querySelector('input')) return;
-            const current = el.textContent;
-            let cancelled = false;
-            el.innerHTML = '<input type="text" class="nav-edit-input" value="' + String(current).replace(/"/g, '&quot;').replace(/</g, '&lt;') + '" maxlength="10">';
-            const input = el.querySelector('input');
-            input.focus();
-            input.select();
-
-            const finish = function() {
-                if (el.querySelector('input')) {
-                    const labels = getNavLabels();
-                    if (!cancelled) {
-                        const val = input.value.trim() || current;
-                        labels[navKey] = val;
-                        saveNavLabels(labels);
-                    } else {
-                        renderNavLabels();
-                    }
-                } else {
-                    renderNavLabels();
-                }
-            };
-
-            ['click', 'mousedown', 'pointerdown', 'touchstart'].forEach(function(evt) {
-                input.addEventListener(evt, function(e) { e.stopPropagation(); });
-            });
-
-            input.addEventListener('keydown', function(e) {
-                e.stopPropagation();
-                if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
-                if (e.key === 'Escape') { e.preventDefault(); cancelled = true; input.blur(); }
-            });
-            input.addEventListener('blur', finish);
-            input.addEventListener('click', function(e) { e.stopPropagation(); });
-        }
-
         // ===== v37 侧边栏目录拖动排序 =====
         function getNavOrder() {
             try {
                 const raw = localStorage.getItem(STORAGE_KEY_NAV_ORDER);
-                const arr = raw ? JSON.parse(raw) : null;
-                return Array.isArray(arr) ? arr : [];
+                let arr = raw ? JSON.parse(raw) : null;
+                if (!Array.isArray(arr)) arr = [];
+                // 去重 + 补漏（确保 8 个内置和所有自定义都在 order 里）
+                var BUILTIN = ['home','account','kanban','workflow','materials','calendar','news','study'];
+                var seen = {};
+                var clean = [];
+                arr.forEach(function(pg){
+                    if (pg && typeof pg === 'string' && !seen[pg]) { seen[pg]=true; clean.push(pg); }
+                });
+                // 补内置
+                BUILTIN.forEach(function(pg){ if (!seen[pg]) { seen[pg]=true; clean.push(pg); } });
+                // 补自定义
+                if (typeof getCustomNav === 'function') {
+                    getCustomNav().forEach(function(c){
+                        var pg = c && (c.type==='url' ? ('url:'+(c.url||'')) : (c.page||''));
+                        if (pg && !seen[pg]) { seen[pg]=true; clean.push(pg); }
+                    });
+                }
+                // 有变化就回写
+                if (clean.length !== arr.length || clean.join(',') !== arr.join(',')) {
+                    localStorage.setItem(STORAGE_KEY_NAV_ORDER, JSON.stringify(clean));
+                    arr = clean;
+                } else {
+                    arr = clean;
+                }
+                return arr;
             } catch (e) {
-                return [];
+                return ['home','account','kanban','workflow','materials','calendar','news','study'];
             }
         }
         // 应用存储的排序到 DOM（未在存储中出现的页面追加到末尾）
@@ -12837,43 +12810,9 @@ CREATE POLICY "allow_all" ON workbench_sync
                 pushToCloud().catch(function(e){ console.warn('[saveNavOrderFromDom] 云同步失败:', e); });
             }
         }
-        // 初始化拖动排序
-        let navDragged = null;
+        // 初始化：只应用已保存的顺序，不再在侧边栏直接操作排序/改名（统一放到设置弹窗）
         function initNavReorder() {
-            const nav = document.querySelector('.sidebar-nav');
-            if (!nav) return;
-            applyNavOrder(); // 先应用已保存的顺序
-            nav.querySelectorAll('.nav-item').forEach((item, idx) => {
-                item.setAttribute('draggable', 'true');
-                item.addEventListener('dragstart', function(e) {
-                    navDragged = this;
-                    this.classList.add('nav-dragging');
-                    e.dataTransfer.effectAllowed = 'move';
-                });
-                item.addEventListener('dragend', function() {
-                    this.classList.remove('nav-dragging');
-                    nav.classList.remove('nav-drag-over');
-                    navDragged = null;
-                });
-                item.addEventListener('dragover', function(e) {
-                    e.preventDefault();
-                    e.dataTransfer.dropEffect = 'move';
-                    nav.classList.add('nav-drag-over');
-                });
-                item.addEventListener('drop', function(e) {
-                    e.preventDefault();
-                    if (!navDragged || navDragged === this) { nav.classList.remove('nav-drag-over'); return; }
-                    const items = Array.prototype.slice.call(nav.querySelectorAll('.nav-item'));
-                    const fromIdx = items.indexOf(navDragged);
-                    let toIdx = items.indexOf(this);
-                    items.splice(fromIdx, 1);
-                    toIdx = items.indexOf(this);
-                    items.splice(toIdx, 0, navDragged);
-                    items.forEach(node => nav.appendChild(node));
-                    nav.classList.remove('nav-drag-over');
-                    saveNavOrderFromDom();
-                });
-            });
+            applyNavOrder();
         }
 
         // ===== v36 个人学习模块 =====
@@ -15715,6 +15654,13 @@ CREATE POLICY "allow_all" ON workbench_sync
             'package': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>',
             'heart': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
             'zap': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+            // —— 侧边栏 8 个内置项目的同款 SVG（与 HTML 硬编码保持一致）——
+            'account': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+            'kanban': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="5" height="18" rx="1"/><rect x="9.5" y="3" width="5" height="12" rx="1"/><rect x="16" y="3" width="5" height="8" rx="1"/></svg>',
+            'workflow': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>',
+            'materials': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>',
+            'news': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>',
+            'study': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>',
         }; }
         // 统一渲染导航图标
         // - SVG icon key (home/folder...) → <svg> 图标
@@ -15816,17 +15762,26 @@ CREATE POLICY "allow_all" ON workbench_sync
                 const raw = localStorage.getItem('media_workbench_custom_nav');
                 let arr = raw ? JSON.parse(raw) : [];
                 if (!Array.isArray(arr)) arr = [];
-                // 过滤测试数据（自动清除脏注入）
+                // 过滤测试数据 + 同 page/url 去重（后出现的丢弃，保留先）
                 var _testTitles = {'空icon':1,'空icon字段':1,'未定义':1,'是个对象':1,'垃圾值':1,'正确':1,'正确home':1,'数字icon':1};
+                var _seenPg = {};
+                var _seenTitle = {};
                 arr = arr.filter(function(item) {
                     if (!item || typeof item !== 'object') return false;
                     if (item.__test__) return false;
-                    var t = item.title || item.name || '';
+                    var t = (item.title || item.name || '').trim();
                     if (_testTitles[t]) return false;
+                    // 去重：同 page/url 只留第一个；同 title 也只留第一个（兜底 url/page 交叉重复）
+                    var pg = item.type === 'url' ? ('url:' + (item.url||'')) : (item.page || '');
+                    if (pg && _seenPg[pg]) return false;
+                    if (pg) _seenPg[pg] = true;
+                    if (t && _seenTitle[t]) return false;
+                    if (t) _seenTitle[t] = true;
                     return true;
                 });
                 // v41 兼容：旧 emoji 值迁移到 SVG icon key
                 var migrated = false;
+                var _BUILTIN_KEYS = {'home':1,'account':1,'kanban':1,'workflow':1,'materials':1,'calendar':1,'news':1,'study':1};
                 arr.forEach(function(item) {
                     if (item && item.icon) {
                         var oldMap = { '📍':'home','🏠':'home','📋':'file','🎯':'target','📅':'calendar',
@@ -15834,6 +15789,11 @@ CREATE POLICY "allow_all" ON workbench_sync
                                        '🔗':'link','🚀':'rocket','⭐':'star','🔥':'zap','💡':'palette',
                                        '📊':'chart','🎨':'palette','💬':'message','🛠️':'wrench','📦':'package' };
                         if (oldMap[item.icon]) { item.icon = oldMap[item.icon]; migrated = true; }
+                    }
+                    // 防止自定义项目 page 撞内置 key（撞了就自动加 c_ 前缀）
+                    if (item && item.type !== 'url' && _BUILTIN_KEYS[item.page]) {
+                        item.page = 'c_' + item.page;
+                        migrated = true;
                     }
                 });
                 // 任何改动（过滤或迁移）都回写 localStorage + 云端，自动清除测试残留
@@ -15988,54 +15948,185 @@ CREATE POLICY "allow_all" ON workbench_sync
             if (typeof pushToCloud === 'function' && syncEnabled) pushToCloud().catch(function(){});
             showSyncToast('个人资料已保存', 'success');
         }
-        function renderSettingsNavList() {
-            // 内置项目
-            var builtinBox = document.getElementById('settingsBuiltinNavList');
-            if (builtinBox) {
-                var html = '';
-                var hidden = profile.hiddenNav || [];
-                getBuiltinNavList().forEach(function(item) {
-                    var hide = hidden.indexOf(item.key) >= 0;
-                    html += '<div class="settings-nav-row">' +
-                        '<label class="settings-nav-toggle">' +
-                            '<input type="checkbox" data-builtin="' + item.key + '" ' + (hide ? '' : 'checked') + '>' +
-                            '<span class="toggle-slider"></span>' +
-                        '</label>' +
-                        '<span class="settings-nav-title">' + item.label + '</span>' +
-                        '<span class="settings-nav-key muted">' + item.key + '</span>' +
-                    '</div>';
-                });
-                builtinBox.innerHTML = html;
-                // 绑定 checkbox 变化
-                builtinBox.querySelectorAll('input[type=checkbox][data-builtin]').forEach(function(cb) {
-                    cb.addEventListener('change', function() {
-                        toggleBuiltinNav(cb.getAttribute('data-builtin'), cb.checked);
+        // 统一导航项：同时包含内置 + 自定义，按 navOrder 排序
+        function _getUnifiedNavItems() {
+            // navOrder 存的是所有 data-page 值（内置是 key，自定义是 'url:'+url 或 page key）
+            var order = [];
+            try {
+                var raw = localStorage.getItem(STORAGE_KEY_NAV_ORDER);
+                if (raw) { var parsed = JSON.parse(raw); if (Array.isArray(parsed)) order = parsed; }
+            } catch(e) {}
+            // 构建两个 map
+            var builtinMap = {};
+            getBuiltinNavList().forEach(function(x){ builtinMap[x.key] = x; });
+            var customList = getCustomNav();
+            var customMap = {};
+            customList.forEach(function(c){
+                var pg = c.type === 'url' ? ('url:' + c.url) : (c.page || '');
+                if (pg) customMap[pg] = c;
+            });
+            var hiddenMap = {};
+            (profile.hiddenNav || []).forEach(function(k){ hiddenMap[k] = true; });
+            var labels = getNavLabels();
+            // 按 order 输出
+            var result = [];
+            var seenOrderKeys = {};
+            order.forEach(function(pg) {
+                if (!pg || seenOrderKeys[pg]) return; // 跳过已处理（nav_order 可能有脏重复）
+                seenOrderKeys[pg] = true;
+                if (customMap[pg]) {
+                    var c = customMap[pg];
+                    result.push({
+                        builtin: false, key: pg, id: c.id,
+                        label: c.title, icon: c.icon, page: pg,
+                        hidden: false, // 自定义项目不参与 hiddenNav（hiddenNav 只管内置 key）
+                        data: c
                     });
-                });
-            }
-            // 自定义项目
-            var customBox = document.getElementById('settingsCustomNavList');
-            if (customBox) {
-                var html2 = '';
-                getCustomNav().forEach(function(item) {
-                    var sub = item.type === 'url' ? ('🔗 ' + item.url) : ('📄 ' + (item.page || ''));
-                    html2 += '<div class="settings-nav-row">' +
-                        renderNavIcon(item.icon) +
-                        '<span class="settings-nav-title">' + String(item.title).replace(/</g,'&lt;') + '</span>' +
-                        '<span class="settings-nav-key muted">' + sub + '</span>' +
-                        '<button class="settings-nav-del" data-del-id="' + item.id + '">删除</button>' +
-                    '</div>';
-                });
-                customBox.innerHTML = html2 || '<div class="settings-empty-hint">暂无自定义项目</div>';
-                // 绑定删除按钮
-                customBox.querySelectorAll('.settings-nav-del').forEach(function(btn) {
-                    btn.addEventListener('click', function() {
-                        deleteCustomNavItem(btn.getAttribute('data-del-id'));
+                    seenOrderKeys[pg] = true;
+                } else if (builtinMap[pg]) {
+                    var bn = builtinMap[pg];
+                    result.push({
+                        builtin: true, key: pg, id: pg,
+                        label: labels[pg] || bn.label, icon: 'builtin-' + pg, page: pg,
+                        hidden: !!hiddenMap[pg], data: bn
                     });
-                });
-            }
+                    seenOrderKeys[pg] = true;
+                }
+            });
+            // order 里没有的内置项追加末尾
+            getBuiltinNavList().forEach(function(bn){
+                if (!seenOrderKeys[bn.key]) {
+                    result.push({
+                        builtin: true, key: bn.key, id: bn.key,
+                        label: labels[bn.key] || bn.label, icon: 'builtin-' + bn.key, page: bn.key,
+                        hidden: !!hiddenMap[bn.key], data: bn
+                    });
+                }
+            });
+            // order 里没有的自定义项追加末尾
+            customList.forEach(function(c){
+                var pg = c.type === 'url' ? ('url:' + c.url) : (c.page || '');
+                if (pg && !seenOrderKeys[pg]) {
+                    result.push({
+                        builtin: false, key: pg, id: c.id,
+                        label: c.title, icon: c.icon, page: pg, hidden: false, data: c
+                    });
+                }
+            });
+            return result;
         }
-
+        function renderSettingsNavList() {
+            var box = document.getElementById('settingsUnifiedNavList');
+            if (!box) return;
+            var items = _getUnifiedNavItems();
+            var html = '';
+            items.forEach(function(item, idx) {
+                // 内置 key 已在 _SVG_MAP 里映射到侧边栏同款 SVG，自定义用 item.icon
+                var iconKey = item.builtin ? item.key : (item.icon || 'home');
+                var iconHtml = renderNavIcon(iconKey);
+                var canUp = idx > 0;
+                var canDown = idx < items.length - 1;
+                var editIcon = item.builtin ? '' : ''; // 自定义项目编辑图标暂时用不到
+                html += '<div class="settings-nav-row">' +
+                    // 隐藏开关（仅内置）
+                    (item.builtin ?
+                        '<label class="settings-nav-toggle">' +
+                            '<input type="checkbox" data-hide="' + item.key + '" ' + (item.hidden ? '' : 'checked') + '>' +
+                            '<span class="toggle-slider"></span>' +
+                        '</label>' :
+                        '<span style="display:inline-block;width:34px;flex-shrink:0;"></span>'
+                    ) +
+                    iconHtml +
+                    '<input type="text" class="settings-nav-label-input" data-page="' + item.page + '" value="' + String(item.label).replace(/"/g,'&quot;') + '" placeholder="' + (item.builtin ? (item.data && item.data.label ? item.data.label : '') : '项目名称') + '" maxlength="12">' +
+                    // 内置 tag
+                    (item.builtin ? '<span class="settings-nav-badge builtin">内置</span>' : '<span class="settings-nav-badge custom">自定义</span>') +
+                    '<button class="settings-nav-move" data-move-page="' + item.page + '" data-move-dir="up" title="上移" ' + (canUp ? '' : 'disabled') + '>▲</button>' +
+                    '<button class="settings-nav-move" data-move-page="' + item.page + '" data-move-dir="down" title="下移" ' + (canDown ? '' : 'disabled') + '>▼</button>' +
+                    (item.builtin ? '' : '<button class="settings-nav-del" data-del-cust="' + item.id + '">删除</button>') +
+                '</div>';
+            });
+            box.innerHTML = html || '<div class="settings-empty-hint">暂无项目</div>';
+            // 绑定隐藏开关（内置 only）
+            box.querySelectorAll('input[type=checkbox][data-hide]').forEach(function(cb) {
+                cb.addEventListener('change', function() {
+                    toggleBuiltinNav(cb.getAttribute('data-hide'), cb.checked);
+                });
+            });
+            // 绑定改名
+            box.querySelectorAll('.settings-nav-label-input').forEach(function(inp) {
+                var pg = inp.getAttribute('data-page');
+                var saveFn = function() {
+                    var u = _getUnifiedNavItems();
+                    var found = null;
+                    for (var i = 0; i < u.length; i++) { if (u[i].page === pg) { found = u[i]; break; } }
+                    if (!found) return;
+                    if (found.builtin) {
+                        saveBuiltinNavLabel(found.key, inp.value);
+                    } else {
+                        renameCustomNavItem(found.id, inp.value);
+                    }
+                };
+                inp.addEventListener('blur', saveFn);
+                inp.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') { inp.blur(); saveFn(); }
+                });
+            });
+            // 绑定排序（统一 move）
+            box.querySelectorAll('.settings-nav-move').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var pg = btn.getAttribute('data-move-page');
+                    var d = btn.getAttribute('data-move-dir');
+                    moveUnifiedNavOrder(pg, d === 'up' ? -1 : 1);
+                });
+            });
+            // 绑定删除（仅自定义）
+            box.querySelectorAll('.settings-nav-del').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    deleteCustomNavItem(btn.getAttribute('data-del-cust'));
+                });
+            });
+        }
+        // 统一移动：内置 key 和自定义 url/page 都在 navOrder 里
+        function moveUnifiedNavOrder(pageKey, delta) {
+            try {
+                var order = [];
+                var raw = localStorage.getItem(STORAGE_KEY_NAV_ORDER);
+                if (raw) { var p = JSON.parse(raw); if (Array.isArray(p)) order = p; }
+                // 先去重（防止脏 order 重复 key）
+                var _seen = {};
+                order = order.filter(function(x){ if (!x || _seen[x]) return false; _seen[x]=true; return true; });
+                // 确保所有侧边栏项目都在 order 里（补漏）
+                var allPages = ['home','account','kanban','workflow','materials','calendar','news','study'];
+                getCustomNav().forEach(function(c){
+                    var pg = c.type === 'url' ? ('url:' + c.url) : (c.page || '');
+                    if (pg) allPages.push(pg);
+                });
+                allPages.forEach(function(pg){ if (order.indexOf(pg) < 0) order.push(pg); });
+                var idx = order.indexOf(pageKey);
+                if (idx < 0) { console.warn('[moveUnifiedNavOrder] pageKey 不在 order 里:', pageKey); return; }
+                var newIdx = idx + delta;
+                if (newIdx < 0 || newIdx >= order.length) return;
+                order.splice(idx, 1);
+                order.splice(newIdx, 0, pageKey);
+                localStorage.setItem(STORAGE_KEY_NAV_ORDER, JSON.stringify(order));
+                applyNavOrder();
+                renderSettingsNavList();
+                if (typeof pushToCloud === 'function' && syncEnabled) pushToCloud().catch(function(){});
+            } catch(e) { console.warn('[moveUnifiedNavOrder] 失败:', e); }
+        }
+        function renameCustomNavItem(id, newTitle) {
+            var list = getCustomNav();
+            var trimmed = String(newTitle || '').trim();
+            for (var i = 0; i < list.length; i++) {
+                if (String(list[i].id) === String(id)) {
+                    if (!trimmed) return;
+                    list[i].title = trimmed;
+                    break;
+                }
+            }
+            saveCustomNav(list);
+            renderCustomNav();
+        }
         function toggleBuiltinNav(pageKey, visible) {
             var hidden = (profile.hiddenNav || []).slice();
             if (!visible) {
@@ -16047,6 +16138,22 @@ CREATE POLICY "allow_all" ON workbench_sync
             saveData(STORAGE_KEY_PROFILE, profile);
             applyHiddenNav();
             if (typeof pushToCloud === 'function' && syncEnabled) pushToCloud().catch(function(){});
+        }
+        function saveBuiltinNavLabel(key, newLabel) {
+            try {
+                var trimmed = String(newLabel || '').trim();
+                var defaults = NAV_DEFAULT_LABELS || {};
+                var labels = getNavLabels();
+                if (!trimmed || trimmed === (defaults[key] || '')) {
+                    // 清空或恢复默认 → 删除自定义覆盖
+                    delete labels[key];
+                } else {
+                    labels[key] = trimmed;
+                }
+                localStorage.setItem(STORAGE_KEY_NAV_LABELS, JSON.stringify(labels));
+                renderNavLabels();
+                if (typeof pushToCloud === 'function' && syncEnabled) pushToCloud().catch(function(){});
+            } catch(e) { console.warn('[saveBuiltinNavLabel] 失败:', e); }
         }
         function addCustomNavItem() {
             var title = document.getElementById('settingsCustomNavTitle').value.trim();
@@ -17120,12 +17227,11 @@ CREATE POLICY "allow_all" ON workbench_sync
                 <!-- Tab 3: 导航管理 -->
                 <div class="settings-tab-panel" data-panel="nav">
                     <div class="settings-nav-section">
-                        <h4 class="settings-sub-title">内置项目</h4>
-                        <div class="settings-nav-list" id="settingsBuiltinNavList"></div>
+                        <h4 class="settings-sub-title">所有项目（改名、排序、隐藏）</h4>
+                        <div class="settings-nav-list" id="settingsUnifiedNavList"></div>
                     </div>
                     <div class="settings-nav-section">
-                        <h4 class="settings-sub-title">自定义项目</h4>
-                        <div class="settings-nav-list" id="settingsCustomNavList"></div>
+                        <h4 class="settings-sub-title">添加项目</h4>
                         <div class="settings-custom-nav-add">
                             <input type="text" id="settingsCustomNavTitle" class="form-input" placeholder="项目名称" maxlength="12">
                             <div class="custom-nav-icon-wrap" id="customNavIconWrap">
