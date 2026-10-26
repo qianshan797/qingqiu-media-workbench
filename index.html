@@ -15816,6 +15816,15 @@ CREATE POLICY "allow_all" ON workbench_sync
                 const raw = localStorage.getItem('media_workbench_custom_nav');
                 let arr = raw ? JSON.parse(raw) : [];
                 if (!Array.isArray(arr)) arr = [];
+                // 过滤测试数据（自动清除脏注入）
+                var _testTitles = {'空icon':1,'空icon字段':1,'未定义':1,'是个对象':1,'垃圾值':1,'正确':1,'正确home':1,'数字icon':1};
+                arr = arr.filter(function(item) {
+                    if (!item || typeof item !== 'object') return false;
+                    if (item.__test__) return false;
+                    var t = item.title || item.name || '';
+                    if (_testTitles[t]) return false;
+                    return true;
+                });
                 // v41 兼容：旧 emoji 值迁移到 SVG icon key
                 var migrated = false;
                 arr.forEach(function(item) {
@@ -15827,7 +15836,12 @@ CREATE POLICY "allow_all" ON workbench_sync
                         if (oldMap[item.icon]) { item.icon = oldMap[item.icon]; migrated = true; }
                     }
                 });
-                if (migrated) { localStorage.setItem('media_workbench_custom_nav', JSON.stringify(arr)); }
+                // 任何改动（过滤或迁移）都回写 localStorage + 云端，自动清除测试残留
+                var needSave = migrated || (raw && JSON.stringify(JSON.parse(raw)).length !== JSON.stringify(arr).length);
+                if (needSave) {
+                    localStorage.setItem('media_workbench_custom_nav', JSON.stringify(arr));
+                    if (typeof pushToCloud === 'function' && syncEnabled) pushToCloud().catch(function(){});
+                }
                 return arr;
             } catch(e) { return []; }
         }
