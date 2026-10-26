@@ -1081,17 +1081,6 @@ window.__newsFetchPromise = (function() {
         .health-metric-target.ok { color: #34C759; }
         .health-metric-target.warn { color: #FF9500; }
         .health-metric-target.bad { color: #FF3B30; }
-        .health-mood-row { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
-        .health-mood-label { font-size: 13px; color: var(--text-muted, #888); }
-        .health-mood-dots { display: flex; gap: 6px; }
-        .health-mood-dot { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--border); background: var(--bg-card); cursor: pointer; font-size: 16px; line-height: 28px; text-align: center; transition: all .15s; }
-        .health-mood-dot.active { border-color: #007AFF; background: rgba(0,122,255,.08); transform: scale(1.08); }
-        .health-checkins { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 14px; }
-        @media (max-width: 640px) { .health-checkins { grid-template-columns: repeat(3, 1fr); } }
-        .health-checkin-btn { background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 10px; padding: 10px 6px; font-size: 13px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: all .15s; color: var(--text); }
-        .health-checkin-btn .emoji { font-size: 22px; line-height: 1; }
-        .health-checkin-btn:hover { border-color: #007AFF; }
-        .health-checkin-btn.active { background: rgba(52,199,89,.1); border-color: #34C759; }
         .health-charts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
         @media (max-width: 640px) { .health-charts { grid-template-columns: 1fr; } }
         .health-chart-group { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
@@ -1114,7 +1103,6 @@ window.__newsFetchPromise = (function() {
         @media (max-width: 640px) {
             .health-streak-tag { margin-left: 0; margin-top: 6px; }
             .health-section-title { gap: 6px; }
-            .health-mood-row { flex-wrap: wrap; gap: 8px; }
             .health-manual-input { gap: 6px; }
             .health-manual-input select, .health-manual-input input, .health-manual-input button { flex: 1 1 auto; min-width: 80px; }
         }
@@ -8194,17 +8182,6 @@ window.__newsFetchPromise = (function() {
                             今日状态
                         </div>
                         <div class="health-metrics" id="healthMetrics"></div>
-                        <div class="health-mood-row">
-                            <span class="health-mood-label">情绪能量：</span>
-                            <div class="health-mood-dots" id="healthMoodDots"
-                                 onclick="var t=event.target;if(t.classList.contains('health-mood-dot'))setHealthMood(parseInt(t.dataset.v,10));">
-                                <div class="health-mood-dot" data-v="1">😫</div>
-                                <div class="health-mood-dot" data-v="2">😐</div>
-                                <div class="health-mood-dot" data-v="3">🙂</div>
-                                <div class="health-mood-dot" data-v="4">😊</div>
-                                <div class="health-mood-dot" data-v="5">🔥</div>
-                            </div>
-                        </div>
                         <div class="health-manual-input">
                             <select id="healthMetricKey" title="手动更新今日指标">
                                 <option value="sleepHours">睡眠时长 (h)</option>
@@ -8215,13 +8192,6 @@ window.__newsFetchPromise = (function() {
                             <input type="number" id="healthMetricValue" step="0.1" placeholder="数值" style="width:90px;">
                             <button onclick="addHealthMetric()">记录今日</button>
                         </div>
-                    </div>
-                    <div class="page-content-card">
-                        <div class="section-title health-section-title">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
-                            每日快速打卡
-                        </div>
-                        <div class="health-checkins" id="healthCheckins"></div>
                     </div>
                     <div class="page-content-card">
                         <div class="section-title health-section-title">
@@ -13475,8 +13445,7 @@ CREATE POLICY "allow_all" ON workbench_sync
         }
         function _healthDefaults() {
             return {
-                daily: { date: _todayStr(), sleepHours: 0, focusHours: 0, standSteps: 0, screenHours: 0, mood: 0,
-                    checkins: { water:false, stand:false, stretch:false, restEyes:false, meditate:false } },
+                daily: { date: _todayStr(), sleepHours: 0, focusHours: 0, standSteps: 0, screenHours: 0 },
                 history: [],
                 goals: { sleepHours: 7.5, focusHours: 5, standSteps: 10000, screenHours: 6 }
             };
@@ -13484,13 +13453,12 @@ CREATE POLICY "allow_all" ON workbench_sync
         function _rollHealth(health) {
             if (health.daily.date !== _todayStr()) {
                 var d = health.daily;
-                if (d.sleepHours || d.focusHours || d.standSteps || d.screenHours || d.mood) {
+                if (d.sleepHours || d.focusHours || d.standSteps || d.screenHours) {
                     health.history.push({ date: d.date, sleepHours: d.sleepHours, focusHours: d.focusHours,
-                        standSteps: d.standSteps, screenHours: d.screenHours, mood: d.mood });
+                        standSteps: d.standSteps, screenHours: d.screenHours });
                 }
                 if (health.history.length > 60) health.history = health.history.slice(-60);
-                health.daily = { date: _todayStr(), sleepHours: 0, focusHours: 0, standSteps: 0, screenHours: 0, mood: 0,
-                    checkins: { water:false, stand:false, stretch:false, restEyes:false, meditate:false } };
+                health.daily = { date: _todayStr(), sleepHours: 0, focusHours: 0, standSteps: 0, screenHours: 0 };
             }
             return health;
         }
@@ -13501,7 +13469,6 @@ CREATE POLICY "allow_all" ON workbench_sync
                 if (!h || typeof h !== 'object') h = _healthDefaults();
                 var def = _healthDefaults();
                 h.daily = Object.assign({}, def.daily, h.daily || {});
-                h.daily.checkins = Object.assign({}, def.daily.checkins, (h.daily && h.daily.checkins) || {});
                 h.history = Array.isArray(h.history) ? h.history : [];
                 h.goals = Object.assign({}, def.goals, h.goals || {});
                 h = _rollHealth(h);
@@ -13518,12 +13485,6 @@ CREATE POLICY "allow_all" ON workbench_sync
             var val = parseFloat(document.getElementById('healthMetricValue').value);
             if (!key || isNaN(val)) return;
             var h = getHealth(); h.daily[key] = val; saveHealth(h); renderHealth();
-        }
-        function setHealthMood(v) {
-            var h = getHealth(); h.daily.mood = v; saveHealth(h); renderHealth();
-        }
-        function toggleHealthCheckin(type) {
-            var h = getHealth(); h.daily.checkins[type] = !h.daily.checkins[type]; saveHealth(h); renderHealth();
         }
         function updateHealthGoal(key, value) {
             var v = parseFloat(value); if (isNaN(v) || v <= 0) return;
@@ -13552,34 +13513,16 @@ CREATE POLICY "allow_all" ON workbench_sync
             });
             var box = document.getElementById('healthMetrics');
             if (box) box.innerHTML = mHtml;
-            document.querySelectorAll('#healthMoodDots .health-mood-dot').forEach(function(d){
-                d.classList.toggle('active', parseInt(d.dataset.v,10) === D.mood);
-            });
-            var hasActivity = (D.mood > 0) || Object.values(D.checkins).some(Boolean);
+            var hasActivity = (D.sleepHours || D.focusHours || D.standSteps || D.screenHours);
             var streak = hasActivity ? 1 : 0;
             var sortedDates = h.history.slice().map(function(x){ return x.date; }).sort().reverse();
             for (var i=0;i<sortedDates.length;i++) {
                 var rec = h.history.find(function(x){ return x.date === sortedDates[i]; });
-                if (rec && (rec.sleepHours || rec.focusHours || rec.standSteps || rec.screenHours || rec.mood)) streak++;
+                if (rec && (rec.sleepHours || rec.focusHours || rec.standSteps || rec.screenHours)) streak++;
                 else break;
             }
             var tag = document.getElementById('healthStreakTag');
-            if (tag) tag.textContent = '🔥 已连续打卡 ' + streak + ' 天';
-            var btnCfg = [
-                { key:'water',    emoji:'💧', label:'喝水 8杯' },
-                { key:'stand',    emoji:'🚶', label:'站起来走' },
-                { key:'stretch',  emoji:'🤸', label:'拉伸 1分钟' },
-                { key:'restEyes', emoji:'👁️', label:'闭眼 1分钟' },
-                { key:'meditate', emoji:'🧘', label:'正念 3分钟' }
-            ];
-            var cHtml = '';
-            btnCfg.forEach(function(b){
-                var active = D.checkins[b.key] ? ' active' : '';
-                cHtml += '<button class="health-checkin-btn' + active + '" onclick="toggleHealthCheckin(\'' + b.key + '\')">' +
-                    '<span class="emoji">' + b.emoji + '</span><span>' + b.label + '</span></button>';
-            });
-            var cb = document.getElementById('healthCheckins');
-            if (cb) cb.innerHTML = cHtml;
+            if (tag) tag.textContent = '🔥 已连续记录 ' + streak + ' 天';
             var last7 = [];
             for (var d=6; d>=0; d--) {
                 var dd = new Date(); dd.setDate(dd.getDate()-d);
