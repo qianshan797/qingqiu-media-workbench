@@ -9084,6 +9084,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                 STORAGE_KEY_STUDY_TASKS, // v36 新增：个人学习任务清单纳入云同步
                 STORAGE_KEY_STUDY_CHECKIN, // v36 新增：学习进度打卡纳入云同步
                 STORAGE_KEY_NAV_ORDER, // v37 新增：侧边栏目录排序纳入云同步
+                STORAGE_KEY_HEALTH, // v45 新增：个人健康管理数据纳入云同步，多端记录一致
                 'media_workbench_custom_nav', // v41 新增：自定义导航项目纳入云同步
                 'media_workflow_deleted_seeds', // v30 修复：删除记录也同步，避免新设备/刷新后被删账号被云端或种子补回
                 'media_workflow_deleted_tasks' // v31 修复：任务删除记录也同步，避免刷新后被删任务被重新注入
