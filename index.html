@@ -1038,6 +1038,86 @@ window.__newsFetchPromise = (function() {
             stroke-width: 1.8;
         }
 
+        /* v35 功能：侧边栏目录名称就地编辑 */
+        .nav-edit-btn {
+            margin-left: auto;
+            opacity: 0;
+            font-size: 13px;
+            color: #999;
+            cursor: pointer;
+            padding: 2px 4px;
+            border-radius: 4px;
+            transition: opacity 0.2s;
+            user-select: none;
+        }
+        .nav-item:hover .nav-edit-btn {
+            opacity: 0.7;
+        }
+        .nav-edit-btn:hover {
+            opacity: 1 !important;
+            color: #007AFF;
+            background: rgba(0, 122, 255, 0.1);
+        }
+        .nav-edit-input {
+            width: 90px;
+            font-size: 13px;
+            border: 1px solid #007AFF;
+            border-radius: 5px;
+            padding: 2px 5px;
+            outline: none;
+            background: #fff;
+            color: #1C1C1E;
+        }
+
+/* ========== v43 个人健康管理 ========== */
+        .health-layout { display: flex; flex-direction: column; gap: 16px; }
+        .health-metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 14px; }
+        @media (max-width: 640px) { .health-metrics { grid-template-columns: repeat(2, 1fr); } }
+        .health-metric-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 12px; text-align: center; }
+        .health-metric-icon { font-size: 22px; line-height: 1; margin-bottom: 6px; }
+        .health-metric-label { font-size: 12px; color: var(--text-muted, #888); margin-bottom: 4px; }
+        .health-metric-value { font-size: 22px; font-weight: 600; color: var(--text); }
+        .health-metric-target { font-size: 11px; color: var(--text-muted, #888); margin-top: 2px; }
+        .health-metric-target.ok { color: #34C759; }
+        .health-metric-target.warn { color: #FF9500; }
+        .health-metric-target.bad { color: #FF3B30; }
+        .health-mood-row { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+        .health-mood-label { font-size: 13px; color: var(--text-muted, #888); }
+        .health-mood-dots { display: flex; gap: 6px; }
+        .health-mood-dot { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--border); background: var(--bg-card); cursor: pointer; font-size: 16px; line-height: 28px; text-align: center; transition: all .15s; }
+        .health-mood-dot.active { border-color: #007AFF; background: rgba(0,122,255,.08); transform: scale(1.08); }
+        .health-checkins { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 14px; }
+        @media (max-width: 640px) { .health-checkins { grid-template-columns: repeat(3, 1fr); } }
+        .health-checkin-btn { background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 10px; padding: 10px 6px; font-size: 13px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: all .15s; color: var(--text); }
+        .health-checkin-btn .emoji { font-size: 22px; line-height: 1; }
+        .health-checkin-btn:hover { border-color: #007AFF; }
+        .health-checkin-btn.active { background: rgba(52,199,89,.1); border-color: #34C759; }
+        .health-charts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+        @media (max-width: 640px) { .health-charts { grid-template-columns: 1fr; } }
+        .health-chart-group { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
+        .health-chart-title { font-size: 13px; color: var(--text-muted, #888); margin-bottom: 8px; }
+        .health-chart-bars { display: flex; align-items: flex-end; gap: 6px; height: 70px; }
+        .health-chart-bar { flex: 1; background: linear-gradient(180deg, #007AFF 0%, rgba(0,122,255,.5) 100%); border-radius: 4px 4px 0 0; min-height: 2px; position: relative; transition: height .3s; }
+        .health-chart-bar.today { background: linear-gradient(180deg, #34C759 0%, rgba(52,199,89,.5) 100%); }
+        .health-chart-labels { display: flex; gap: 6px; margin-top: 4px; }
+        .health-chart-labels span { flex: 1; font-size: 10px; color: var(--text-muted, #888); text-align: center; }
+        .health-settings-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        @media (max-width: 640px) { .health-settings-row { grid-template-columns: repeat(2, 1fr); } }
+        .health-goal-field { display: flex; flex-direction: column; gap: 4px; }
+        .health-goal-field label { font-size: 11px; color: var(--text-muted, #888); }
+        .health-goal-field input { width: 100%; padding: 6px 8px; font-size: 13px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-card); color: var(--text); }
+        .health-section-title { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+        .health-streak-tag { margin-left: auto; display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 20px; background: rgba(255,149,0,.1); color: #FF9500; font-size: 12px; font-weight: 500; }
+        .health-manual-input { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 10px; }
+        .health-manual-input select, .health-manual-input input { padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-card); color: var(--text); font-size: 13px; }
+        .health-manual-input button { padding: 6px 14px; border-radius: 6px; font-size: 13px; background: #007AFF; color: #fff; border: none; cursor: pointer; }
+        @media (max-width: 640px) {
+            .health-streak-tag { margin-left: 0; margin-top: 6px; }
+            .health-section-title { gap: 6px; }
+            .health-mood-row { flex-wrap: wrap; gap: 8px; }
+            .health-manual-input { gap: 6px; }
+            .health-manual-input select, .health-manual-input input, .health-manual-input button { flex: 1 1 auto; min-width: 80px; }
+        }
         /* v36 个人学习模块 */
         .study-layout {
             display: flex;
@@ -1392,6 +1472,10 @@ window.__newsFetchPromise = (function() {
             opacity: 0.5;
             transform: scale(0.98);
         }
+        .sidebar-nav.nav-drag-over .nav-item {
+            transition: transform 0.15s ease;
+        }
+
         .nav-badge {
             margin-left: auto;
             background: #007AFF;
@@ -7715,6 +7799,10 @@ window.__newsFetchPromise = (function() {
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
                     <span class="nav-label" id="navLabel_study">个人学习</span>
                 </button>
+                <button class="nav-item" data-page="health" onclick="switchPage('health', this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                    <span class="nav-label" id="navLabel_health">个人健康管理</span>
+                </button>
             </nav>
             <div class="sidebar-footer">
                 <div class="sync-row">
@@ -8085,6 +8173,69 @@ window.__newsFetchPromise = (function() {
                             <h3>选择日期查看任务完成情况</h3>
                         </div>
                         <div class="calendar-detail-content" id="calendarDetailContent"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<!-- v43 个人健康管理 -->
+            <div class="page-section" id="page-health">
+                <div class="page-header" style="display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+                    <div>
+                        <h1>个人健康管理</h1>
+                        <div class="subtitle">媒体从业者的身体续航 · 每日打卡 + 长期追踪</div>
+                    </div>
+                    <div class="health-streak-tag" id="healthStreakTag">🔥 已连续打卡 0 天</div>
+                </div>
+                <div class="health-layout">
+                    <div class="page-content-card">
+                        <div class="section-title health-section-title">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                            今日状态
+                        </div>
+                        <div class="health-metrics" id="healthMetrics"></div>
+                        <div class="health-mood-row">
+                            <span class="health-mood-label">情绪能量：</span>
+                            <div class="health-mood-dots" id="healthMoodDots"
+                                 onclick="var t=event.target;if(t.classList.contains('health-mood-dot'))setHealthMood(parseInt(t.dataset.v,10));">
+                                <div class="health-mood-dot" data-v="1">😫</div>
+                                <div class="health-mood-dot" data-v="2">😐</div>
+                                <div class="health-mood-dot" data-v="3">🙂</div>
+                                <div class="health-mood-dot" data-v="4">😊</div>
+                                <div class="health-mood-dot" data-v="5">🔥</div>
+                            </div>
+                        </div>
+                        <div class="health-manual-input">
+                            <select id="healthMetricKey" title="手动更新今日指标">
+                                <option value="sleepHours">睡眠时长 (h)</option>
+                                <option value="focusHours">专注时长 (h)</option>
+                                <option value="standSteps">步数 (步)</option>
+                                <option value="screenHours">屏幕时长 (h)</option>
+                            </select>
+                            <input type="number" id="healthMetricValue" step="0.1" placeholder="数值" style="width:90px;">
+                            <button onclick="addHealthMetric()">记录今日</button>
+                        </div>
+                    </div>
+                    <div class="page-content-card">
+                        <div class="section-title health-section-title">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                            每日快速打卡
+                        </div>
+                        <div class="health-checkins" id="healthCheckins"></div>
+                    </div>
+                    <div class="page-content-card">
+                        <div class="section-title health-section-title">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                            近 7 天走势
+                        </div>
+                        <div class="health-charts" id="healthCharts"></div>
+                    </div>
+                    <div class="page-content-card">
+                        <div class="section-title health-section-title">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                            目标参数
+                        </div>
+                        <div class="health-settings-row" id="healthGoalsEdit"></div>
                     </div>
                 </div>
             </div>
@@ -8899,6 +9050,8 @@ CREATE POLICY "allow_all" ON workbench_sync
         const STORAGE_KEY_NAV_LABELS = 'media_workflow_nav_labels';
         // v37 新增：侧边栏目录排序（可拖动排序，同步到云端）
         const STORAGE_KEY_NAV_ORDER = 'media_workflow_nav_order';
+        // v43 新增：个人健康管理数据
+        const STORAGE_KEY_HEALTH = 'media_workflow_health';
         const NAV_DEFAULT_LABELS = {
             home: '主页',
             account: '账号管理',
@@ -8907,7 +9060,8 @@ CREATE POLICY "allow_all" ON workbench_sync
             materials: '素材筛选池',
             calendar: '工作日历',
             news: '每日快讯',
-            study: '个人学习'
+            study: '个人学习',
+            health: '个人健康管理'
         };
         const CURRENT_SCHEMA_VERSION = 18;
 
@@ -12740,6 +12894,44 @@ CREATE POLICY "allow_all" ON workbench_sync
         }
 
         // 点击 ✎ 启动就地编辑
+        function startNavEdit(navKey) {
+            const el = document.getElementById('navLabel_' + navKey);
+            if (!el || el.querySelector('input')) return;
+            const current = el.textContent;
+            let cancelled = false;
+            el.innerHTML = '<input type="text" class="nav-edit-input" value="' + String(current).replace(/"/g, '&quot;').replace(/</g, '&lt;') + '" maxlength="10">';
+            const input = el.querySelector('input');
+            input.focus();
+            input.select();
+
+            const finish = function() {
+                if (el.querySelector('input')) {
+                    const labels = getNavLabels();
+                    if (!cancelled) {
+                        const val = input.value.trim() || current;
+                        labels[navKey] = val;
+                        saveNavLabels(labels);
+                    } else {
+                        renderNavLabels();
+                    }
+                } else {
+                    renderNavLabels();
+                }
+            };
+
+            ['click', 'mousedown', 'pointerdown', 'touchstart'].forEach(function(evt) {
+                input.addEventListener(evt, function(e) { e.stopPropagation(); });
+            });
+
+            input.addEventListener('keydown', function(e) {
+                e.stopPropagation();
+                if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+                if (e.key === 'Escape') { e.preventDefault(); cancelled = true; input.blur(); }
+            });
+            input.addEventListener('blur', finish);
+            input.addEventListener('click', function(e) { e.stopPropagation(); });
+        }
+
         // ===== v37 侧边栏目录拖动排序 =====
         function getNavOrder() {
             try {
@@ -12747,7 +12939,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                 let arr = raw ? JSON.parse(raw) : null;
                 if (!Array.isArray(arr)) arr = [];
                 // 去重 + 补漏（确保 8 个内置和所有自定义都在 order 里）
-                var BUILTIN = ['home','account','kanban','workflow','materials','calendar','news','study'];
+                var BUILTIN = ['home','account','kanban','workflow','materials','calendar','news','study','health'];
                 var seen = {};
                 var clean = [];
                 arr.forEach(function(pg){
@@ -13276,7 +13468,168 @@ CREATE POLICY "allow_all" ON workbench_sync
             wrap.innerHTML = html;
         }
 
+// ============ v43 个人健康管理 ============
+        function _todayStr() {
+            var d = new Date();
+            return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+        }
+        function _healthDefaults() {
+            return {
+                daily: { date: _todayStr(), sleepHours: 0, focusHours: 0, standSteps: 0, screenHours: 0, mood: 0,
+                    checkins: { water:false, stand:false, stretch:false, restEyes:false, meditate:false } },
+                history: [],
+                goals: { sleepHours: 7.5, focusHours: 5, standSteps: 10000, screenHours: 6 }
+            };
+        }
+        function _rollHealth(health) {
+            if (health.daily.date !== _todayStr()) {
+                var d = health.daily;
+                if (d.sleepHours || d.focusHours || d.standSteps || d.screenHours || d.mood) {
+                    health.history.push({ date: d.date, sleepHours: d.sleepHours, focusHours: d.focusHours,
+                        standSteps: d.standSteps, screenHours: d.screenHours, mood: d.mood });
+                }
+                if (health.history.length > 60) health.history = health.history.slice(-60);
+                health.daily = { date: _todayStr(), sleepHours: 0, focusHours: 0, standSteps: 0, screenHours: 0, mood: 0,
+                    checkins: { water:false, stand:false, stretch:false, restEyes:false, meditate:false } };
+            }
+            return health;
+        }
+        function getHealth() {
+            try {
+                var raw = localStorage.getItem(STORAGE_KEY_HEALTH);
+                var h = raw ? JSON.parse(raw) : null;
+                if (!h || typeof h !== 'object') h = _healthDefaults();
+                var def = _healthDefaults();
+                h.daily = Object.assign({}, def.daily, h.daily || {});
+                h.daily.checkins = Object.assign({}, def.daily.checkins, (h.daily && h.daily.checkins) || {});
+                h.history = Array.isArray(h.history) ? h.history : [];
+                h.goals = Object.assign({}, def.goals, h.goals || {});
+                h = _rollHealth(h);
+                localStorage.setItem(STORAGE_KEY_HEALTH, JSON.stringify(h));
+                return h;
+            } catch(e) { return _healthDefaults(); }
+        }
+        function saveHealth(health) {
+            try { localStorage.setItem(STORAGE_KEY_HEALTH, JSON.stringify(health)); } catch(e) {}
+            if (typeof pushToCloud === 'function' && syncEnabled) { pushToCloud().catch(function(){}); }
+        }
+        function addHealthMetric() {
+            var key = document.getElementById('healthMetricKey').value;
+            var val = parseFloat(document.getElementById('healthMetricValue').value);
+            if (!key || isNaN(val)) return;
+            var h = getHealth(); h.daily[key] = val; saveHealth(h); renderHealth();
+        }
+        function setHealthMood(v) {
+            var h = getHealth(); h.daily.mood = v; saveHealth(h); renderHealth();
+        }
+        function toggleHealthCheckin(type) {
+            var h = getHealth(); h.daily.checkins[type] = !h.daily.checkins[type]; saveHealth(h); renderHealth();
+        }
+        function updateHealthGoal(key, value) {
+            var v = parseFloat(value); if (isNaN(v) || v <= 0) return;
+            var h = getHealth(); h.goals[key] = v; saveHealth(h); renderHealth();
+        }
+        function renderHealth() {
+            var h = getHealth();
+            var D = h.daily, G = h.goals;
+            var metricCfg = [
+                { key:'sleepHours', icon:'🌙', label:'睡眠', unit:'h', goal:G.sleepHours, max:12 },
+                { key:'focusHours', icon:'🎯', label:'专注', unit:'h', goal:G.focusHours, max:10 },
+                { key:'standSteps', icon:'🚶', label:'步数', unit:'', goal:G.standSteps, max:15000 },
+                { key:'screenHours', icon:'📱', label:'屏幕', unit:'h', goal:G.screenHours, max:12, invert:true }
+            ];
+            var mHtml = '';
+            metricCfg.forEach(function(m){
+                var v = D[m.key] || 0;
+                var ratio = m.goal ? v / m.goal : 1;
+                var cls = 'ok';
+                if (m.invert) { cls = ratio <= 1 ? 'ok' : (ratio <= 1.3 ? 'warn' : 'bad'); }
+                else          { cls = ratio >= 1 ? 'ok' : (ratio >= 0.6 ? 'warn' : 'bad'); }
+                var display = m.key === 'standSteps' ? Math.round(v).toLocaleString() + m.unit : v + m.unit;
+                mHtml += '<div class="health-metric-card"><div class="health-metric-icon">' + m.icon + '</div>' +
+                    '<div class="health-metric-label">' + m.label + '</div><div class="health-metric-value">' + display + '</div>' +
+                    '<div class="health-metric-target ' + cls + '">目标 ' + m.goal + (m.unit || '步') + '</div></div>';
+            });
+            var box = document.getElementById('healthMetrics');
+            if (box) box.innerHTML = mHtml;
+            document.querySelectorAll('#healthMoodDots .health-mood-dot').forEach(function(d){
+                d.classList.toggle('active', parseInt(d.dataset.v,10) === D.mood);
+            });
+            var hasActivity = (D.mood > 0) || Object.values(D.checkins).some(Boolean);
+            var streak = hasActivity ? 1 : 0;
+            var sortedDates = h.history.slice().map(function(x){ return x.date; }).sort().reverse();
+            for (var i=0;i<sortedDates.length;i++) {
+                var rec = h.history.find(function(x){ return x.date === sortedDates[i]; });
+                if (rec && (rec.sleepHours || rec.focusHours || rec.standSteps || rec.screenHours || rec.mood)) streak++;
+                else break;
+            }
+            var tag = document.getElementById('healthStreakTag');
+            if (tag) tag.textContent = '🔥 已连续打卡 ' + streak + ' 天';
+            var btnCfg = [
+                { key:'water',    emoji:'💧', label:'喝水 8杯' },
+                { key:'stand',    emoji:'🚶', label:'站起来走' },
+                { key:'stretch',  emoji:'🤸', label:'拉伸 1分钟' },
+                { key:'restEyes', emoji:'👁️', label:'闭眼 1分钟' },
+                { key:'meditate', emoji:'🧘', label:'正念 3分钟' }
+            ];
+            var cHtml = '';
+            btnCfg.forEach(function(b){
+                var active = D.checkins[b.key] ? ' active' : '';
+                cHtml += '<button class="health-checkin-btn' + active + '" onclick="toggleHealthCheckin(\'' + b.key + '\')">' +
+                    '<span class="emoji">' + b.emoji + '</span><span>' + b.label + '</span></button>';
+            });
+            var cb = document.getElementById('healthCheckins');
+            if (cb) cb.innerHTML = cHtml;
+            var last7 = [];
+            for (var d=6; d>=0; d--) {
+                var dd = new Date(); dd.setDate(dd.getDate()-d);
+                var ds = dd.getFullYear() + '-' + String(dd.getMonth()+1).padStart(2,'0') + '-' + String(dd.getDate()).padStart(2,'0');
+                var found7 = (ds === _todayStr()) ? D : h.history.find(function(x){ return x.date === ds; });
+                last7.push({ date: ds, rec: found7 });
+            }
+            var charts = [
+                { key:'sleepHours',  label:'睡眠 (h)',  max: 12, unit:'h' },
+                { key:'focusHours',  label:'专注 (h)',  max: 10, unit:'h' },
+                { key:'standSteps',  label:'步数',      max: 15000, unit:'' },
+                { key:'screenHours', label:'屏幕 (h)',  max: 10, unit:'h' }
+            ];
+            var chHtml = '';
+            charts.forEach(function(ch){
+                var bars = '';
+                last7.forEach(function(item, idx){
+                    var v = (item.rec && item.rec[ch.key]) || 0;
+                    var pct = Math.min(100, (v / ch.max) * 100);
+                    var todayCls = (idx === 6) ? ' today' : '';
+                    bars += '<div class="health-chart-bar' + todayCls + '" style="height:' + pct + '%" title="' + v + ch.unit + '"></div>';
+                });
+                var lbls = '';
+                last7.forEach(function(item, idx){
+                    var mm = item.date.slice(5);
+                    if (idx < 6 && item.rec) mm = mm.slice(-2);
+                    lbls += '<span>' + mm + '</span>';
+                });
+                chHtml += '<div class="health-chart-group"><div class="health-chart-title">' + ch.label + '</div>' +
+                    '<div class="health-chart-bars">' + bars + '</div><div class="health-chart-labels">' + lbls + '</div></div>';
+            });
+            var cc = document.getElementById('healthCharts');
+            if (cc) cc.innerHTML = chHtml;
+            var gFields = [
+                { key:'sleepHours',  label:'睡眠目标 (h)' },
+                { key:'focusHours',  label:'专注目标 (h)' },
+                { key:'standSteps',  label:'步数目标 (步)' },
+                { key:'screenHours', label:'屏幕上限 (h)' }
+            ];
+            var gHtml = '';
+            gFields.forEach(function(f){
+                gHtml += '<div class="health-goal-field"><label>' + f.label + '</label>' +
+                    '<input type="number" step="0.1" value="' + (G[f.key]||'') + '" onchange="updateHealthGoal(\'' + f.key + '\', this.value)"></div>';
+            });
+            var gb = document.getElementById('healthGoalsEdit');
+            if (gb) gb.innerHTML = gHtml;
+        }
         function switchPage(pageName, navEl) {
+            // v43: page 归一化（迁移旧的 c_home → health）
+            if (pageName === 'c_home') pageName = 'health';
             // v41: 自定义 nav 如果是外部 URL，直接跳转
             if (typeof pageName === 'string' && pageName.startsWith('url:')) {
                 const url = pageName.slice(4);
@@ -13293,10 +13646,10 @@ CREATE POLICY "allow_all" ON workbench_sync
             });
             targetPage.classList.add('active');
 
-            // 主页/个人学习不显示全局搜索栏
+            // 主页/个人学习/个人健康管理不显示全局搜索栏
             const searchContainer = document.querySelector('.global-search-container');
             if (searchContainer) {
-                searchContainer.style.display = (pageName === 'home' || pageName === 'study') ? 'none' : '';
+                searchContainer.style.display = (pageName === 'home' || pageName === 'study' || pageName === 'health') ? 'none' : '';
             }
 
             document.querySelectorAll('.nav-item').forEach(item => {
@@ -13318,7 +13671,8 @@ CREATE POLICY "allow_all" ON workbench_sync
                 'materials': navLabels.materials,
                 'calendar': navLabels.calendar,
                 'news': navLabels.news,
-                'study': navLabels.study
+                'study': navLabels.study,
+                'health': navLabels.health
             };
             const titleEl = document.getElementById('mobileHeaderTitle');
             if (titleEl && titleMap[pageName]) {
@@ -13346,6 +13700,8 @@ CREATE POLICY "allow_all" ON workbench_sync
             } else if (pageName === 'study') {
                 renderStudyTasks();
                 renderStudyCheckin();
+            } else if (pageName === 'health') {
+                renderHealth();
             }
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -15661,6 +16017,7 @@ CREATE POLICY "allow_all" ON workbench_sync
             'materials': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>',
             'news': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>',
             'study': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>',
+            'health': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
         }; }
         // 统一渲染导航图标
         // - SVG icon key (home/folder...) → <svg> 图标
@@ -15781,7 +16138,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                 });
                 // v41 兼容：旧 emoji 值迁移到 SVG icon key
                 var migrated = false;
-                var _BUILTIN_KEYS = {'home':1,'account':1,'kanban':1,'workflow':1,'materials':1,'calendar':1,'news':1,'study':1};
+                var _BUILTIN_KEYS = {'home':1,'account':1,'kanban':1,'workflow':1,'materials':1,'calendar':1,'news':1,'study':1,'health':1};
                 arr.forEach(function(item) {
                     if (item && item.icon) {
                         var oldMap = { '📍':'home','🏠':'home','📋':'file','🎯':'target','📅':'calendar',
@@ -15796,6 +16153,13 @@ CREATE POLICY "allow_all" ON workbench_sync
                         migrated = true;
                     }
                 });
+                // v43 修复：个人健康管理已升级为内置页面，移除旧的自定义 health/c_home 项，避免导航重复
+                var beforeHealthFilter = arr.length;
+                arr = arr.filter(function(item) {
+                    if (!item || item.type === 'url') return true;
+                    return item.page !== 'health' && item.page !== 'c_home' && item.page !== 'c_health';
+                });
+                if (arr.length !== beforeHealthFilter) migrated = true;
                 // 任何改动（过滤或迁移）都回写 localStorage + 云端，自动清除测试残留
                 var needSave = migrated || (raw && JSON.stringify(JSON.parse(raw)).length !== JSON.stringify(arr).length);
                 if (needSave) {
@@ -15814,7 +16178,7 @@ CREATE POLICY "allow_all" ON workbench_sync
         function getBuiltinNavList() {
             // 返回硬编码 nav 的元信息，用于设置界面列表
             var labels = getNavLabels();
-            var pages = ['home','account','kanban','workflow','materials','calendar','news','study'];
+            var pages = ['home','account','kanban','workflow','materials','calendar','news','study','health'];
             return pages.map(function(pg) {
                 return { key: pg, label: labels[pg] || pg, builtin: true };
             });
@@ -16096,7 +16460,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                 var _seen = {};
                 order = order.filter(function(x){ if (!x || _seen[x]) return false; _seen[x]=true; return true; });
                 // 确保所有侧边栏项目都在 order 里（补漏）
-                var allPages = ['home','account','kanban','workflow','materials','calendar','news','study'];
+                var allPages = ['home','account','kanban','workflow','materials','calendar','news','study','health'];
                 getCustomNav().forEach(function(c){
                     var pg = c.type === 'url' ? ('url:' + c.url) : (c.page || '');
                     if (pg) allPages.push(pg);
