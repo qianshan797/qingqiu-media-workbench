@@ -9824,23 +9824,9 @@ CREATE POLICY "allow_all" ON workbench_sync
             updateDashboardStats();
             updateTagFilterSelect();
             updateKanbanBadge();
-            const profile = getStoredData(STORAGE_KEY_PROFILE, { name: '运营者', avatar: '👤' });
-            const avatarEl = document.getElementById('profileAvatar');
-            const nameEl = document.getElementById('profileName');
-            if (avatarEl && profile.avatar) {
-                const av = String(profile.avatar);
-                if (av.startsWith('data:image/')) {
-                    avatarEl.innerHTML = `<img src="${av}" alt="头像">`;
-                } else if (av.startsWith('http://') || av.startsWith('https://')) {
-                    avatarEl.innerHTML = `<img src="${av}" alt="头像" referrerpolicy="no-referrer" onerror="this.parentElement.textContent='👤'">`;
-                } else if (av.length > 40 && /^[A-Za-z0-9+/=]+$/.test(av.slice(0, 20))) {
-                    // 看起来像被截断的 Base64，尝试自动补前缀
-                    avatarEl.innerHTML = `<img src="data:image/png;base64,${av}" alt="头像" onerror="this.parentElement.textContent='👤'">`;
-                } else {
-                    avatarEl.textContent = av || '👤';
-                }
-            }
-            if (nameEl && profile.name) nameEl.textContent = profile.name;
+            // v41 fix: 云同步后用 renderProfile 一次性更新所有（头像/昵称/logo标题/custom nav/hiddenNav）
+            profile = getStoredData(STORAGE_KEY_PROFILE, { name: '运营者', avatar: '👤' });
+            renderProfile();
         }
 
         // 自动同步（防抖 3 秒）
