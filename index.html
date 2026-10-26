@@ -774,6 +774,146 @@ window.__newsFetchPromise = (function() {
             color: #8E8E93;
         }
 
+        /* v41 设置按钮 + 工作台设置 */
+        .sidebar-logo {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 18px 20px 12px;
+        }
+        .sidebar-logo-inner { flex: 1; min-width: 0; }
+        .sidebar-logo h2 { margin-bottom: 2px; }
+        .sidebar-settings-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 8px;
+            color: #8E8E93;
+            opacity: 0.6;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        .sidebar-settings-btn:hover { opacity: 1; color: #007AFF; background: rgba(0,122,255,0.08); }
+        .sidebar-settings-btn svg { width: 18px; height: 18px; }
+        body.dark-mode .sidebar-settings-btn { color: rgba(235,235,245,0.5); }
+        body.dark-mode .sidebar-settings-btn:hover { color: #0A84FF; background: rgba(10,132,255,0.15); }
+
+        .nav-emoji { font-size: 18px; line-height: 1; margin-right: 4px; display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; flex-shrink: 0; }
+        .nav-emoji img { width: 22px; height: 22px; border-radius: 5px; object-fit: cover; }
+
+        /* Settings Modal */
+        .settings-modal-body { padding-top: 12px; }
+        .settings-tabs {
+            display: flex; gap: 0; margin-bottom: 18px;
+            border-bottom: 1px solid #E5E5EA;
+        }
+        .settings-tab {
+            background: transparent; border: none; cursor: pointer;
+            padding: 10px 16px; font-size: 14px; font-weight: 500;
+            color: #8E8E93; border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        .settings-tab.active { color: #007AFF; border-bottom-color: #007AFF; }
+        body.dark-mode .settings-tabs { border-bottom-color: #3A3A3C; }
+        body.dark-mode .settings-tab { color: rgba(235,235,245,0.5); }
+        body.dark-mode .settings-tab.active { color: #0A84FF; border-bottom-color: #0A84FF; }
+
+        .settings-tab-panel { display: none; }
+        .settings-tab-panel.active { display: block; }
+
+        .settings-sub-title {
+            font-size: 13px; font-weight: 600; color: #1C1C1E;
+            margin: 8px 0 10px;
+        }
+        body.dark-mode .settings-sub-title { color: #F2F2F7; }
+
+        .settings-nav-section { margin-bottom: 16px; }
+        .settings-nav-list { display: flex; flex-direction: column; gap: 6px; }
+
+        .settings-nav-row {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 12px; border-radius: 8px;
+            background: #F9F9FB; font-size: 13px;
+        }
+        body.dark-mode .settings-nav-row { background: #1C1C1E; }
+
+        .settings-nav-title { flex: 1; font-weight: 500; color: #1C1C1E; }
+        body.dark-mode .settings-nav-title { color: #F2F2F7; }
+        .settings-nav-key.muted { font-size: 11px; color: #8E8E93; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+        .settings-nav-toggle { position: relative; width: 34px; height: 20px; flex-shrink: 0; display: inline-block; }
+        .settings-nav-toggle input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider {
+            position: absolute; inset: 0; background: #E5E5EA;
+            border-radius: 10px; cursor: pointer; transition: all 0.2s;
+        }
+        .toggle-slider::before {
+            content: ''; position: absolute; left: 3px; top: 3px;
+            width: 14px; height: 14px; background: #fff; border-radius: 50%;
+            transition: all 0.2s;
+        }
+        .settings-nav-toggle input:checked + .toggle-slider { background: #007AFF; }
+        .settings-nav-toggle input:checked + .toggle-slider::before { left: 17px; }
+        body.dark-mode .toggle-slider { background: #3A3A3C; }
+        body.dark-mode .settings-nav-toggle input:checked + .toggle-slider { background: #0A84FF; }
+
+        .settings-nav-del {
+            background: transparent; border: none; color: #FF3B30;
+            font-size: 12px; cursor: pointer; padding: 2px 6px;
+            opacity: 0.6; transition: opacity 0.2s;
+        }
+        .settings-nav-del:hover { opacity: 1; }
+
+        .settings-empty-hint { color: #8E8E93; font-size: 12px; padding: 8px 12px; }
+
+        .settings-custom-nav-add {
+            display: flex; gap: 6px; align-items: center; flex-wrap: wrap;
+            margin-top: 8px;
+        }
+        .settings-custom-nav-add .form-input { padding: 7px 10px; font-size: 13px; box-sizing: border-box; }
+        .settings-custom-nav-add #settingsCustomNavTitle { flex: 1 1 120px; min-width: 0; }
+        .custom-nav-icon-wrap { position: relative; flex: 0 0 auto; display: inline-flex; align-items: center; gap: 4px; }
+        .custom-nav-icon-preview {
+            width: 38px; height: 38px; border-radius: 8px; background: #F2F2F7;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; cursor: pointer; border: 1px solid transparent;
+            transition: all 0.15s; overflow: hidden; flex-shrink: 0;
+        }
+        .custom-nav-icon-preview:hover { border-color: #007AFF; background: #E8F2FF; }
+        .custom-nav-icon-preview img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+        .custom-nav-icon-up-btn {
+            width: 30px; height: 30px; border-radius: 6px; border: none; cursor: pointer;
+            background: #F2F2F7; font-size: 14px; transition: all 0.15s; padding: 0;
+        }
+        .custom-nav-icon-up-btn:hover { background: #007AFF; color: #fff; }
+        .custom-nav-emoji-panel {
+            position: absolute; top: 44px; left: 0; z-index: 200;
+            background: #fff; border-radius: 10px; box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+            padding: 8px; display: grid; grid-template-columns: repeat(5, 1fr);
+            gap: 4px; width: 220px;
+        }
+        .custom-nav-emoji-panel span {
+            font-size: 20px; text-align: center; padding: 4px 0; cursor: pointer;
+            border-radius: 6px; transition: background 0.1s; line-height: 1;
+        }
+        .custom-nav-emoji-panel span:hover { background: #E8F2FF; }
+        body.dark-mode .custom-nav-icon-preview { background: #2C2C2E; }
+        body.dark-mode .custom-nav-icon-preview:hover { background: #0A84FF33; border-color: #0A84FF; }
+        body.dark-mode .custom-nav-icon-up-btn { background: #2C2C2E; }
+        body.dark-mode .custom-nav-icon-up-btn:hover { background: #0A84FF; }
+        body.dark-mode .custom-nav-emoji-panel { background: #1C1C1E; box-shadow: 0 6px 24px rgba(0,0,0,0.5); }
+        body.dark-mode .custom-nav-emoji-panel span:hover { background: #0A84FF33; }
+        .settings-custom-nav-add #settingsCustomNavType { width: auto !important; flex: 0 0 auto; min-width: 100px; }
+        .settings-custom-nav-add #settingsCustomNavUrl { flex: 1 1 100%; }
+        .settings-custom-nav-add .toolbar-btn { flex: 0 0 auto; white-space: nowrap; }
+
+        /* emoji preview for custom nav */
+        .avatar-picker { margin-top: 4px; }
+        .avatar-input-row .settings-avatar { display: flex; align-items: center; gap: 8px; }
+
+
         .sidebar-profile {
             display: flex;
             align-items: center;
@@ -7531,8 +7671,13 @@ window.__newsFetchPromise = (function() {
         <div class="mobile-overlay" id="mobileOverlay" onclick="closeMobileSidebar()"></div>
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-logo">
-                <h2>个人工作台</h2>
-                <div class="tagline">个人增长与发展</div>
+                <div class="sidebar-logo-inner">
+                    <h2 id="sidebarLogoTitle">个人工作台</h2>
+                    <div class="tagline" id="sidebarLogoTagline">个人增长与发展</div>
+                </div>
+                <button class="sidebar-settings-btn" title="设置" onclick="openSettingsModal()" aria-label="设置">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                </button>
             </div>
             <div class="sidebar-profile" onclick="openProfileModal()">
                 <div class="profile-avatar" id="profileAvatar">👤</div>
@@ -10767,8 +10912,11 @@ CREATE POLICY "allow_all" ON workbench_sync
 
         const defaultProfile = {
             name: '运营者',
-            avatar: '👤'
-        };
+            avatar: '👤',
+            workbenchTitle: '个人工作台',
+            workbenchTagline: '个人增长与发展',
+            hiddenNav: []
+        }
 
         // API配置默认结构（各平台数据获取接口 + AI评分）
         const defaultApiConfig = {
@@ -13184,10 +13332,21 @@ CREATE POLICY "allow_all" ON workbench_sync
         }
 
         function switchPage(pageName, navEl) {
+            // v41: 自定义 nav 如果是外部 URL，直接跳转
+            if (typeof pageName === 'string' && pageName.startsWith('url:')) {
+                const url = pageName.slice(4);
+                window.open(url, '_blank');
+                return;
+            }
+            const targetPage = document.getElementById(`page-${pageName}`);
+            if (!targetPage) {
+                console.warn('[switchPage] page-' + pageName + ' 不存在');
+                return;
+            }
             document.querySelectorAll('.page-section').forEach(page => {
                 page.classList.remove('active');
             });
-            document.getElementById(`page-${pageName}`).classList.add('active');
+            targetPage.classList.add('active');
 
             // 主页/个人学习不显示全局搜索栏
             const searchContainer = document.querySelector('.global-search-container');
@@ -15414,6 +15573,14 @@ CREATE POLICY "allow_all" ON workbench_sync
                 avatarEl.textContent = '👤';
             }
             nameEl.textContent = profile.name || '运营者';
+
+            // v41: 顺便渲染工作台 logo 标题/副标题 + 自定义 nav 合并渲染 + 隐藏开关
+            const logoTitle = document.getElementById('sidebarLogoTitle');
+            const logoTagline = document.getElementById('sidebarLogoTagline');
+            if (logoTitle) logoTitle.textContent = profile.workbenchTitle || '个人工作台';
+            if (logoTagline) logoTagline.textContent = profile.workbenchTagline || '个人增长与发展';
+            renderCustomNav();
+            applyHiddenNav();
         }
 
         let profileAvatarType = 'text';
@@ -15517,35 +15684,319 @@ CREATE POLICY "allow_all" ON workbench_sync
             reader.readAsDataURL(file);
         }
 
-        function handleProfileAvatarUpload(input) {
-            const file = input.files[0];
-            if (!file) return;
 
-            if (!file.type.startsWith('image/')) {
-                alert('请选择图片文件');
-                return;
+        // ==================== v41 设置弹窗 ====================
+        // 当前自定义导航图标状态（emoji 或 dataURL 或 http URL）
+        var _customNavIconValue = '📍';
+        // 统一渲染导航图标：emoji → <span class="nav-emoji">emoji</span>
+        //                图片URL → <span class="nav-emoji"><img src=...></span>
+        function renderNavIcon(iconStr) {
+            if (!iconStr) iconStr = '📍';
+            if (iconStr.indexOf('data:image/') === 0 || /^https?:\/\//.test(iconStr)) {
+                return '<span class="nav-emoji"><img src="' + iconStr + '" alt="icon" onerror="this.parentElement.textContent=\'📍\'"></span>';
             }
-
-            compressImage(file, 200, function(base64) {
-                profileAvatarType = 'image';
-                const preview = document.getElementById('profileAvatarPreview');
-                const textInput = document.getElementById('profileAvatarText');
-                const clearBtn = document.getElementById('profileAvatarClearBtn');
-                
-                preview.innerHTML = `<img src="${base64}" alt="头像">`;
-                textInput.value = '';
-                clearBtn.style.display = 'block';
-                
-                document.querySelectorAll('#profileAvatarEmojiGrid .avatar-emoji-btn').forEach(b => b.classList.remove('selected'));
-                
-                if (!document.getElementById('profileAvatarImageData')) {
-                    const hiddenInput = document.createElement('input');
-                    hiddenInput.type = 'hidden';
-                    hiddenInput.id = 'profileAvatarImageData';
-                    document.querySelector('#profileModal .avatar-picker').appendChild(hiddenInput);
-                }
-                document.getElementById('profileAvatarImageData').value = base64;
+            return '<span class="nav-emoji">' + iconStr + '</span>';
+        }
+        function updateCustomNavIconPreview() {
+            var prev = document.getElementById('customNavIconPreview');
+            if (!prev) return;
+            var v = _customNavIconValue || '📍';
+            if (v.indexOf('data:image/') === 0 || /^https?:\/\//.test(v)) {
+                prev.innerHTML = '<img src="' + v + '" alt="icon" onerror="this.parentElement.textContent=\'📍\'">';
+            } else {
+                prev.textContent = v;
+            }
+        }
+        function toggleCustomNavEmojiPicker() {
+            var panel = document.getElementById('customNavEmojiPanel');
+            if (!panel) return;
+            var hidden = panel.style.display === 'none';
+            panel.style.display = hidden ? 'grid' : 'none';
+            if (hidden) {
+                setTimeout(function() {
+                    document.addEventListener('click', _closeEmojiPanelOnOutside, { once: true });
+                }, 10);
+            }
+        }
+        function _closeEmojiPanelOnOutside(e) {
+            var wrap = document.getElementById('customNavIconWrap');
+            if (wrap && !wrap.contains(e.target)) {
+                var panel = document.getElementById('customNavEmojiPanel');
+                if (panel) panel.style.display = 'none';
+            } else {
+                document.addEventListener('click', _closeEmojiPanelOnOutside, { once: true });
+            }
+        }
+        function pickCustomNavEmoji(e) {
+            _customNavIconValue = e;
+            updateCustomNavIconPreview();
+            var panel = document.getElementById('customNavEmojiPanel');
+            if (panel) panel.style.display = 'none';
+        }
+        function triggerCustomNavIconUpload() {
+            document.getElementById('settingsCustomNavIconFile').click();
+        }
+        function handleCustomNavIconUpload(input) {
+            var file = input.files && input.files[0];
+            if (!file) return;
+            if (!/^image\//.test(file.type)) { showSyncToast('请选择图片文件', 'error'); return; }
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var img = new Image();
+                img.onload = function() {
+                    var max = 128;
+                    var w = img.width, h = img.height;
+                    if (w > max || h > max) {
+                        if (w > h) { h = Math.round(h * max / w); w = max; }
+                        else { w = Math.round(w * max / h); h = max; }
+                    }
+                    var c = document.createElement('canvas'); c.width = w; c.height = h;
+                    c.getContext('2d').drawImage(img, 0, 0, w, h);
+                    _customNavIconValue = c.toDataURL('image/png');
+                    updateCustomNavIconPreview();
+                };
+                img.onerror = function() { showSyncToast('图片加载失败', 'error'); };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+            input.value = '';
+        }
+        function clearCustomNavIcon() {
+            _customNavIconValue = '📍';
+            updateCustomNavIconPreview();
+        }
+        function getCustomNav() {
+            try {
+                const raw = localStorage.getItem('media_workbench_custom_nav');
+                const arr = raw ? JSON.parse(raw) : [];
+                return Array.isArray(arr) ? arr : [];
+            } catch(e) { return []; }
+        }
+        function saveCustomNav(arr) {
+            try { localStorage.setItem('media_workbench_custom_nav', JSON.stringify(arr)); } catch(e) {}
+            if (typeof pushToCloud === 'function' && syncEnabled) {
+                pushToCloud().catch(function(e){});
+            }
+        }
+        function getBuiltinNavList() {
+            // 返回硬编码 nav 的元信息，用于设置界面列表
+            var labels = getNavLabels();
+            var pages = ['home','account','kanban','workflow','materials','calendar','news','study'];
+            return pages.map(function(pg) {
+                return { key: pg, label: labels[pg] || pg, builtin: true };
             });
+        }
+        function renderCustomNav() {
+            var nav = document.querySelector('.sidebar-nav');
+            if (!nav) return;
+            // 清掉之前插入的 custom nav（带 data-custom="true"）
+            nav.querySelectorAll('.nav-item[data-custom="true"]').forEach(function(el){ el.remove(); });
+            var list = getCustomNav();
+            list.forEach(function(item) {
+                var btn = document.createElement('button');
+                btn.className = 'nav-item';
+                btn.setAttribute('data-custom', 'true');
+                var clickParam = item.type === 'url' ? ('url:' + item.url) : item.page;
+                btn.setAttribute('data-page', clickParam);
+                btn.onclick = function() { switchPage(clickParam, btn); };
+                btn.innerHTML = renderNavIcon(item.icon) + '<span class="nav-label">' + String(item.title).replace(/</g,'&lt;').replace(/"/g,'&quot;') + '</span>';
+                nav.appendChild(btn);
+            });
+        }
+        function applyHiddenNav() {
+            var hidden = (profile && Array.isArray(profile.hiddenNav)) ? profile.hiddenNav : [];
+            document.querySelectorAll('.sidebar-nav .nav-item[data-page]').forEach(function(el) {
+                var pg = el.getAttribute('data-page');
+                if (pg && !pg.startsWith('url:') && hidden.indexOf(pg) >= 0) {
+                    el.style.display = 'none';
+                } else {
+                    el.style.display = '';
+                }
+            });
+        }
+        function openSettingsModal() {
+            // 初始化表单
+            document.getElementById('settingsWorkbenchTitle').value = profile.workbenchTitle || '';
+            document.getElementById('settingsWorkbenchTagline').value = profile.workbenchTagline || '';
+            document.getElementById('settingsProfileName').value = profile.name || '';
+            var at = document.getElementById('settingsAvatarText');
+            if (at) at.value = '';
+            // 重置自定义导航图标
+            _customNavIconValue = '📍';
+            setTimeout(updateCustomNavIconPreview, 0);
+            document.getElementById('settingsModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            switchSettingsTab('workbench');
+            renderSettingsNavList();
+        }
+        function closeSettingsModal() {
+            document.getElementById('settingsModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        function switchSettingsTab(tabName) {
+            document.querySelectorAll('.settings-tab').forEach(function(t) {
+                t.classList.toggle('active', t.getAttribute('data-tab') === tabName);
+            });
+            document.querySelectorAll('.settings-tab-panel').forEach(function(p) {
+                p.classList.toggle('active', p.getAttribute('data-panel') === tabName);
+            });
+            if (tabName === 'profile') initSettingsAvatarPreview();
+        }
+        function saveSettingsWorkbench() {
+            var t = document.getElementById('settingsWorkbenchTitle').value.trim();
+            var tl = document.getElementById('settingsWorkbenchTagline').value.trim();
+            profile.workbenchTitle = t || '个人工作台';
+            profile.workbenchTagline = tl || '个人增长与发展';
+            saveData(STORAGE_KEY_PROFILE, profile);
+            renderProfile();
+            if (typeof pushToCloud === 'function' && syncEnabled) pushToCloud().catch(function(){});
+            showSyncToast('工作台设置已保存', 'success');
+        }
+        function initSettingsAvatarPreview() {
+            var av = profile.avatar || '👤';
+            var prev = document.getElementById('settingsAvatarPreview');
+            if (!prev) return;
+            if (av.startsWith('data:image/') || av.startsWith('http://') || av.startsWith('https://')) {
+                prev.innerHTML = '<img src="' + av + '" alt="头像" onerror="this.parentElement.textContent=\'👤\'">';
+            } else {
+                prev.textContent = av;
+            }
+            var at = document.getElementById('settingsAvatarText');
+            if (at) at.value = (av && !av.startsWith('data:') && !av.startsWith('http')) ? av : '';
+        }
+        function triggerSettingsAvatarUpload() {
+            document.getElementById('settingsAvatarFileInput').click();
+        }
+        function handleSettingsAvatarUpload(input) {
+            var file = input.files && input.files[0];
+            if (!file) return;
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var img = new Image();
+                img.onload = function() {
+                    var w = img.width, h = img.height, max = 200;
+                    if (w > h && w > max) { h = Math.round(h * max / w); w = max; }
+                    else if (h > max) { w = Math.round(w * max / h); h = max; }
+                    var c = document.createElement('canvas'); c.width = w; c.height = h;
+                    c.getContext('2d').drawImage(img, 0, 0, w, h);
+                    var url = c.toDataURL('image/jpeg', 0.8);
+                    profile.avatar = url;
+                    var prev = document.getElementById('settingsAvatarPreview');
+                    if (prev) prev.innerHTML = '<img src="' + url + '" alt="头像">';
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+        function saveSettingsProfile() {
+            var name = document.getElementById('settingsProfileName').value.trim() || '运营者';
+            var at = document.getElementById('settingsAvatarText').value.trim();
+            if (at) profile.avatar = at.slice(0, 2);
+            profile.name = name;
+            saveData(STORAGE_KEY_PROFILE, profile);
+            renderProfile();
+            if (typeof pushToCloud === 'function' && syncEnabled) pushToCloud().catch(function(){});
+            showSyncToast('个人资料已保存', 'success');
+        }
+        function renderSettingsNavList() {
+            // 内置项目
+            var builtinBox = document.getElementById('settingsBuiltinNavList');
+            if (builtinBox) {
+                var html = '';
+                var hidden = profile.hiddenNav || [];
+                getBuiltinNavList().forEach(function(item) {
+                    var hide = hidden.indexOf(item.key) >= 0;
+                    html += '<div class="settings-nav-row">' +
+                        '<label class="settings-nav-toggle">' +
+                            '<input type="checkbox" data-builtin="' + item.key + '" ' + (hide ? '' : 'checked') + '>' +
+                            '<span class="toggle-slider"></span>' +
+                        '</label>' +
+                        '<span class="settings-nav-title">' + item.label + '</span>' +
+                        '<span class="settings-nav-key muted">' + item.key + '</span>' +
+                    '</div>';
+                });
+                builtinBox.innerHTML = html;
+                // 绑定 checkbox 变化
+                builtinBox.querySelectorAll('input[type=checkbox][data-builtin]').forEach(function(cb) {
+                    cb.addEventListener('change', function() {
+                        toggleBuiltinNav(cb.getAttribute('data-builtin'), cb.checked);
+                    });
+                });
+            }
+            // 自定义项目
+            var customBox = document.getElementById('settingsCustomNavList');
+            if (customBox) {
+                var html2 = '';
+                getCustomNav().forEach(function(item) {
+                    var sub = item.type === 'url' ? ('🔗 ' + item.url) : ('📄 ' + (item.page || ''));
+                    html2 += '<div class="settings-nav-row">' +
+                        renderNavIcon(item.icon) +
+                        '<span class="settings-nav-title">' + String(item.title).replace(/</g,'&lt;') + '</span>' +
+                        '<span class="settings-nav-key muted">' + sub + '</span>' +
+                        '<button class="settings-nav-del" data-del-id="' + item.id + '">删除</button>' +
+                    '</div>';
+                });
+                customBox.innerHTML = html2 || '<div class="settings-empty-hint">暂无自定义项目</div>';
+                // 绑定删除按钮
+                customBox.querySelectorAll('.settings-nav-del').forEach(function(btn) {
+                    btn.addEventListener('click', function() {
+                        deleteCustomNavItem(btn.getAttribute('data-del-id'));
+                    });
+                });
+            }
+        }
+
+        function toggleBuiltinNav(pageKey, visible) {
+            var hidden = (profile.hiddenNav || []).slice();
+            if (!visible) {
+                if (hidden.indexOf(pageKey) < 0) hidden.push(pageKey);
+            } else {
+                hidden = hidden.filter(function(x){ return x !== pageKey; });
+            }
+            profile.hiddenNav = hidden;
+            saveData(STORAGE_KEY_PROFILE, profile);
+            applyHiddenNav();
+            if (typeof pushToCloud === 'function' && syncEnabled) pushToCloud().catch(function(){});
+        }
+        function addCustomNavItem() {
+            var title = document.getElementById('settingsCustomNavTitle').value.trim();
+            var icon = _customNavIconValue || '📍';
+            var typeSel = document.getElementById('settingsCustomNavType');
+            var selVal = typeSel.value; // home|account|...|study|__url__
+            var url = '', pageName = '', normType = 'page';
+            if (selVal === '__url__') {
+                normType = 'url';
+                url = document.getElementById('settingsCustomNavUrl').value.trim();
+                if (!url) { showSyncToast('请输入外部链接 URL', 'error'); return; }
+                if (!/^https?:\/\//i.test(url)) { showSyncToast('URL 需以 http:// 或 https:// 开头', 'error'); return; }
+            } else {
+                pageName = selVal;
+            }
+            if (!title) { showSyncToast('请输入项目名称', 'error'); return; }
+            var list = getCustomNav();
+            list.push({
+                id: 'nav_' + Date.now(),
+                title: title, icon: icon,
+                type: normType, page: pageName, url: url
+            });
+            saveCustomNav(list);
+            renderCustomNav();
+            renderSettingsNavList();
+            document.getElementById('settingsCustomNavTitle').value = '';
+            clearCustomNavIcon();
+            document.getElementById('settingsCustomNavUrl').value = '';
+            showSyncToast('已添加', 'success');
+        }
+        function deleteCustomNavItem(id) {
+            var list = getCustomNav().filter(function(x){ return String(x.id) !== String(id); });
+            saveCustomNav(list);
+            renderCustomNav();
+            renderSettingsNavList();
+        }
+        function onCustomNavTypeChange(sel) {
+            var urlInput = document.getElementById('settingsCustomNavUrl');
+            if (!urlInput) return;
+            urlInput.style.display = (sel && sel.value === '__url__') ? '' : 'none';
         }
 
         function clearProfileAvatar() {
@@ -16528,5 +16979,111 @@ CREATE POLICY "allow_all" ON workbench_sync
             doExportDownload(htmlContent);
         }
     </script>
+
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal settings-modal" style="max-width: 560px;">
+            <div class="modal-header">
+                <h2>⚙️ 设置</h2>
+                <button class="modal-close" onclick="closeSettingsModal()">×</button>
+            </div>
+            <div class="modal-body settings-modal-body">
+                <!-- Tab 切换 -->
+                <div class="settings-tabs">
+                    <button class="settings-tab active" data-tab="workbench" onclick="switchSettingsTab('workbench')">工作台</button>
+                    <button class="settings-tab" data-tab="profile" onclick="switchSettingsTab('profile')">个人资料</button>
+                    <button class="settings-tab" data-tab="nav" onclick="switchSettingsTab('nav')">导航管理</button>
+                </div>
+
+                <!-- Tab 1: 工作台信息 -->
+                <div class="settings-tab-panel active" data-panel="workbench">
+                    <div class="form-group">
+                        <label class="form-label">工作台名称</label>
+                        <input type="text" id="settingsWorkbenchTitle" class="form-input" maxlength="20" placeholder="个人工作台">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">副标题 / Slogan</label>
+                        <input type="text" id="settingsWorkbenchTagline" class="form-input" maxlength="40" placeholder="个人增长与发展">
+                    </div>
+                    <button class="toolbar-btn primary" onclick="saveSettingsWorkbench()" style="width:100%;margin-top:8px;">保存工作台设置</button>
+                </div>
+
+                <!-- Tab 2: 个人资料 -->
+                <div class="settings-tab-panel" data-panel="profile">
+                    <div class="form-group">
+                        <label class="form-label">个人昵称</label>
+                        <input type="text" id="settingsProfileName" class="form-input" maxlength="20" placeholder="运营者">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">头像</label>
+                        <div class="avatar-picker">
+                            <div class="avatar-input-row">
+                                <div class="avatar-preview" id="settingsAvatarPreview">👤</div>
+                                <input type="text" id="settingsAvatarText" class="avatar-text-input" placeholder="Emoji 或文字" maxlength="2">
+                                <button class="avatar-upload-btn" onclick="triggerSettingsAvatarUpload()">📷 上传</button>
+                                <input type="file" id="settingsAvatarFileInput" class="hidden" accept="image/*" onchange="handleSettingsAvatarUpload(this)">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="toolbar-btn primary" onclick="saveSettingsProfile()" style="width:100%;margin-top:8px;">保存个人资料</button>
+                </div>
+
+                <!-- Tab 3: 导航管理 -->
+                <div class="settings-tab-panel" data-panel="nav">
+                    <div class="settings-nav-section">
+                        <h4 class="settings-sub-title">内置项目</h4>
+                        <div class="settings-nav-list" id="settingsBuiltinNavList"></div>
+                    </div>
+                    <div class="settings-nav-section">
+                        <h4 class="settings-sub-title">自定义项目</h4>
+                        <div class="settings-nav-list" id="settingsCustomNavList"></div>
+                        <div class="settings-custom-nav-add">
+                            <input type="text" id="settingsCustomNavTitle" class="form-input" placeholder="项目名称" maxlength="12">
+                            <div class="custom-nav-icon-wrap" id="customNavIconWrap">
+                                <div class="custom-nav-icon-preview" id="customNavIconPreview" onclick="toggleCustomNavEmojiPicker()" title="选图标">📍</div>
+                                <button type="button" class="custom-nav-icon-up-btn" onclick="triggerCustomNavIconUpload()" title="上传图片">📷</button>
+                                <input type="file" id="settingsCustomNavIconFile" class="hidden" accept="image/*" onchange="handleCustomNavIconUpload(this)">
+                                <div class="custom-nav-emoji-panel" id="customNavEmojiPanel" style="display:none;">
+                                    <span onclick="pickCustomNavEmoji('📍')">📍</span>
+                                    <span onclick="pickCustomNavEmoji('🏠')">🏠</span>
+                                    <span onclick="pickCustomNavEmoji('📋')">📋</span>
+                                    <span onclick="pickCustomNavEmoji('🎯')">🎯</span>
+                                    <span onclick="pickCustomNavEmoji('📅')">📅</span>
+                                    <span onclick="pickCustomNavEmoji('📰')">📰</span>
+                                    <span onclick="pickCustomNavEmoji('📚')">📚</span>
+                                    <span onclick="pickCustomNavEmoji('👤')">👤</span>
+                                    <span onclick="pickCustomNavEmoji('💼')">💼</span>
+                                    <span onclick="pickCustomNavEmoji('⚙️')">⚙️</span>
+                                    <span onclick="pickCustomNavEmoji('🔗')">🔗</span>
+                                    <span onclick="pickCustomNavEmoji('🚀')">🚀</span>
+                                    <span onclick="pickCustomNavEmoji('⭐')">⭐</span>
+                                    <span onclick="pickCustomNavEmoji('🔥')">🔥</span>
+                                    <span onclick="pickCustomNavEmoji('💡')">💡</span>
+                                    <span onclick="pickCustomNavEmoji('📊')">📊</span>
+                                    <span onclick="pickCustomNavEmoji('🎨')">🎨</span>
+                                    <span onclick="pickCustomNavEmoji('💬')">💬</span>
+                                    <span onclick="pickCustomNavEmoji('🛠️')">🛠️</span>
+                                    <span onclick="pickCustomNavEmoji('📦')">📦</span>
+                                </div>
+                            </div>
+                            <select id="settingsCustomNavType" class="form-input" onchange="onCustomNavTypeChange(this)">
+                                <option value="home">主页</option>
+                                <option value="account">账号管理</option>
+                                <option value="kanban">账号看板</option>
+                                <option value="workflow">工作流</option>
+                                <option value="materials">素材库</option>
+                                <option value="calendar">日程</option>
+                                <option value="news">每日快讯</option>
+                                <option value="study">个人学习</option>
+                                <option value="__url__">外部链接</option>
+                            </select>
+                            <input type="text" id="settingsCustomNavUrl" class="form-input" placeholder="外部链接 URL" style="display:none;">
+                            <button class="toolbar-btn primary" onclick="addCustomNavItem()">添加</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
