@@ -1003,6 +1003,22 @@ window.__newsFetchPromise = (function() {
             overflow-y: auto;
         }
 
+        /* v47 侧边栏分组 */
+        .nav-group {
+            display: block;
+        }
+        .nav-group-label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            color: #8E8E93;
+            padding: 12px 14px 4px;
+            user-select: none;
+        }
+        body.dark-mode .nav-group-label {
+            color: rgba(235, 235, 245, 0.35);
+        }
+
         .nav-item {
             display: flex;
             align-items: center;
@@ -1733,128 +1749,652 @@ window.__newsFetchPromise = (function() {
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== 主页 (Home) ===== */
-        /* 主页卡片铺满 main-content，去掉留白 */
-        .page-section#page-home.active {
-            display: flex;
-            margin: -32px -40px;
-            min-height: 100vh;
+        /* ===== 主页 (Home) v48 今日节奏仪表盘 ===== */
+        #page-home {
+            --hm-card: #FFFFFF;
+            --hm-text: #1C1C1E;
+            --hm-text-2: #3A3A3C;
+            --hm-text-3: #8E8E93;
+            --hm-text-4: #A1A1A6;
+            --hm-line: #F0F0F3;
+            --hm-soft: #FAFAFC;
+            --hm-track: #EDEDF0;
+            --hm-border: rgba(0, 0, 0, 0.04);
+            --hm-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 10px 30px rgba(0, 0, 0, 0.04);
         }
-        .home-welcome {
+        body.dark-mode #page-home {
+            --hm-card: #1C1C1E;
+            --hm-text: #EBEBF5;
+            --hm-text-2: #D1D1D6;
+            --hm-text-3: rgba(235, 235, 245, 0.6);
+            --hm-text-4: rgba(235, 235, 245, 0.4);
+            --hm-line: rgba(255, 255, 255, 0.08);
+            --hm-soft: rgba(255, 255, 255, 0.045);
+            --hm-track: rgba(255, 255, 255, 0.12);
+            --hm-border: rgba(255, 255, 255, 0.06);
+            --hm-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+        }
+        .page-section#page-home.active { display: block; }
+        .home-dashboard { display: flex; flex-direction: column; gap: 28px; padding-bottom: 24px; }
+
+        .home-block-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        .home-block-bar {
+            width: 3px;
+            height: 18px;
+            border-radius: 2px;
+            background: var(--hm-text);
+            flex: 0 0 auto;
+        }
+        .home-block-title {
+            font-size: 19px;
+            font-weight: 700;
+            color: var(--hm-text);
+            letter-spacing: 0.3px;
+            flex: 0 0 auto;
+        }
+        .home-block-en {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            color: var(--hm-text-4);
+            text-transform: uppercase;
+            flex: 0 0 auto;
+        }
+        .home-block-line {
+            flex: 1 1 auto;
+            height: 1px;
+            background: var(--hm-line);
+            margin-left: 4px;
+        }
+
+        .home-row { display: grid; gap: 18px; }
+        .home-row-2 { grid-template-columns: 1.02fr 1fr; }
+
+        .home-card {
+            background: var(--hm-card);
+            border: 1px solid var(--hm-border);
+            border-radius: 20px;
+            padding: 22px 24px;
+            box-shadow: var(--hm-shadow);
+            min-width: 0;
+        }
+        .home-card-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .home-card-head-main { min-width: 0; }
+        .home-card-en {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            color: var(--hm-text-4);
+            text-transform: uppercase;
+        }
+        .home-card-title {
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--hm-text);
+            letter-spacing: 0.2px;
+        }
+        .home-card-count {
+            font-size: 12px;
+            color: var(--hm-text-3);
+            white-space: nowrap;
+            padding-top: 12px;
+        }
+        .home-card-side {
+            font-size: 12px;
+            color: var(--hm-text-3);
+            white-space: nowrap;
+            padding-top: 12px;
+        }
+        .home-link-btn {
+            border: none;
+            background: none;
+            padding: 12px 0 0;
+            font-size: 12px;
+            color: var(--hm-text-3);
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .home-link-btn:hover { color: var(--hm-text); }
+
+        /* 问候卡 */
+        .home-greet-card {
             position: relative;
-            border-radius: 0;
-            background: linear-gradient(135deg, #1c1c2e 0%, #2d1b4e 45%, #6a3fb5 100%);
-            padding: 48px 28px;
-            margin-top: 0;
             overflow: hidden;
-            text-align: center;
-            flex: 1;
-            width: 100%;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: center;
+            min-height: 232px;
+            padding: 28px 28px 24px;
+            border: none;
+            color: #FFFFFF;
+            background: linear-gradient(150deg, #2E2E30 0%, #1B1B1D 68%);
         }
-        body.dark-mode .home-welcome { background: linear-gradient(135deg, #111122 0%, #201238 45%, #4b2d83 100%); }
-        .home-welcome::before {
+        .home-greet-card::after {
             content: "";
             position: absolute;
-            top: -30%;
-            left: -20%;
-            width: 140%;
-            height: 140%;
-            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.10) 0%, transparent 40%),
-                        radial-gradient(circle at 75% 70%, rgba(255,255,255,0.08) 0%, transparent 45%);
-            animation: introShift 18s ease-in-out infinite alternate;
+            inset: 0;
+            border-radius: 20px;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
             pointer-events: none;
         }
-        @keyframes introShift {
-            from { transform: translate(0, 0) rotate(0deg); }
-            to { transform: translate(-4%, -6%) rotate(3deg); }
+        .home-greet-glow {
+            position: absolute;
+            top: -46%;
+            right: -18%;
+            width: 78%;
+            height: 130%;
+            background: radial-gradient(circle at 50% 50%, rgba(214, 168, 108, 0.42) 0%, rgba(160, 118, 68, 0.16) 38%, transparent 68%);
+            pointer-events: none;
         }
-        .home-greet {
+        .home-hello {
             position: relative;
             z-index: 2;
-        }
-        .home-logo {
-            font-size: 46px;
-            line-height: 1;
-            margin-bottom: 10px;
-            animation: introPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        @keyframes introPop {
-            from { transform: scale(0.5); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-        .home-title {
-            color: #ffffff;
             font-size: 26px;
             font-weight: 800;
-            letter-spacing: 1px;
-            margin-bottom: 4px;
-        }
-        .home-sub {
-            color: rgba(255,255,255,0.72);
-            font-size: 14px;
             letter-spacing: 0.5px;
-            font-weight: 400;
         }
-        .home-quote-card {
+        .home-greet-quote {
             position: relative;
             z-index: 2;
-            max-width: 620px;
-            margin: 36px auto 8px;
-            background: rgba(255,255,255,0.07);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border: 1px solid rgba(255,255,255,0.16);
-            border-radius: 20px;
-            padding: 34px 28px;
-            animation: quoteFade 1s ease 0.2s both;
+            margin-top: 10px;
+            max-width: 92%;
+            font-size: 12.5px;
+            line-height: 1.65;
+            color: rgba(255, 255, 255, 0.62);
         }
-        @keyframes quoteFade {
-            from { opacity: 0; transform: translateY(16px); }
-            to { opacity: 1; transform: translateY(0); }
+        .home-clock {
+            position: relative;
+            z-index: 2;
+            margin-top: auto;
+            padding-top: 18px;
+            font-size: 46px;
+            font-weight: 700;
+            line-height: 1.05;
+            letter-spacing: 1.5px;
+            font-variant-numeric: tabular-nums;
         }
-        .home-quote-mark {
+        .home-date-line {
+            position: relative;
+            z-index: 2;
+            margin-top: 8px;
+            font-size: 12px;
+            letter-spacing: 0.4px;
+            color: rgba(255, 255, 255, 0.52);
+        }
+
+        /* 今日聚焦 */
+        .home-focus-card { display: flex; flex-direction: column; }
+        .home-focus-star { color: #C0925A; font-size: 15px; }
+        .home-focus-list {
+            margin-top: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow-y: auto;
+            max-height: 178px;
+        }
+        .home-focus-empty {
+            margin-top: 22px;
+            font-size: 12.5px;
+            line-height: 1.75;
+            color: var(--hm-text-4);
+        }
+        .home-focus-empty b { color: var(--hm-text-2); font-weight: 600; }
+        .home-focus-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            background: var(--hm-soft);
+            border: 1px solid var(--hm-line);
+        }
+        .home-focus-check {
+            width: 18px;
+            height: 18px;
+            flex: 0 0 auto;
+            margin-top: 1px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(192, 146, 90, 0.55);
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .home-focus-check:hover { border-color: #C0925A; background: rgba(192, 146, 90, 0.12); }
+        .home-focus-body { min-width: 0; flex: 1 1 auto; }
+        .home-focus-title {
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 1.45;
+            color: var(--hm-text);
+            word-break: break-word;
+        }
+        .home-focus-meta {
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            font-size: 11px;
+            color: var(--hm-text-4);
+        }
+        .home-chip {
+            display: inline-block;
+            padding: 2px 7px;
+            border-radius: 999px;
+            font-size: 10.5px;
+            font-weight: 600;
+            line-height: 1.5;
+            white-space: nowrap;
+        }
+        .home-chip.high { background: rgba(255, 59, 48, 0.12); color: #D70015; }
+        .home-chip.medium { background: rgba(255, 149, 0, 0.14); color: #B26A00; }
+        .home-chip.low { background: rgba(52, 199, 89, 0.14); color: #1E8C43; }
+        .home-chip.overdue { background: rgba(255, 59, 48, 0.12); color: #D70015; }
+        body.dark-mode .home-chip.high,
+        body.dark-mode .home-chip.overdue { background: rgba(255, 69, 58, 0.2); color: #FF6961; }
+        body.dark-mode .home-chip.medium { background: rgba(255, 159, 10, 0.2); color: #FFB340; }
+        body.dark-mode .home-chip.low { background: rgba(48, 209, 88, 0.2); color: #4CD964; }
+
+        /* 今日概览 */
+        .home-vitals-card { padding: 24px 28px 30px; }
+        .home-vitals-icon { color: #8FA88A; font-size: 15px; }
+        .home-vitals {
+            margin-top: 24px;
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+        }
+        .home-vital {
+            text-align: center;
+            min-width: 0;
+            cursor: pointer;
+            padding: 6px 4px;
+            border-radius: 14px;
+            transition: background 0.18s, transform 0.18s;
+        }
+        .home-vital:hover { background: var(--hm-soft); transform: translateY(-2px); }
+        .home-ring {
+            position: relative;
+            width: 92px;
+            height: 92px;
+            margin: 0 auto 14px;
+        }
+        .home-ring svg { width: 100%; height: 100%; display: block; }
+        .home-ring-bg { fill: none; stroke: var(--hm-track); stroke-width: 7; }
+        .home-ring-fg {
+            fill: none;
+            stroke-width: 7;
+            stroke-linecap: round;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+            transition: stroke-dashoffset 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .home-ring-glyph {
             position: absolute;
-            top: 10px;
-            left: 20px;
-            font-size: 48px;
-            color: rgba(255,255,255,0.25);
-            font-family: Georgia, serif;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 21px;
             line-height: 1;
         }
-        .home-quote-text {
-            font-size: 21px;
+        .home-vital-pct {
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--hm-text);
+            letter-spacing: 0.2px;
+        }
+        .home-vital-label {
+            margin-top: 4px;
+            font-size: 12.5px;
             font-weight: 600;
-            line-height: 1.6;
-            color: #ffffff;
+            color: var(--hm-text-2);
         }
-        .home-quote-author {
-            margin-top: 16px;
-            font-size: 14px;
-            color: rgba(255,255,255,0.65);
+        .home-vital-sub {
+            margin-top: 3px;
+            font-size: 11px;
+            color: var(--hm-text-4);
+        }
+
+        /* 习惯追踪 */
+        .home-habits { margin-top: 18px; }
+        .home-habit-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) repeat(7, 22px) 42px;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 0;
+        }
+        .home-habit-row.head {
+            padding: 0 0 6px;
+            font-size: 10.5px;
+            color: var(--hm-text-4);
+            border-bottom: 1px solid var(--hm-line);
+        }
+        .home-habit-row.head .home-habit-cell-head { text-align: center; }
+        .home-habit-row.head .home-habit-rate-head { text-align: right; }
+        .home-habit-name {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            min-width: 0;
+            font-size: 12.5px;
+            color: var(--hm-text-2);
+        }
+        .home-habit-name span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .home-habit-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            flex: 0 0 auto;
+        }
+        .home-habit-cell {
+            width: 22px;
+            height: 22px;
+            border-radius: 7px;
+            background: var(--hm-track);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            color: #FFFFFF;
+            font-weight: 700;
+        }
+        .home-habit-cell.on { background: #8FA88A; }
+        .home-habit-cell.today { box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.08); }
+        body.dark-mode .home-habit-cell.today { box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.18); }
+        .home-habit-rate {
+            text-align: right;
+            font-size: 11.5px;
+            color: var(--hm-text-3);
+            white-space: nowrap;
+        }
+
+        /* 待办清单 */
+        .home-todo-progress { margin-top: 16px; }
+        .home-todo-progress-label {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .home-todo-progress-label strong {
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--hm-text);
             letter-spacing: 0.5px;
         }
-        .home-date {
-            position: relative;
-            z-index: 2;
+        .home-todo-progress-label span {
+            font-size: 11.5px;
+            color: var(--hm-text-3);
+        }
+        .home-todo-bar {
+            margin-top: 8px;
+            height: 5px;
+            border-radius: 3px;
+            background: var(--hm-track);
+            overflow: hidden;
+        }
+        .home-todo-bar span {
+            display: block;
+            height: 100%;
+            width: 0;
+            border-radius: 3px;
+            background: var(--hm-text);
+            transition: width 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .home-todo-list {
+            margin-top: 10px;
+            max-height: 208px;
+            overflow-y: auto;
+        }
+        .home-todo-empty {
+            padding: 26px 0 18px;
+            text-align: center;
+            font-size: 12.5px;
+            color: var(--hm-text-4);
+        }
+        .home-todo-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--hm-line);
+        }
+        .home-todo-item:last-child { border-bottom: none; }
+        .home-todo-check {
+            width: 17px;
+            height: 17px;
+            flex: 0 0 auto;
+            border-radius: 5px;
+            border: 1.5px solid var(--hm-track);
+            background: transparent;
+            color: #fff;
+            font-size: 11px;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.18s;
+        }
+        .home-todo-check:hover { border-color: var(--hm-text-3); }
+        .home-todo-check.done { background: #8FA88A; border-color: #8FA88A; }
+        .home-todo-title {
+            flex: 1 1 auto;
+            min-width: 0;
+            font-size: 12.5px;
+            color: var(--hm-text);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .home-todo-item.done .home-todo-title {
+            color: var(--hm-text-4);
+            text-decoration: line-through;
+        }
+
+        /* 番茄钟 */
+        .home-pomo-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 24px 24px 22px;
+            border: none;
+            color: #FFFFFF;
+            background: linear-gradient(160deg, #2C2C2E 0%, #171719 100%);
+        }
+        .home-pomo-en {
+            font-size: 9.5px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            color: rgba(255, 255, 255, 0.42);
+            text-transform: uppercase;
+        }
+        .home-pomo-title {
+            margin-top: 6px;
             font-size: 13px;
-            color: rgba(255,255,255,0.55);
-            margin-top: 14px;
-            letter-spacing: 0.5px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        .pomo-ring-wrap {
+            position: relative;
+            width: 168px;
+            height: 168px;
+            margin: 16px auto 4px;
+        }
+        .pomo-ring { width: 100%; height: 100%; display: block; transform: rotate(-90deg); }
+        .pomo-ring-bg { fill: none; stroke: rgba(255, 255, 255, 0.12); stroke-width: 5.5; }
+        .pomo-ring-fg {
+            fill: none;
+            stroke: #E0B24A;
+            stroke-width: 5.5;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.6s linear;
+        }
+        .pomo-time {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            transform: translateY(-56%);
+            font-size: 34px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            font-variant-numeric: tabular-nums;
+        }
+        .pomo-state {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            transform: translateY(16px);
+            font-size: 11.5px;
+            color: rgba(255, 255, 255, 0.52);
+        }
+        .pomo-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .pomo-btn {
+            border: none;
+            border-radius: 12px;
+            padding: 9px 26px;
+            font-size: 12.5px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.13);
+            transition: all 0.2s;
+        }
+        .pomo-btn:hover { background: rgba(255, 255, 255, 0.2); }
+        .pomo-btn.primary { background: #FFFFFF; color: #1C1C1E; }
+        .pomo-btn.primary:hover { background: #F0F0F2; }
+        .pomo-stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+            width: 100%;
+            margin-top: 16px;
+        }
+        .pomo-stats > div {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            padding: 10px 4px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.07);
+        }
+        .pomo-stats strong {
+            font-size: 17px;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+        }
+        .pomo-stats span {
+            font-size: 10.5px;
+            color: rgba(255, 255, 255, 0.52);
+        }
+
+        /* 状态趋势 */
+        .home-mood-chart { margin-top: 18px; min-height: 190px; }
+        .home-mood-bars {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 10px;
+            height: 190px;
+        }
+        .home-mood-col {
+            flex: 1 1 0;
+            min-width: 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 7px;
+        }
+        .home-mood-val {
+            font-size: 10px;
+            color: var(--hm-text-4);
+            font-variant-numeric: tabular-nums;
+        }
+        .home-mood-bar {
+            width: 100%;
+            max-width: 26px;
+            min-height: 6px;
+            border-radius: 8px 8px 4px 4px;
+            background: linear-gradient(180deg, #6E8FBF 0%, #3A5A88 100%);
+            transition: height 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .home-mood-col.today .home-mood-bar {
+            background: linear-gradient(180deg, #E0B24A 0%, #B98A2E 100%);
+        }
+        .home-mood-day {
+            font-size: 10.5px;
+            color: var(--hm-text-4);
+            white-space: nowrap;
+        }
+        .home-mood-col.today .home-mood-day {
+            color: var(--hm-text-2);
+            font-weight: 600;
+        }
+        .home-mood-empty {
+            min-height: 190px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        .home-mood-empty-icon { font-size: 30px; opacity: 0.45; }
+        .home-mood-empty-text {
+            font-size: 12px;
+            color: var(--hm-text-4);
+            text-align: center;
+            line-height: 1.7;
+        }
+
+        @media (max-width: 1100px) {
+            .home-row-2 { grid-template-columns: 1fr; }
         }
         @media (max-width: 720px) {
-            .page-section#page-home.active {
-                margin: -72px -16px -24px;
-                min-height: 100vh;
-            }
-            .home-welcome { padding: 32px 18px; }
-            .home-logo { font-size: 38px; }
-            .home-title { font-size: 22px; }
-            .home-quote-text { font-size: 17px; }
-            .home-quote-card { padding: 24px 18px; }
+            .home-dashboard { gap: 22px; padding-bottom: 12px; }
+            .home-card { padding: 18px 16px; border-radius: 16px; }
+            .home-block-title { font-size: 16px; }
+            .home-block-en { font-size: 9px; letter-spacing: 0.12em; }
+            .home-greet-card { padding: 22px 18px; min-height: 200px; }
+            .home-hello { font-size: 22px; }
+            .home-clock { font-size: 38px; }
+            .home-vitals { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 8px; }
+            .home-ring { width: 78px; height: 78px; }
+            .home-habit-row { grid-template-columns: minmax(0, 1fr) repeat(7, 19px) 36px; gap: 5px; }
+            .home-habit-cell { width: 19px; height: 19px; border-radius: 6px; }
+            .home-habit-name { font-size: 11.5px; }
+            .home-mood-bars { gap: 6px; }
+            .pomo-ring-wrap { width: 150px; height: 150px; }
         }
 
         .page-header {
@@ -7448,7 +7988,7 @@ window.__newsFetchPromise = (function() {
         }
 
         body.in-dingtalk .page-section#page-home.active {
-            margin-top: -16px;
+            margin-top: 0;
         }
 
         /* 钉钉环境下的侧边栏优化 */
@@ -7773,7 +8313,7 @@ window.__newsFetchPromise = (function() {
             <button class="mobile-menu-btn" onclick="toggleMobileSidebar()">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
             </button>
-            <div class="mobile-header-title" id="mobileHeaderTitle">账号管理</div>
+            <div class="mobile-header-title" id="mobileHeaderTitle">主页</div>
         </div>
         <div class="mobile-overlay" id="mobileOverlay" onclick="closeMobileSidebar()"></div>
         <aside class="sidebar" id="sidebar">
@@ -7793,45 +8333,59 @@ window.__newsFetchPromise = (function() {
                 </div>
             </div>
             <nav class="sidebar-nav">
-                <button class="nav-item active" data-page="home" onclick="switchPage('home', this)">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                    <span class="nav-label" id="navLabel_home">主页</span>
-                </button>
-                <button class="nav-item" data-page="account" onclick="switchPage('account', this)">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                    <span class="nav-label" id="navLabel_account">账号管理</span>
-                </button>
-                <button class="nav-item" data-page="kanban" onclick="switchPage('kanban', this)">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="5" height="18" rx="1"/><rect x="9.5" y="3" width="5" height="12" rx="1"/><rect x="16" y="3" width="5" height="8" rx="1"/></svg>
-                    <span class="nav-label" id="navLabel_kanban">工作任务</span>
-                    <span class="nav-badge" id="navKanbanBadge">3</span>
-                </button>
-                <button class="nav-item" data-page="workflow" onclick="switchPage('workflow', this)">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-                    <span class="nav-label" id="navLabel_workflow">数据看板</span>
-                </button>
-                <button class="nav-item" data-page="materials" onclick="switchPage('materials', this)">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-                    <span class="nav-label" id="navLabel_materials">素材筛选池</span>
-                    <span class="nav-badge" id="navMaterialsBadge" style="display: none;">0</span>
-                </button>
-                <button class="nav-item" data-page="calendar" onclick="switchPage('calendar', this)">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    <span class="nav-label" id="navLabel_calendar">工作日历</span>
-                </button>
-                <button class="nav-item" data-page="news" onclick="switchPage('news', this)">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
-                    <span class="nav-label" id="navLabel_news">每日快讯</span>
-                    <span class="nav-badge" id="navNewsBadge" style="display: none;">0</span>
-                </button>
-                <button class="nav-item" data-page="study" onclick="switchPage('study', this)">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-                    <span class="nav-label" id="navLabel_study">个人学习</span>
-                </button>
-                <button class="nav-item" data-page="health" onclick="switchPage('health', this)">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                    <span class="nav-label" id="navLabel_health">个人健康管理</span>
-                </button>
+                <div class="nav-group" data-group="top">
+                    <div class="nav-group-items">
+                        <button class="nav-item active" data-page="home" onclick="switchPage('home', this)">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                            <span class="nav-label" id="navLabel_home">主页</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="nav-group" data-group="features">
+                    <div class="nav-group-label">功能模块</div>
+                    <div class="nav-group-items">
+                        <button class="nav-item" data-page="account" onclick="switchPage('account', this)">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                            <span class="nav-label" id="navLabel_account">账号管理</span>
+                        </button>
+                        <button class="nav-item" data-page="kanban" onclick="switchPage('kanban', this)">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="5" height="18" rx="1"/><rect x="9.5" y="3" width="5" height="12" rx="1"/><rect x="16" y="3" width="5" height="8" rx="1"/></svg>
+                            <span class="nav-label" id="navLabel_kanban">工作任务</span>
+                            <span class="nav-badge" id="navKanbanBadge">3</span>
+                        </button>
+                        <button class="nav-item" data-page="news" onclick="switchPage('news', this)">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
+                            <span class="nav-label" id="navLabel_news">每日快讯</span>
+                            <span class="nav-badge" id="navNewsBadge" style="display: none;">0</span>
+                        </button>
+                        <button class="nav-item" data-page="study" onclick="switchPage('study', this)">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                            <span class="nav-label" id="navLabel_study">个人学习</span>
+                        </button>
+                        <button class="nav-item" data-page="materials" onclick="switchPage('materials', this)">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                            <span class="nav-label" id="navLabel_materials">素材筛选池</span>
+                            <span class="nav-badge" id="navMaterialsBadge" style="display: none;">0</span>
+                        </button>
+                        <button class="nav-item" data-page="calendar" onclick="switchPage('calendar', this)">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                            <span class="nav-label" id="navLabel_calendar">工作日历</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="nav-group" data-group="data">
+                    <div class="nav-group-label">数据管理</div>
+                    <div class="nav-group-items">
+                        <button class="nav-item" data-page="workflow" onclick="switchPage('workflow', this)">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                            <span class="nav-label" id="navLabel_workflow">数据看板</span>
+                        </button>
+                        <button class="nav-item" data-page="health" onclick="switchPage('health', this)">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                            <span class="nav-label" id="navLabel_health">个人健康管理</span>
+                        </button>
+                    </div>
+                </div>
             </nav>
             <div class="sidebar-footer">
                 <div class="sync-row">
@@ -7864,21 +8418,125 @@ window.__newsFetchPromise = (function() {
             </div>
 
             <div class="page-section active" id="page-home">
-                <div class="home-welcome">
-                    <div class="home-greet">
-                        <div class="home-logo">✨</div>
-                        <div class="home-title">每日一言</div>
-                    </div>
-                    <div class="home-quote-card">
-                        <div class="home-quote-blocks">
-                            <div class="home-quote-block">
-                                <div class="home-quote-text" id="introQuoteText"></div>
-                                <div class="home-quote-author" id="introQuoteAuthor"></div>
+                <div class="home-dashboard">
+
+                    <!-- 今日节奏 -->
+                    <div class="home-block">
+                        <div class="home-block-head">
+                            <span class="home-block-bar"></span>
+                            <span class="home-block-title">今日节奏</span>
+                            <span class="home-block-en">TODAY · RHYTHM</span>
+                            <span class="home-block-line"></span>
+                        </div>
+                        <div class="home-row home-row-2">
+                            <div class="home-card home-greet-card">
+                                <div class="home-greet-glow"></div>
+                                <div class="home-hello" id="homeHello">早上好</div>
+                                <div class="home-greet-quote" id="homeGreetQuote"></div>
+                                <div class="home-clock" id="homeClock">00:00:00</div>
+                                <div class="home-date-line" id="homeDateLine"></div>
+                            </div>
+                            <div class="home-card home-focus-card">
+                                <div class="home-card-head">
+                                    <div class="home-card-head-main">
+                                        <div class="home-card-en">TODAY'S FOCUS</div>
+                                        <div class="home-card-title"><span class="home-focus-star">☆</span> 今日聚焦</div>
+                                    </div>
+                                    <div class="home-card-count" id="homeFocusCount">0 项</div>
+                                </div>
+                                <div class="home-focus-list" id="homeFocusList"></div>
                             </div>
                         </div>
-                        <div class="home-quote-mark">“</div>
                     </div>
-                    <div class="home-date" id="introDate"></div>
+
+                    <!-- 今日概览 -->
+                    <div class="home-card home-vitals-card">
+                        <div class="home-card-head">
+                            <div class="home-card-head-main">
+                                <div class="home-card-en">DAILY VITALS</div>
+                                <div class="home-card-title"><span class="home-vitals-icon">◎</span> 今日概览</div>
+                            </div>
+                        </div>
+                        <div class="home-vitals" id="homeVitals"></div>
+                    </div>
+
+                    <!-- 待办与习惯 -->
+                    <div class="home-block">
+                        <div class="home-block-head">
+                            <span class="home-block-bar"></span>
+                            <span class="home-block-title">待办与习惯</span>
+                            <span class="home-block-en">TASKS &amp; HABITS</span>
+                            <span class="home-block-line"></span>
+                        </div>
+                        <div class="home-row home-row-2">
+                            <div class="home-card home-todo-card">
+                                <div class="home-card-head">
+                                    <div class="home-card-head-main">
+                                        <div class="home-card-en">TODO LIST</div>
+                                        <div class="home-card-title">待办清单</div>
+                                    </div>
+                                    <button type="button" class="home-link-btn" onclick="switchPage('kanban')">查看全部</button>
+                                </div>
+                                <div class="home-todo-progress">
+                                    <div class="home-todo-progress-label">
+                                        <strong id="homeTodoDone">0/0</strong>
+                                        <span id="homeTodoPct">完成 0%</span>
+                                    </div>
+                                    <div class="home-todo-bar"><span id="homeTodoBar"></span></div>
+                                </div>
+                                <div class="home-todo-list" id="homeTodoList"></div>
+                            </div>
+                            <div class="home-card home-habits-card">
+                                <div class="home-card-head">
+                                    <div class="home-card-head-main">
+                                        <div class="home-card-en">HABIT TRACKER</div>
+                                        <div class="home-card-title">本周习惯追踪表</div>
+                                    </div>
+                                    <div class="home-card-side" id="homeHabitWeek">本周</div>
+                                </div>
+                                <div class="home-habits" id="homeHabits"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 专注与状态 -->
+                    <div class="home-block">
+                        <div class="home-block-head">
+                            <span class="home-block-bar"></span>
+                            <span class="home-block-title">专注与状态</span>
+                            <span class="home-block-en">FOCUS &amp; MOOD</span>
+                            <span class="home-block-line"></span>
+                        </div>
+                        <div class="home-row home-row-2">
+                            <div class="home-card home-pomo-card">
+                                <div class="home-pomo-en">POMODORO · 25 / 5</div>
+                                <div class="home-pomo-title">专注番茄钟</div>
+                                <div class="pomo-ring-wrap">
+                                    <svg class="pomo-ring" viewBox="0 0 120 120">
+                                        <circle cx="60" cy="60" r="52" class="pomo-ring-bg"></circle>
+                                        <circle cx="60" cy="60" r="52" class="pomo-ring-fg" id="pomoRingFg"></circle>
+                                    </svg>
+                                    <div class="pomo-time" id="pomoTime">25:00</div>
+                                    <div class="pomo-state" id="pomoState">保持专注</div>
+                                </div>
+                                <div class="pomo-actions">
+                                    <button type="button" class="pomo-btn primary" id="pomoStartBtn" onclick="togglePomodoro()">开始</button>
+                                    <button type="button" class="pomo-btn" onclick="resetPomodoro()">重置</button>
+                                </div>
+                                <div class="pomo-stats">
+                                    <div><strong id="pomoTodayCount">0</strong><span>今日番茄</span></div>
+                                    <div><strong id="pomoTodayMinutes">0</strong><span>专注分钟</span></div>
+                                    <div><strong id="pomoTodayRounds">0</strong><span>轮次</span></div>
+                                </div>
+                            </div>
+                            <div class="home-card home-mood-card">
+                                <div class="home-card-en">FOCUS TREND · 近 7 天</div>
+                                <div class="home-card-title">本周状态趋势</div>
+                                <div class="home-mood-chart" id="homeMoodChart"></div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
@@ -11503,6 +12161,7 @@ CREATE POLICY "allow_all" ON workbench_sync
             }).join('');
 
             updateNewsBadge();
+            if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
         }
 
         function getCategoryStyle(category) {
@@ -12955,8 +13614,15 @@ CREATE POLICY "allow_all" ON workbench_sync
                 const raw = localStorage.getItem(STORAGE_KEY_NAV_ORDER);
                 let arr = raw ? JSON.parse(raw) : null;
                 if (!Array.isArray(arr)) arr = [];
-                // 去重 + 补漏（确保 8 个内置和所有自定义都在 order 里）
-                var BUILTIN = ['home','account','kanban','workflow','materials','calendar','news','study','health'];
+                var orig = arr.slice(); // 用于判断是否真的发生了清理/补漏
+                // 去重 + 补漏（确保内置项和所有自定义都在 order 里），顺序即 v47 默认分组内顺序
+                var BUILTIN = ['home','account','kanban','news','study','materials','calendar','workflow','health'];
+                // v47 清理历史脏 key（c_home / c_health 已并入内置 health），并恢复内置项默认顺序
+                if (arr.indexOf('c_home') >= 0 || arr.indexOf('c_health') >= 0) {
+                    arr = BUILTIN.concat(arr.filter(function(pg){
+                        return BUILTIN.indexOf(pg) === -1 && pg !== 'c_home' && pg !== 'c_health';
+                    }));
+                }
                 var seen = {};
                 var clean = [];
                 arr.forEach(function(pg){
@@ -12972,18 +13638,29 @@ CREATE POLICY "allow_all" ON workbench_sync
                     });
                 }
                 // 有变化就回写
-                if (clean.length !== arr.length || clean.join(',') !== arr.join(',')) {
+                if (clean.length !== orig.length || clean.join(',') !== orig.join(',')) {
                     localStorage.setItem(STORAGE_KEY_NAV_ORDER, JSON.stringify(clean));
-                    arr = clean;
-                } else {
-                    arr = clean;
                 }
+                arr = clean;
                 return arr;
             } catch (e) {
-                return ['home','account','kanban','workflow','materials','calendar','news','study'];
+                return ['home','account','kanban','news','study','materials','calendar','workflow','health'];
             }
         }
-        // 应用存储的排序到 DOM（未在存储中出现的页面追加到末尾）
+        // v47 导航分组归属：主页置顶，数据看板/个人健康归入「数据管理」，其余（含自定义项）归入「功能模块」
+        // 用函数声明而非常量对象，保证在脚本任意位置调用都不会因未初始化而报错
+        function getNavGroupName(pageKey) {
+            if (pageKey === 'home') return 'top';
+            if (pageKey === 'workflow' || pageKey === 'health') return 'data';
+            return 'features';
+        }
+        function getNavGroupContainer(pageKey) {
+            var group = getNavGroupName(pageKey);
+            var host = document.querySelector('.sidebar-nav .nav-group[data-group="' + group + '"] .nav-group-items');
+            if (!host) host = document.querySelector('.sidebar-nav .nav-group[data-group="features"] .nav-group-items');
+            return host || document.querySelector('.sidebar-nav');
+        }
+        // 应用存储的排序到 DOM（按分组落位，组内顺序取自存储）
         function applyNavOrder() {
             const nav = document.querySelector('.sidebar-nav');
             if (!nav) return;
@@ -12994,15 +13671,15 @@ CREATE POLICY "allow_all" ON workbench_sync
                 const pg = it.getAttribute('data-page');
                 if (pg) orderMap[pg] = it;
             });
-            // 按存储顺序重排
+            // 按存储顺序放回各自分组
             order.forEach(pg => {
                 const node = orderMap[pg];
-                if (node) { nav.appendChild(node); }
+                if (node) { getNavGroupContainer(pg).appendChild(node); }
             });
             // 追加未出现的项，保持原始相对顺序
             items.forEach(it => {
                 const pg = it.getAttribute('data-page');
-                if (pg && order.indexOf(pg) === -1) nav.appendChild(it);
+                if (pg && order.indexOf(pg) === -1) getNavGroupContainer(pg).appendChild(it);
             });
         }
         // 将当前 DOM 顺序保存到存储并云同步
@@ -13019,8 +13696,9 @@ CREATE POLICY "allow_all" ON workbench_sync
                 pushToCloud().catch(function(e){ console.warn('[saveNavOrderFromDom] 云同步失败:', e); });
             }
         }
-        // 初始化：只应用已保存的顺序，不再在侧边栏直接操作排序/改名（统一放到设置弹窗）
+        // 初始化：先渲染自定义项，再按分组应用已保存的顺序（统一放到设置弹窗排序/改名）
         function initNavReorder() {
+            if (typeof renderCustomNav === 'function') renderCustomNav();
             applyNavOrder();
         }
 
@@ -13158,6 +13836,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                     '<button class="study-task-del" onclick="deleteStudyTask(\'' + t.id + '\')" title="删除">✕</button>' +
                 '</div>';
             }).join('');
+            if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
         }
 
         function getStudyCheckin() {
@@ -13616,6 +14295,7 @@ CREATE POLICY "allow_all" ON workbench_sync
             });
             var gb = document.getElementById('healthGoalsEdit');
             if (gb) gb.innerHTML = gHtml;
+            if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
         }
         // ============ v46 页面副标题就地编辑 ============
         function getPageSubtitles() {
@@ -13748,7 +14428,9 @@ CREATE POLICY "allow_all" ON workbench_sync
 
             closeMobileSidebar();
 
-            if (pageName === 'kanban') {
+            if (pageName === 'home') {
+                renderHomeDashboard();
+            } else if (pageName === 'kanban') {
                 renderTasks();
             } else if (pageName === 'materials') {
                 newMaterialsCount = 0;
@@ -13826,6 +14508,7 @@ CREATE POLICY "allow_all" ON workbench_sync
             });
 
             updateDashboardStats();
+            if (typeof renderHomeDashboard === 'function') renderHomeDashboard();
         }
 
         function createTaskCard(task) {
@@ -16273,11 +16956,13 @@ CREATE POLICY "allow_all" ON workbench_sync
                     btn.onclick = function() { switchPage(clickParam, btn); };
                     var safeTitle = String(title).replace(/</g,'&lt;').replace(/"/g,'&quot;');
                     btn.innerHTML = renderNavIcon(icon) + '<span class="nav-label">' + safeTitle + '</span>';
-                    nav.appendChild(btn);
+                    getNavGroupContainer(clickParam).appendChild(btn); // v47 自定义项归入功能模块
                 } catch(e) {
                     console.warn('[renderCustomNav] 跳过脏数据:', e.message, item);
                 }
             });
+            // v47 自定义项重建后按分组+顺序归位
+            if (typeof applyNavOrder === 'function') applyNavOrder();
         }
         function applyHiddenNav() {
             var hidden = (profile && Array.isArray(profile.hiddenNav)) ? profile.hiddenNav : [];
@@ -17460,24 +18145,449 @@ CREATE POLICY "allow_all" ON workbench_sync
             { text: "Believe you can and you're halfway there. / 相信你能做到，你就已经成功了一半。", author: "Theodore Roosevelt" }
         ];
 
-        function initIntroScreen() {
-            // 每日名言：按一年中的第几天取（保证每天不同）
+        // ============ v48 主页：今日节奏仪表盘 ============
+        const STORAGE_KEY_POMODORO = 'media_workflow_pomodoro';
+        const POMODORO_FOCUS_SECONDS = 25 * 60;
+        let pomodoroRemaining = POMODORO_FOCUS_SECONDS;
+        let pomodoroRunning = false;
+        let pomodoroTimerId = null;
+
+        function _hmPad(n) { return n < 10 ? '0' + n : '' + n; }
+        function _hmEsc(s) {
+            return String(s == null ? '' : s)
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+        function _hmAttr(id) {
+            return String(id == null ? '' : id).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+        }
+        function _hmIsTemplate(t) {
+            return t && t.isDaily === true && !t.dueDate && t.status === 'pending';
+        }
+        function _hmDaysBetween(fromStr, toStr) {
+            const a = new Date(fromStr + 'T00:00:00');
+            const b = new Date(toStr + 'T00:00:00');
+            if (isNaN(a.getTime()) || isNaN(b.getTime())) return 0;
+            return Math.max(0, Math.round((b - a) / 86400000));
+        }
+        function _hmWeekNumber(d) {
+            const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+            const dayNum = date.getUTCDay() || 7;
+            date.setUTCDate(date.getUTCDate() + 4 - dayNum);
+            const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+            return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+        }
+
+        // 今日聚焦：当天及逾期的高优先级事项（自动聚合，无需手动置顶）
+        function getHomeFocusTasks() {
+            const todayStr = getTodayDate();
+            return (tasks || []).filter(function(t) {
+                if (_hmIsTemplate(t)) return false;
+                if (t.priority !== 'high') return false;
+                if (t.status === 'completed' || t.status === 'archived') return false;
+                if (!t.dueDate) return true;
+                return t.dueDate <= todayStr;
+            }).sort(function(a, b) {
+                const ad = a.dueDate || '9999-12-31';
+                const bd = b.dueDate || '9999-12-31';
+                if (ad !== bd) return ad < bd ? -1 : 1;
+                return (a.status === 'inProgress' ? 0 : 1) - (b.status === 'inProgress' ? 0 : 1);
+            });
+        }
+        function renderHomeFocus() {
+            const list = document.getElementById('homeFocusList');
+            const cnt = document.getElementById('homeFocusCount');
+            if (!list) return;
+            const todayStr = getTodayDate();
+            const items = getHomeFocusTasks();
+            if (cnt) cnt.textContent = items.length + ' 项';
+            if (!items.length) {
+                list.innerHTML = '<div class="home-focus-empty">暂无高优先级事项。在「工作任务」中把任务设为<b>高优先级</b>并设好截止日期，当天会自动聚焦到这里。</div>';
+                return;
+            }
+            list.innerHTML = items.slice(0, 8).map(function(t) {
+                let when = '';
+                if (!t.dueDate) {
+                    when = '<span>未设截止</span>';
+                } else if (t.dueDate === todayStr) {
+                    when = '<span>今天截止</span>';
+                } else {
+                    when = '<span class="home-chip overdue">逾期 ' + _hmDaysBetween(t.dueDate, todayStr) + ' 天</span>';
+                }
+                const statusChip = t.status === 'inProgress' ? '<span class="home-chip medium">进行中</span>' : '<span class="home-chip high">紧急</span>';
+                return '<div class="home-focus-item">' +
+                    '<button type="button" class="home-focus-check" title="标记完成" onclick="homeCompleteTask(\'' + _hmAttr(t.id) + '\')"></button>' +
+                    '<div class="home-focus-body">' +
+                        '<div class="home-focus-title">' + _hmEsc(t.title) + '</div>' +
+                        '<div class="home-focus-meta">' + statusChip + when + '</div>' +
+                    '</div>' +
+                '</div>';
+            }).join('');
+        }
+        function homeCompleteTask(id) {
+            moveTask(id, 'completed');
+        }
+
+        function _hmRing(pct, color, glyph) {
+            const p = Math.max(0, Math.min(100, Math.round(pct || 0)));
+            const C = 2 * Math.PI * 44;
+            const off = C * (1 - p / 100);
+            return '<div class="home-ring">' +
+                '<svg viewBox="0 0 100 100">' +
+                    '<circle cx="50" cy="50" r="44" class="home-ring-bg"></circle>' +
+                    '<circle cx="50" cy="50" r="44" class="home-ring-fg" stroke="' + color + '" stroke-dasharray="' + C.toFixed(2) + '" stroke-dashoffset="' + off.toFixed(2) + '"></circle>' +
+                '</svg>' +
+                '<div class="home-ring-glyph" style="color:' + color + '">' + glyph + '</div>' +
+            '</div>';
+        }
+        function renderHomeVitals() {
+            const box = document.getElementById('homeVitals');
+            if (!box) return;
+            const todayStr = getTodayDate();
+
+            // 今日任务：截止日期为今天的任务
+            const todayTasks = (tasks || []).filter(function(t) {
+                return !_hmIsTemplate(t) && t.dueDate === todayStr;
+            });
+            const todayDone = todayTasks.filter(function(t) {
+                return t.status === 'completed' || t.status === 'archived';
+            }).length;
+
+            // 学习打卡：今天可见的学习任务
+            let studyAll = [];
+            try { studyAll = getStudyTasks().filter(studyTaskVisibleToday); } catch (e) { studyAll = []; }
+            const studyDone = studyAll.filter(function(t) { return t.done; }).length;
+
+            // 快讯阅读：最新一批快讯的已读比例
+            let latestNews = todayStr;
+            try { latestNews = getNewsLatestDate() || todayStr; } catch (e) { latestNews = todayStr; }
+            const newsToday = (news || []).filter(function(n) { return n.date === latestNews; });
+            const newsRead = newsToday.filter(function(n) { return n.read; }).length;
+
+            // 健康记录：四项基础指标已记录的数量
+            let healthDone = 0;
+            try {
+                const h = getHealth();
+                healthDone = ['sleepHours', 'focusHours', 'standSteps', 'screenHours'].filter(function(k) {
+                    return (h.daily[k] || 0) > 0;
+                }).length;
+            } catch (e) { healthDone = 0; }
+
+            function ratio(a, b) { return b ? Math.round(a / b * 100) : 0; }
+            const items = [
+                { pct: ratio(todayDone, todayTasks.length), glyph: '≡', label: '今日任务', sub: todayDone + '/' + todayTasks.length + ' 项', color: '#7A5C3E', page: 'kanban' },
+                { pct: ratio(studyDone, studyAll.length), glyph: '✓', label: '学习打卡', sub: studyDone + '/' + studyAll.length + ' 项', color: '#8FA88A', page: 'study' },
+                { pct: ratio(newsRead, newsToday.length), glyph: '▤', label: '快讯阅读', sub: newsRead + '/' + newsToday.length + ' 条', color: '#5B7FB0', page: 'news' },
+                { pct: ratio(healthDone, 4), glyph: '◎', label: '健康记录', sub: healthDone + '/4 项', color: '#C0925A', page: 'health' }
+            ];
+            box.innerHTML = items.map(function(it) {
+                return '<div class="home-vital" onclick="switchPage(\'' + it.page + '\')" title="点击前往 ' + it.label + '">' +
+                    _hmRing(it.pct, it.color, it.glyph) +
+                    '<div class="home-vital-pct">' + it.pct + '%</div>' +
+                    '<div class="home-vital-label">' + it.label + '</div>' +
+                    '<div class="home-vital-sub">' + it.sub + '</div>' +
+                '</div>';
+            }).join('');
+        }
+
+        // 本周习惯追踪表：基于健康数据的目标达成情况
+        function renderHomeHabits() {
+            const box = document.getElementById('homeHabits');
+            if (!box) return;
+            const h = getHealth();
+            const todayStr = getTodayDate();
+            const now = new Date();
+            const monday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            monday.setDate(monday.getDate() - ((monday.getDay() + 6) % 7));
+            const weekDates = [];
+            for (let i = 0; i < 7; i++) {
+                weekDates.push(fmtDate(new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + i)));
+            }
+            const wdNames = ['一', '二', '三', '四', '五', '六', '日'];
+            const todayIdx = (now.getDay() + 6) % 7;
+
+            const side = document.getElementById('homeHabitWeek');
+            if (side) side.textContent = '本周 · 周' + wdNames[todayIdx];
+
+            function recOf(ds) {
+                if (ds === h.daily.date) return h.daily;
+                for (let i = 0; i < h.history.length; i++) {
+                    if (h.history[i].date === ds) return h.history[i];
+                }
+                return null;
+            }
+            const habits = [
+                { label: '睡眠达标', color: '#8FA88A', goal: (h.goals.sleepHours || 7.5) + 'h', check: function(r) { return r && (r.sleepHours || 0) >= (h.goals.sleepHours || 7.5); } },
+                { label: '专注达标', color: '#6E88B8', goal: (h.goals.focusHours || 5) + 'h', check: function(r) { return r && (r.focusHours || 0) >= (h.goals.focusHours || 5); } },
+                { label: '步数达标', color: '#C0925A', goal: (h.goals.standSteps || 10000) + '步', check: function(r) { return r && (r.standSteps || 0) >= (h.goals.standSteps || 10000); } },
+                { label: '屏幕控制', color: '#9B9BA1', goal: '≤' + (h.goals.screenHours || 6) + 'h', check: function(r) { return r && (r.screenHours || 0) > 0 && (r.screenHours || 0) <= (h.goals.screenHours || 6); } }
+            ];
+
+            let html = '<div class="home-habit-row head"><span>习惯</span>';
+            wdNames.forEach(function(n) { html += '<span class="home-habit-cell-head">' + n + '</span>'; });
+            html += '<span class="home-habit-rate-head">完成率</span></div>';
+
+            habits.forEach(function(hb) {
+                let onCount = 0;
+                let cells = '';
+                weekDates.forEach(function(ds, i) {
+                    const on = hb.check(recOf(ds));
+                    if (on) onCount++;
+                    const cls = 'home-habit-cell' + (on ? ' on' : '') + (ds === todayStr ? ' today' : '');
+                    cells += '<div class="' + cls + '" title="' + ds + '">' + (on ? '✓' : '') + '</div>';
+                });
+                html += '<div class="home-habit-row">' +
+                    '<div class="home-habit-name"><span class="home-habit-dot" style="background:' + hb.color + '"></span><span>' + hb.label + '</span></div>' +
+                    cells +
+                    '<div class="home-habit-rate">' + Math.round(onCount / 7 * 100) + '%</div>' +
+                '</div>';
+            });
+            box.innerHTML = html;
+        }
+
+        // 待办清单：今日及逾期的未完成任务
+        function renderHomeTodo() {
+            const list = document.getElementById('homeTodoList');
+            if (!list) return;
+            const todayStr = getTodayDate();
+
+            const active = (tasks || []).filter(function(t) {
+                if (_hmIsTemplate(t)) return false;
+                if (t.status !== 'pending' && t.status !== 'inProgress') return false;
+                return !t.dueDate || t.dueDate <= todayStr;
+            });
+            const rank = { high: 3, medium: 2, low: 1 };
+            active.sort(function(a, b) {
+                const r = (rank[b.priority] || 0) - (rank[a.priority] || 0);
+                if (r !== 0) return r;
+                return String(a.dueDate || '9999').localeCompare(String(b.dueDate || '9999'));
+            });
+
+            const doneToday = (tasks || []).filter(function(t) {
+                if (_hmIsTemplate(t)) return false;
+                if (t.status !== 'completed' && t.status !== 'archived') return false;
+                return t.completedDate === todayStr || t.dueDate === todayStr;
+            }).length;
+            const total = active.length + doneToday;
+            const pct = total ? Math.round(doneToday / total * 100) : 0;
+
+            const doneEl = document.getElementById('homeTodoDone');
+            const pctEl = document.getElementById('homeTodoPct');
+            const barEl = document.getElementById('homeTodoBar');
+            if (doneEl) doneEl.textContent = doneToday + '/' + total;
+            if (pctEl) pctEl.textContent = '完成 ' + pct + '%';
+            if (barEl) barEl.style.width = pct + '%';
+
+            if (!active.length) {
+                list.innerHTML = '<div class="home-todo-empty">今日待办已清空 🎉</div>';
+                return;
+            }
+            const chipMap = { high: ['high', '紧急'], medium: ['medium', '本周'], low: ['low', '可缓'] };
+            list.innerHTML = active.slice(0, 8).map(function(t) {
+                const chip = chipMap[t.priority] || chipMap.medium;
+                return '<div class="home-todo-item">' +
+                    '<button type="button" class="home-todo-check" title="标记完成" onclick="homeCompleteTask(\'' + _hmAttr(t.id) + '\')"></button>' +
+                    '<div class="home-todo-title" title="' + _hmEsc(t.title) + '">' + _hmEsc(t.title) + '</div>' +
+                    '<span class="home-chip ' + chip[0] + '">' + chip[1] + '</span>' +
+                '</div>';
+            }).join('');
+        }
+
+        // 本周状态趋势：近 7 天专注时长
+        function renderHomeMood() {
+            const box = document.getElementById('homeMoodChart');
+            if (!box) return;
+            let h;
+            try { h = getHealth(); } catch (e) { h = null; }
+            if (!h) {
+                box.innerHTML = '<div class="home-mood-empty"><div class="home-mood-empty-icon">📊</div><div class="home-mood-empty-text">暂无本周数据<br>在「个人健康管理」中记录每日状态</div></div>';
+                return;
+            }
+            const now = new Date();
+            const wdNames = ['日', '一', '二', '三', '四', '五', '六'];
+            const days = [];
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i);
+                const ds = fmtDate(d);
+                let rec = null;
+                if (ds === h.daily.date) rec = h.daily;
+                else {
+                    for (let j = 0; j < h.history.length; j++) {
+                        if (h.history[j].date === ds) { rec = h.history[j]; break; }
+                    }
+                }
+                days.push({
+                    label: '周' + wdNames[d.getDay()],
+                    value: rec ? (rec.focusHours || 0) : 0,
+                    today: ds === getTodayDate()
+                });
+            }
+            const maxVal = Math.max.apply(null, days.map(function(d) { return d.value; }).concat([2]));
+            if (!days.some(function(d) { return d.value > 0; })) {
+                box.innerHTML = '<div class="home-mood-empty"><div class="home-mood-empty-icon">📊</div><div class="home-mood-empty-text">暂无本周数据 · 在「个人健康管理」中记录每日状态</div></div>';
+                return;
+            }
+            box.innerHTML = '<div class="home-mood-bars">' + days.map(function(d) {
+                const hPx = d.value > 0 ? Math.round(d.value / maxVal * 120) + 6 : 6;
+                return '<div class="home-mood-col' + (d.today ? ' today' : '') + '">' +
+                    '<div class="home-mood-val">' + (d.value > 0 ? d.value + 'h' : '—') + '</div>' +
+                    '<div class="home-mood-bar" style="height:' + hPx + 'px"></div>' +
+                    '<div class="home-mood-day">' + (d.today ? '今天' : d.label) + '</div>' +
+                '</div>';
+            }).join('') + '</div>';
+        }
+
+        // 番茄钟
+        function getPomodoroState() {
+            const todayStr = getTodayDate();
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY_POMODORO);
+                const s = raw ? JSON.parse(raw) : null;
+                if (!s || s.date !== todayStr) return { date: todayStr, count: 0, minutes: 0, rounds: 0 };
+                return { date: todayStr, count: s.count || 0, minutes: s.minutes || 0, rounds: s.rounds || 0 };
+            } catch (e) {
+                return { date: todayStr, count: 0, minutes: 0, rounds: 0 };
+            }
+        }
+        function savePomodoroState(s) {
+            try { localStorage.setItem(STORAGE_KEY_POMODORO, JSON.stringify(s)); } catch (e) { }
+        }
+        function renderPomodoro() {
+            const tEl = document.getElementById('pomoTime');
+            const stateEl = document.getElementById('pomoState');
+            const btn = document.getElementById('pomoStartBtn');
+            const ring = document.getElementById('pomoRingFg');
+            if (!tEl) return;
+            const m = Math.floor(pomodoroRemaining / 60);
+            const sec = pomodoroRemaining % 60;
+            tEl.textContent = _hmPad(m) + ':' + _hmPad(sec);
+            if (ring) {
+                const C = 2 * Math.PI * 52;
+                ring.setAttribute('stroke-dasharray', C.toFixed(2));
+                const progress = (POMODORO_FOCUS_SECONDS - pomodoroRemaining) / POMODORO_FOCUS_SECONDS;
+                ring.setAttribute('stroke-dashoffset', (C * (1 - progress)).toFixed(2));
+            }
+            if (stateEl) {
+                stateEl.textContent = pomodoroRunning ? '专注中…' : (pomodoroRemaining === POMODORO_FOCUS_SECONDS ? '保持专注' : '已暂停');
+            }
+            if (btn) {
+                btn.textContent = pomodoroRunning ? '暂停' : (pomodoroRemaining === POMODORO_FOCUS_SECONDS ? '开始' : '继续');
+            }
+            const s = getPomodoroState();
+            const cEl = document.getElementById('pomoTodayCount');
+            const mEl = document.getElementById('pomoTodayMinutes');
+            const rEl = document.getElementById('pomoTodayRounds');
+            if (cEl) cEl.textContent = s.count;
+            if (mEl) mEl.textContent = s.minutes;
+            if (rEl) rEl.textContent = s.rounds;
+        }
+        function startPomodoro() {
+            if (pomodoroRunning) return;
+            pomodoroRunning = true;
+            if (pomodoroTimerId) clearInterval(pomodoroTimerId);
+            pomodoroTimerId = setInterval(function() {
+                pomodoroRemaining--;
+                if (pomodoroRemaining <= 0) {
+                    finishPomodoro();
+                    return;
+                }
+                renderPomodoro();
+            }, 1000);
+            renderPomodoro();
+        }
+        function pausePomodoro() {
+            if (pomodoroTimerId) clearInterval(pomodoroTimerId);
+            pomodoroTimerId = null;
+            pomodoroRunning = false;
+            renderPomodoro();
+        }
+        function resetPomodoro() {
+            if (pomodoroTimerId) clearInterval(pomodoroTimerId);
+            pomodoroTimerId = null;
+            pomodoroRunning = false;
+            pomodoroRemaining = POMODORO_FOCUS_SECONDS;
+            renderPomodoro();
+        }
+        function togglePomodoro() {
+            if (pomodoroRunning) pausePomodoro();
+            else startPomodoro();
+        }
+        function finishPomodoro() {
+            if (pomodoroTimerId) clearInterval(pomodoroTimerId);
+            pomodoroTimerId = null;
+            pomodoroRunning = false;
+            const s = getPomodoroState();
+            s.count += 1;
+            s.rounds += 1;
+            s.minutes += 25;
+            savePomodoroState(s);
+            pomodoroRemaining = POMODORO_FOCUS_SECONDS;
+            renderPomodoro();
+            if (typeof showToast === 'function') showToast('番茄钟完成，休息 5 分钟 ☕', 'success');
+        }
+
+        // 问候 / 时钟
+        function updateHomeGreeting() {
+            const now = new Date();
+            const hr = now.getHours();
+            let greet = '晚上好';
+            if (hr < 5) greet = '夜深了';
+            else if (hr < 9) greet = '早上好';
+            else if (hr < 12) greet = '上午好';
+            else if (hr < 14) greet = '中午好';
+            else if (hr < 18) greet = '下午好';
+            else if (hr < 23) greet = '晚上好';
+
+            const el = document.getElementById('homeHello');
+            if (el) {
+                const name = (typeof profile !== 'undefined' && profile && profile.name) ? profile.name : '';
+                el.textContent = greet + (name ? '，' + name : '');
+            }
+            const weekNames = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+            const dl = document.getElementById('homeDateLine');
+            if (dl) {
+                dl.textContent = now.getFullYear() + '年' + (now.getMonth() + 1) + '月' + now.getDate() + '日 ' +
+                    weekNames[now.getDay()] + ' • 第 ' + _hmWeekNumber(now) + ' 周';
+            }
+        }
+        function tickHomeClock() {
+            const el = document.getElementById('homeClock');
+            if (!el) return;
+            const d = new Date();
+            el.textContent = _hmPad(d.getHours()) + ':' + _hmPad(d.getMinutes()) + ':' + _hmPad(d.getSeconds());
+        }
+        function initHomeQuote() {
             const now = new Date();
             const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
             const quote = INTRO_QUOTES[(dayOfYear - 1 + INTRO_QUOTES.length) % INTRO_QUOTES.length];
-            const qText = document.getElementById('introQuoteText');
-            const qAuth = document.getElementById('introQuoteAuthor');
-            const qDate = document.getElementById('introDate');
-            if (qText) qText.textContent = quote.text;
-            if (qAuth) qAuth.textContent = '—— ' + quote.author;
-            if (qDate) {
-                const weekNames = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
-                qDate.textContent = now.getFullYear() + '年' + (now.getMonth()+1) + '月' + now.getDate() + '日 ' + weekNames[now.getDay()];
+            const el = document.getElementById('homeGreetQuote');
+            if (el) el.textContent = quote.text + ' —— ' + quote.author;
+        }
+
+        function renderHomeDashboard() {
+            if (!document.getElementById('homeFocusList')) return;
+            renderHomeFocus();
+            renderHomeVitals();
+            renderHomeHabits();
+            renderHomeTodo();
+            renderHomeMood();
+            renderPomodoro();
+        }
+        function initHomeDashboard() {
+            initHomeQuote();
+            updateHomeGreeting();
+            tickHomeClock();
+            renderHomeDashboard();
+            if (!window.__homeTickTimer) {
+                window.__homeTickTimer = setInterval(function() {
+                    tickHomeClock();
+                    if (new Date().getSeconds() === 0) updateHomeGreeting();
+                }, 1000);
             }
         }
 
         deduplicateTasks(); // 清理重复任务
-        initIntroScreen(); // 初始化主页（每日名言 + 日期）
+        initHomeDashboard(); // 初始化主页（今日节奏仪表盘）
         initDarkMode(); // 初始化深色模式
         renderNavLabels(); // v35 应用已保存的侧边栏目录名称
         initPageSubtitleEditing(); // v46 页面副标题可点击就地编辑
