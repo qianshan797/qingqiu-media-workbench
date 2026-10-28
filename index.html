@@ -786,6 +786,10 @@ window.__newsFetchPromise = (function() {
             box-sizing: border-box;
         }
 
+        html {
+            overflow-x: hidden;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', sans-serif;
             background-color: var(--bg-primary);
@@ -1679,6 +1683,9 @@ window.__newsFetchPromise = (function() {
             flex: 1;
             margin-left: 260px;
             padding: 32px 40px;
+            min-width: 0;
+            max-width: 100%;
+            overflow-x: hidden;
         }
 
         .global-search-container {
@@ -3909,6 +3916,8 @@ window.__newsFetchPromise = (function() {
             border-radius: 16px;
             padding: 28px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            max-width: 100%;
+            overflow-x: hidden;
         }
 
         /* 每日快讯样式 */
@@ -3936,7 +3945,7 @@ window.__newsFetchPromise = (function() {
             border-radius: 8px;
             border: 1px solid var(--border);
             background: var(--bg-card);
-            font-size: 14px;
+            font-size: 16px;
             color: var(--text-primary);
             cursor: pointer;
         }
@@ -4000,6 +4009,8 @@ window.__newsFetchPromise = (function() {
             border-radius: 12px;
             border-left: 4px solid var(--primary);
             transition: all 0.2s ease;
+            overflow: hidden;
+            min-width: 0;
         }
         .news-card:hover {
             background: var(--border-light);
@@ -4030,6 +4041,10 @@ window.__newsFetchPromise = (function() {
         .news-card-title a {
             color: inherit;
             text-decoration: none;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+            -webkit-hyphens: auto;
+            hyphens: auto;
         }
         .news-card-title a:hover {
             color: var(--primary);
@@ -6390,6 +6405,37 @@ window.__newsFetchPromise = (function() {
             .calendar-add-task {
                 padding: 10px;
                 margin-bottom: 14px;
+            }
+
+            /* 移动端：资讯卡片改为纵向布局，防止横向溢出导致 iOS 缩放异常 */
+            .news-card {
+                flex-direction: column;
+                gap: 12px;
+                padding: 14px;
+            }
+            .news-card-actions {
+                flex-direction: row;
+                justify-content: flex-start;
+                align-items: center;
+                margin-top: 4px;
+            }
+            .news-card-action {
+                padding: 8px 12px;
+                font-size: 13px;
+            }
+            .news-card-title {
+                font-size: 15px;
+            }
+            .news-card-summary {
+                font-size: 13px;
+            }
+            .news-header-bar {
+                gap: 10px;
+                padding-bottom: 12px;
+                margin-bottom: 16px;
+            }
+            .news-date-display {
+                font-size: 16px;
             }
         }
 
