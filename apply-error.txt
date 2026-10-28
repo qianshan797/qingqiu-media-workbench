@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "<stdin>", line 46, in <module>
+  File "<stdin>", line 25, in build
+AssertionError: final line count 19072
