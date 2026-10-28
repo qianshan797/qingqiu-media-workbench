@@ -10608,6 +10608,25 @@ CREATE POLICY "allow_all" ON workbench_sync
                         return;
                     }
                 }
+                // profile：云端优先（云端有值就用云端的，本地只作兜底）
+                // 理由：改名后 saveData → pushToCloud 自动同步，云端值总是最新的
+                if (k === STORAGE_KEY_PROFILE || k === 'media_workflow_profile') {
+                    try {
+                        var remoteP = null;
+                        try { remoteP = (typeof val === 'string') ? JSON.parse(val) : val; } catch(eP2) {}
+                        if (!remoteP || typeof remoteP !== 'object') {
+                            console.log('[restoreFromCloudData] profile 云端无效，保留本地');
+                            return;
+                        }
+                        // 云端有合法 profile → 直接写入
+                        localStorage.setItem(k, typeof val === 'string' ? val : JSON.stringify(remoteP));
+                        console.log('[restoreFromCloudData] profile 采用云端值 name=', remoteP.name);
+                        return;
+                    } catch(eProfile) {
+                        console.error('[restoreFromCloudData] profile 合并异常:', eProfile);
+                        return;
+                    }
+                }
                 localStorage.setItem(k, val);
             });
             // v46：副标题文案从云端恢复后立即生效
