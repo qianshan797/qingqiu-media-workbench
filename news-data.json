@@ -1,5 +1,293 @@
 [
   {
+    "id": "news_20261028_001",
+    "date": "2026-10-28",
+    "category": "平台动态",
+    "title": "亚马逊黑五网一FBA入仓今日截止，多数卖家卡在Amazon-optimized拆分节点",
+    "summary": "亚马逊黑五网一FBA入仓进入最后窗口：10月21日为最小拆分截止日，10月28日为多数卖家使用的Amazon-optimized拆分选项截止日。未按期入仓将错过黑五排期，须确认头程舱位与拆分策略。",
+    "source": "http://m.toutiao.com/group/7701325486898676252/",
+    "tags": [
+      "亚马逊",
+      "黑五",
+      "FBA入仓",
+      "旺季备货",
+      "头程物流"
+    ],
+    "read": false,
+    "createdAt": 1793147793025,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20261028_002",
+    "date": "2026-10-28",
+    "category": "平台合规",
+    "title": "亚马逊商业责任险新规11月2日生效：加强安全类目商品保额门槛升至100万美元",
+    "summary": "亚马逊11月2日起实施新商业责任险要求：增强安全类目商品无论月销售额是否超1万美元，均须维持每次事故及累计保额不低于100万美元的第三方责任险，新老Listing均适用，需上传保单凭证。",
+    "source": "https://sellercentral.amazon.com/seller-forums/discussions/t/287d5c33-8278-4802-ba69-2f58f7dda408",
+    "tags": [
+      "亚马逊",
+      "商业责任险",
+      "平台合规",
+      "保额门槛",
+      "美国站"
+    ],
+    "read": false,
+    "createdAt": 1793147793025,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20261028_003",
+    "date": "2026-10-28",
+    "category": "平台动态",
+    "title": "TikTok Shop全托管黑五商品上架10月27日硬截止，16个站点首次参战",
+    "summary": "TikTok Shop全托管黑五季首次覆盖16个站点，欧洲8个新兴站点首次参战。商家须在10月27日前完成商品上架，逾期无缘本期活动；美区跨境POP需10月31日前提报，全托管需月底完成九成品入仓。",
+    "source": "https://www.tiktokshopglobalselling.com/zh-cn/newsroom/detail/tiktokshop_FS_bfcm",
+    "tags": [
+      "TikTok Shop",
+      "全托管",
+      "黑五",
+      "上架截止",
+      "16国"
+    ],
+    "read": false,
+    "createdAt": 1793147793025,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20261028_004",
+    "date": "2026-10-28",
+    "category": "平台动态",
+    "title": "Shopee巴西黑五启动：投入2300万雷亚尔优惠券并新建4个配送中心",
+    "summary": "Shopee于10月27日宣布巴西大促方案：投入2300万雷亚尔用于黑五优惠券、另2500万雷亚尔投向11.11，并新启用4个配送中心，订单处理能力提升60%。黑五10月28日开启，最高折扣50%。",
+    "source": "https://sbtnews.sbt.com.br/noticia/economia/shopee-abre-4-centros-de-distribuicao-e-prepara-black-friday",
+    "tags": [
+      "Shopee",
+      "巴西站",
+      "黑五",
+      "物流履约",
+      "优惠券"
+    ],
+    "read": false,
+    "createdAt": 1793147793025,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20261028_005",
+    "date": "2026-10-28",
+    "category": "平台功能更新",
+    "title": "TikTok Shop更新Order API：新增LIVE场次ID与买家昵称字段",
+    "summary": "TikTok Shop于10月22日更新Partner Center订单API，美欧英日等市场新增LIVE场次ID与买家昵称字段，并上线订单标签及LIVE新API，商家可据此做直播归因分析。",
+    "source": "https://partner.tiktokshop.com/docv2/changelog",
+    "tags": [
+      "TikTok Shop",
+      "API更新",
+      "直播电商",
+      "订单数据",
+      "功能更新"
+    ],
+    "read": false,
+    "createdAt": 1793147793025,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20261028_006",
+    "date": "2026-10-28",
+    "category": "贸易政策",
+    "title": "美国CBP将国际邮政新申报流程强制日推迟90天至2027年1月20日",
+    "summary": "美国海关10月14日宣布，将国际邮件Entry Type 13新申报流程强制日期由2026年10月22日延后至2027年1月20日，为进口商、报关代理与物流商留出过渡期，邮政渠道免税同步暂停。",
+    "source": "https://www.govinfo.gov/content/pkg/FR-2026-10-22/html/2026-21600.htm",
+    "tags": [
+      "美国海关",
+      "CBP",
+      "邮政小包",
+      "免税",
+      "申报合规"
+    ],
+    "read": false,
+    "createdAt": 1793147793025,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20261028_007",
+    "date": "2026-10-28",
+    "category": "市场趋势",
+    "title": "跨太平洋航线旺季高位运行：上海至洛杉矶运价涨至8007美元/FEU",
+    "summary": "跨太平洋航线旺季高位运行，上海至洛杉矶运价涨2%至8007美元/FEU，上海至纽约达10166美元/FEU；美国9月集装箱进口255万TEU、同比增10%。舱位锁定与订舱提前期成四季度最大成本变量。",
+    "source": "https://finance.sina.com.cn/wm/2026-10-26/doc-iniwqpfh2383569.shtml.md",
+    "tags": [
+      "海运费",
+      "美线",
+      "舱位",
+      "FBA头程",
+      "旺季"
+    ],
+    "read": false,
+    "createdAt": 1793147793025,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20261028_008",
+    "date": "2026-10-28",
+    "category": "市场趋势",
+    "title": "中国造AI爆款出海：AI眼镜、AI陪伴机器人订单已排产到明年",
+    "summary": "央视报道，四季度跨境旺季中消费电子与AI智能硬件为增速最快的出海品类，AI眼镜、AI陪伴机器人在海外快速起量，部分订单已排产至明年；海运费上涨与舱位紧张同步推高履约成本。",
+    "source": "http://m.toutiao.com/group/7701496791522460169/",
+    "tags": [
+      "AI眼镜",
+      "出海爆款",
+      "智能硬件",
+      "旺季选品",
+      "订单排产"
+    ],
+    "read": false,
+    "createdAt": 1793147793025,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20261028_009",
+    "date": "2026-10-28",
+    "category": "AI模型更新",
+    "title": "Google DeepMind发布Genie 4世界模型：实时生成可交互世界并同步音频",
+    "summary": "谷歌DeepMind于10月27日发布世界模型Genie 4研究预览版，可用自然语言提示实时生成并修改可交互虚拟环境并同步生成音频，单段模拟由一分钟延长至约两分钟，定位影视预演与机器人训练。",
+    "source": "https://www.theverge.com/tech/1019076/google-genie-4-ai-model",
+    "tags": [
+      "Google DeepMind",
+      "Genie 4",
+      "世界模型",
+      "实时生成",
+      "多模态"
+    ],
+    "read": false,
+    "createdAt": 1793147793025,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20261028_010",
+    "date": "2026-10-28",
+    "category": "AI模型更新",
+    "title": "Liquid AI开源LFM3：一个骨干通吃文本、视觉、音频与决策全模态",
+    "summary": "Liquid AI开源LFM3基础模型，六款模型由LFM3-1.7B-Base微调，预训练耗费22T tokens，采用tri-hybrid混合架构，效果超上代且参数少35%，量化后可在手机本地跑。",
+    "source": "https://www.liquid.ai/blog/lfm3",
+    "tags": [
+      "Liquid AI",
+      "LFM3",
+      "开源模型",
+      "全模态",
+      "端侧部署"
+    ],
+    "read": false,
+    "createdAt": 1793147793025,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20261028_011",
+    "date": "2026-10-28",
+    "category": "AI模型更新",
+    "title": "科大讯飞星火X2.6发布：纯国产算力端云一体，端侧智能体完成率升至41.9%",
+    "summary": "科大讯飞10月28日发布星火X2.6，采用云端大模型加4B端侧模型的端云一体架构，长程任务动态并行使超长上下文训练效率提升约4倍，端侧智能体任务完成率由约12%升至41.9%。",
+    "source": "https://www.aibase.com/zh/news/31906",
+    "tags": [
+      "科大讯飞",
+      "星火X2.6",
+      "端云一体",
+      "智能体",
+      "国产算力"
+    ],
+    "read": false,
+    "createdAt": 1793147793025,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20261028_012",
+    "date": "2026-10-28",
+    "category": "AI功能更新",
+    "title": "字节即梦AI上线「短剧工作室」：三大自研模型打通短剧全流程创作",
+    "summary": "10月26日字节跳动旗下即梦AI上线短剧工作室，配套自研剧本模型DreamScript、图片模型Anycook与分镜模型DreamShot，覆盖剧本、分镜、视频制作与后期调整，打通短剧AIGC全流程。",
+    "source": "https://www.jiemian.com/article/15239885.html",
+    "tags": [
+      "即梦AI",
+      "短剧工作室",
+      "DreamScript",
+      "AIGC",
+      "字节跳动"
+    ],
+    "read": false,
+    "createdAt": 1793147793025,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20261028_013",
+    "date": "2026-10-28",
+    "category": "AI功能更新",
+    "title": "MOSS-Image开源生图模型登顶HuggingFace趋势榜，主攻密集文字与JSON布局控制",
+    "summary": "模思智能与OpenMOSS团队开源的MOSS-Image登顶Hugging Face生图趋势榜，GitHub收获1.4k stars，主打密集文字渲染与JSON Layout构图控制，适合海报电商图。",
+    "source": "https://www.qbitai.com/2026/10/504930.html",
+    "tags": [
+      "MOSS-Image",
+      "开源生图",
+      "HuggingFace",
+      "电商素材",
+      "排版控制"
+    ],
+    "read": false,
+    "createdAt": 1793147793025,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20261028_014",
+    "date": "2026-10-28",
+    "category": "AI行业动态",
+    "title": "OpenAI公布前沿模型断网训练安全政策：搭建离线世界应对Agent越界风险",
+    "summary": "OpenAI公布前沿模型训练安全政策，将训练环境从公网剥离：缓存网页搭出离线世界，模型只能在缓存内容中检索，外加沙箱与网络访问限制。政策源于今年多起Agent越界事故。",
+    "source": "https://www.qbitai.com/2026/10/505529.html",
+    "tags": [
+      "OpenAI",
+      "AI安全",
+      "智能体",
+      "沙箱",
+      "红队测试"
+    ],
+    "read": false,
+    "createdAt": 1793147793025,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20261028_015",
+    "date": "2026-10-28",
+    "category": "AI行业动态",
+    "title": "Anthropic递交S-1招股书启动纳斯达克IPO，或成史上最大科技IPO",
+    "summary": "10月26日晚Anthropic向美国SEC提交S-1，拟以代码ANT在纳斯达克上市，最早11月中旬挂牌。上半年收入达162.9亿美元、同比增约1300%，市场估值预期1.5万亿至2万亿美元。",
+    "source": "https://m.36kr.com/p/4042929382872200",
+    "tags": [
+      "Anthropic",
+      "Claude",
+      "IPO",
+      "S-1",
+      "AI估值"
+    ],
+    "read": false,
+    "createdAt": 1793147793025,
+    "addedToPool": false
+  },
+  {
+    "id": "news_20261028_016",
+    "date": "2026-10-28",
+    "category": "AI行业动态",
+    "title": "英伟达30亿美元入股Meta并扩大Muse系列模型合作，加码AI算力集群",
+    "summary": "10月27日英伟达宣布向Meta投资30亿美元认购其新股，双方扩大在AI助手Muse及系列模型上的合作。Meta将扩大英伟达Vera Rubin算力集群部署，提升AI负载效率并降低总拥有成本。",
+    "source": "http://m.toutiao.com/group/7701505664073433651/",
+    "tags": [
+      "英伟达",
+      "Meta",
+      "Muse模型",
+      "算力投资",
+      "AI智能体"
+    ],
+    "read": false,
+    "createdAt": 1793147793025,
+    "addedToPool": false
+  },
+  {
     "id": "news_20261027_001",
     "date": "2026-10-27",
     "category": "平台动态",
