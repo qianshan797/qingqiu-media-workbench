@@ -10499,6 +10499,115 @@ CREATE POLICY "allow_all" ON workbench_sync
                         return;
                     }
                 }
+                // v50 bugfix：健康数据（health）也必须走合并，而不是直接覆盖
+                // 场景：finishPomodoro 刚累加了本地 daily.focusHours=0.42，pushToCloud 还在 async 中；
+                //      此刻 restoreFromCloudData 拉回云端旧值 daily.focusHours=0 → 覆盖本地 → 番茄 count 保住了但专注丢了
+                if (k === STORAGE_KEY_HEALTH || k === 'media_workflow_health') {
+                    try {
+                        var localH = null;
+                        try {
+                            var localHRaw = localStorage.getItem(STORAGE_KEY_HEALTH);
+                            localH = localHRaw ? JSON.parse(localHRaw) : null;
+                        } catch (eLH) { localH = null; }
+                        var remoteH = null;
+                        try { remoteH = (typeof val === 'string') ? JSON.parse(val) : val; } catch (eRH) { remoteH = null; }
+                        if (!localH || typeof localH !== 'object') {
+                            localStorage.setItem(STORAGE_KEY_HEALTH, JSON.stringify(remoteH));
+                            return;
+                        }
+                        if (!remoteH || typeof remoteH !== 'object') { return; }
+                        var todayH = (typeof _todayStr === 'function') ? _todayStr() : getTodayDate();
+                        var metricKeys = ['sleepHours', 'focusHours', 'standSteps', 'screenHours'];
+
+                        // 1) goals：本地优先（用户在本地改的目标值不应被云端旧值覆盖）
+                        var mergedGoals = Object.assign({}, remoteH.goals || {}, localH.goals || {});
+
+                        // 2) daily：date 相同 → 四项指标分别取较大值；date 不同 → 取"今天"指向的那份，另一份推进 history
+                        function _hMergeDay(a, b) {
+                            if (!a) return b || null;
+                            if (!b) return a;
+                            var m = { date: a.date || b.date };
+                            metricKeys.forEach(function(mk) { m[mk] = Math.max(a[mk] || 0, b[mk] || 0); });
+                            return m;
+                        }
+                        function _hDayNonZero(d) {
+                            return d && metricKeys.some(function(mk) { return (d[mk] || 0) > 0; });
+                        }
+
+                        var ld = localH.daily || null;
+                        var rd = remoteH.daily || null;
+                        var mergedDaily = null;
+                        var extraForHistory = null;
+                        if (ld && rd && ld.date === rd.date) {
+                            mergedDaily = _hMergeDay(ld, rd);
+                        } else if (ld && rd) {
+                            // 两份 daily 日期不同：取今天指向的那份为 daily，另一份塞回 history 合并
+                            if (ld.date === todayH) {
+                                mergedDaily = ld;
+                                extraForHistory = rd;
+                            } else if (rd.date === todayH) {
+                                mergedDaily = rd;
+                                extraForHistory = ld;
+                            } else {
+                                // 都不是今天：取较新的那份为 daily
+                                mergedDaily = (ld.date || '') > (rd.date || '') ? ld : rd;
+                                extraForHistory = (ld.date || '') > (rd.date || '') ? rd : ld;
+                            }
+                        } else {
+                            mergedDaily = ld || rd;
+                        }
+                        if (extraForHistory && _hDayNonZero(extraForHistory)) {
+                            // 另一份 daily 日期不同且有数据 → 并入 history
+                            if (Array.isArray(localH.history)) {
+                                localH.history.push(extraForHistory);
+                            } else {
+                                localH.history = [extraForHistory];
+                            }
+                        }
+
+                        // 3) history：按 date 并集合并，同 date 条目每项取较大值
+                        var mergedHistoryMap = {};
+                        (localH.history || []).forEach(function(rec) {
+                            if (!rec || !rec.date) return;
+                            if (!mergedHistoryMap[rec.date]) mergedHistoryMap[rec.date] = rec;
+                            else mergedHistoryMap[rec.date] = _hMergeDay(mergedHistoryMap[rec.date], rec);
+                        });
+                        (remoteH.history || []).forEach(function(rec) {
+                            if (!rec || !rec.date) return;
+                            if (!mergedHistoryMap[rec.date]) mergedHistoryMap[rec.date] = rec;
+                            else mergedHistoryMap[rec.date] = _hMergeDay(mergedHistoryMap[rec.date], rec);
+                        });
+                        var mergedHistory = Object.keys(mergedHistoryMap).sort().map(function(d) { return mergedHistoryMap[d]; });
+                        if (mergedHistory.length > 365) mergedHistory = mergedHistory.slice(-365);
+
+                        var mergedHealth = {
+                            daily: mergedDaily,
+                            history: mergedHistory,
+                            goals: mergedGoals
+                        };
+                        localStorage.setItem(STORAGE_KEY_HEALTH, JSON.stringify(mergedHealth));
+                        // 合并后立即 _rollHealth 确保 daily 指向今天
+                        try {
+                            if (typeof _rollHealth === 'function') {
+                                var mh = JSON.parse(localStorage.getItem(STORAGE_KEY_HEALTH));
+                                mh = _rollHealth(mh);
+                                localStorage.setItem(STORAGE_KEY_HEALTH, JSON.stringify(mh));
+                                console.log('[restoreFromCloudData] health 合并完成，daily.date=', mh.daily.date,
+                                    'focusHours=', mh.daily.focusHours, 'history=', mh.history.length, '天');
+                            } else {
+                                console.log('[restoreFromCloudData] health 合并完成，daily.date=', mergedDaily && mergedDaily.date,
+                                    'focusHours=', mergedDaily && mergedDaily.focusHours, 'history=', mergedHistory.length, '天');
+                            }
+                        } catch (eRoll) {
+                            console.error('[restoreFromCloudData] health 合并后 rollHealth 异常:', eRoll);
+                        }
+                        return;
+                    } catch (eHealth) {
+                        console.error('[restoreFromCloudData] health 合并异常:', eHealth);
+                        // 合并失败兜底：放弃云端覆盖，保留本地（最安全策略，不会丢数据）
+                        return;
+                    }
+                }
                 localStorage.setItem(k, val);
             });
             // v46：副标题文案从云端恢复后立即生效
