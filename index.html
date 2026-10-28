@@ -19033,8 +19033,11 @@ CREATE POLICY "allow_all" ON workbench_sync
             } catch (eHealth) {
                 console.error('[finishPomodoro] 同步专注时长失败:', eHealth);
             }
-            if (healthUpdated && typeof renderHealth === 'function') {
-                try { renderHealth(); } catch (eRender) {}
+            if (healthUpdated) {
+                try { if (typeof renderHealth === 'function') renderHealth(); } catch (eRender) {}
+                // 主页"今日概览"健康进度条 + "本周专注趋势"柱状图也需要立刻刷新
+                try { if (typeof renderHomeVitals === 'function') renderHomeVitals(); } catch (eHV) {}
+                try { if (typeof renderHomeMood === 'function') renderHomeMood(); } catch (eHM) {}
             }
             // 番茄钟与健康数据一起推送一次
             if (typeof pushToCloud === 'function' && syncEnabled) pushToCloud().catch(function() {});
