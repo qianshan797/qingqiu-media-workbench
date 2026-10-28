@@ -58,6 +58,8 @@ jobs:
                   f.write(out)
               shutil.rmtree('patches')
               os.remove('.github/workflows/apply-v50.yml')
+              if os.path.exists('apply-error.txt'):
+                  os.remove('apply-error.txt')
               print('patch applied')
 
           try:
@@ -72,5 +74,5 @@ jobs:
           git config user.name "qingqiu-bot"
           git config user.email "qingqiu-bot@users.noreply.github.com"
           git add -A
-          git diff --cached --quiet || git commit -m "v50: pomodoro/theme cloud sync + health calendar + focus auto-accumulate"
+          git diff --cached --quiet || git commit -m "v50: 番茄钟与主题云同步 + 健康日历 + 番茄专注自动累加"
           git push origin HEAD:main
