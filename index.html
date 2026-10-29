@@ -13801,8 +13801,8 @@ CREATE POLICY "allow_all" ON workbench_sync
             },
             {
                 name: 'addTask',
-                match: /^(?:(?:添加|新增|加|创建|新建)\s*(?:一个|条|项|个)?\s*)(?!(?:日常|每日|每天|每日例行|学习|study|routine)\b)(.+?)(?:\s*(?:任务|task))?$/i,
-                extractTitle: (m) => (m[3] || m[1] || m[2] || '').trim(),
+                match: /^(?:(?:添加|新增|加|创建|新建)\s*(?:一个|条|项|个)?\s*)(?!(?:日常|每日|每天|每日例行|学习|study|routine)\b)(?:任务\s*)?(.+?)\s*$/i,
+                extractTitle: (m) => (m[1] || m[2] || m[3] || '').trim(),
                 run: function(title) {
                     if (!title) return false;
                     _quickAddTask({ title: title, isDaily: false });
@@ -13872,6 +13872,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                 name: 'stopPomodoro',
                 match: /^(?:\/?stop\s*番茄|\/?停止番茄(?:钟)?|\/?停止专注|\/?番茄(?:钟)?\s*停止|\/?专注\s*停止)$/i,
                 run: function() {
+                    if (typeof finishPomodoro === 'function') { finishPomodoro(true); return '番茄钟已停止'; }
                     if (typeof stopPomodoro === 'function') { stopPomodoro(); return '番茄钟已停止'; }
                     return false;
                 }
