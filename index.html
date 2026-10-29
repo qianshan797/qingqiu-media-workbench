@@ -10334,22 +10334,41 @@ CREATE POLICY "allow_all" ON workbench_sync
                         });
                         // 清理自动生成的更新数据任务
                         let cleaned = merged.filter(t => !(t && t.title && t.title.indexOf('更新')===0 && t.title.indexOf(')数据')!==-1));
-                        // ✅ 多端去重防御：按 title + isDaily + dueDate 去重，
-                        //    两个设备各自生成"今日日常实例"后云端按 id 合并会产生重复，这里兜底
+                        // ✅ v42 全维度去重：按 title + isDaily + platform + dueDate + status 去重，
+                        //    覆盖多端同步重复、每日任务模板多份、用户手动复制等所有场景；
+                        //    保留 id 最小的那条（先创建的），并把重复的 id 写进 deleted_tasks 防止下次 restore 又被加回来
                         const dupCountBefore = cleaned.length;
-                        const dailyKey = {};
+                        const allKey = {};
+                        var extraDelTasks = {};
                         cleaned = cleaned.filter(t => {
                             if (!t || !t.title) return false;
-                            // 只对 pending 状态、有 dueDate 的日常实例去重
-                            if (t.isDaily !== true || !t.dueDate || t.status !== 'pending') return true;
-                            const key = t.title + '|' + t.dueDate;
-                            if (dailyKey[key]) return false; // 重复，丢弃
-                            dailyKey[key] = true;
+                            const key = (t.title||'') + '|' + (t.isDaily?'1':'0') + '|' + (t.platform||'') + '|' + (t.dueDate||'') + '|' + (t.status||'');
+                            if (allKey[key]) {
+                                // 同 key 已存在，比 id 大小，保留先创建的（更小的 id）
+                                var existing = allKey[key];
+                                if (String(t.id) < String(existing.id)) {
+                                    extraDelTasks[String(existing.id)] = Date.now();
+                                    allKey[key] = t;
+                                } else {
+                                    extraDelTasks[String(t.id)] = Date.now();
+                                }
+                                return false; // 丢弃重复
+                            }
+                            allKey[key] = t;
                             return true;
                         });
+                        // 把去重产生的新 deleted id 合并进 deleted_tasks
+                        if (Object.keys(extraDelTasks).length > 0) {
+                            try {
+                                var _dRClean = localStorage.getItem('media_workflow_deleted_tasks');
+                                var _dMClean = _dRClean ? JSON.parse(_dRClean) : {};
+                                Object.assign(_dMClean, extraDelTasks);
+                                localStorage.setItem('media_workflow_deleted_tasks', JSON.stringify(_dMClean));
+                            } catch(eDup) {}
+                        }
                         const dupRemoved = dupCountBefore - cleaned.length;
                         if (dupRemoved > 0) {
-                            console.warn('[restoreFromCloudData] 多端日常实例去重：移除', dupRemoved, '条重复（同 title+dueDate+isDaily 的 pending 任务只保留一条）');
+                            console.warn('[restoreFromCloudData] v42 全维度去重：移除', dupRemoved, '条重复（按 title+isDaily+platform+dueDate+status，保留最早创建的）');
                         }
                         // v35 修复：不再靠标题关键字过滤！只清 deleted_tasks 里已记录的 id
                         // 原因：标题含"更新账号"的用户自己的日常模板会被误杀
