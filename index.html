@@ -15327,12 +15327,6 @@ CREATE POLICY "allow_all" ON workbench_sync
             });
             targetPage.classList.add('active');
 
-            // 主页/个人学习/个人健康管理不显示全局搜索栏
-            const searchContainer = document.querySelector('.global-search-container');
-            if (searchContainer) {
-                searchContainer.style.display = (pageName === 'home' || pageName === 'study' || pageName === 'health') ? 'none' : '';
-            }
-
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
             });
@@ -19605,9 +19599,6 @@ CREATE POLICY "allow_all" ON workbench_sync
         generateDailyAccountTasks(); // 自动生成每日账号更新任务
         autoUpdateAccountData(); // 自动更新账号数据（每天中午12点）
         initGlobalSearch(); // 初始化全局搜索
-        // 初始加载默认显示主页，隐藏全局搜索栏
-        const initSearchContainer = document.querySelector('.global-search-container');
-        if (initSearchContainer) initSearchContainer.style.display = 'none';
         initCloudSync(); // 初始化云同步
         autoSyncNews(); // 自动同步每日快讯
         updateNewsBadge(); // 更新快讯未读徽标
