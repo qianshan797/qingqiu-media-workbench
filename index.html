@@ -1746,6 +1746,61 @@ window.__newsFetchPromise = (function() {
             color: var(--text-secondary);
         }
 
+        /* 语音按钮样式 */
+        .voice-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            margin-right: 4px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .voice-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+        .voice-btn:hover {
+            background: var(--primary-soft);
+            color: var(--primary);
+        }
+        .voice-btn.recording {
+            background: rgba(255, 59, 48, 0.15);
+            color: #FF3B30;
+            animation: voicePulse 1.2s ease-in-out infinite;
+        }
+        @keyframes voicePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        .voice-hint {
+            margin-top: 8px;
+            padding: 8px 14px;
+            background: var(--primary-soft);
+            border-radius: 10px;
+            font-size: 13px;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: fadeIn 0.2s ease;
+        }
+        .voice-hint-close {
+            margin-left: auto;
+            cursor: pointer;
+            color: var(--primary-dark);
+            opacity: 0.6;
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 1;
+        }
+        .voice-hint-close:hover { opacity: 1; }
+
         .global-search-results {
             position: absolute;
             top: calc(100% + 8px);
@@ -8566,11 +8621,15 @@ window.__newsFetchPromise = (function() {
             <div class="global-search-container">
                 <div class="global-search-bar">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                    <input type="text" id="globalSearchInput" class="global-search-input" placeholder="搜索素材标题/标签、任务标题、账号名称...">
+                    <input type="text" id="globalSearchInput" class="global-search-input" placeholder="搜索... 或输入指令：添加日常任务 xxx / 番茄 / /go news">
+                    <button class="voice-btn" id="voiceBtn" onclick="toggleVoiceCommand()" title="语音指令（点一下说话）">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M19 10a7 7 0 0 1-14 0"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+                    </button>
                     <button class="search-clear-btn" id="searchClearBtn" style="display: none;" onclick="clearGlobalSearch()">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
                     </button>
                 </div>
+                <div class="voice-hint" id="voiceHint" style="display:none;">请说话... <span class="voice-hint-close" onclick="stopVoiceCommand()">×</span></div>
                 <div class="global-search-results" id="globalSearchResults"></div>
             </div>
 
@@ -13644,6 +13703,350 @@ CREATE POLICY "allow_all" ON workbench_sync
             overlay.classList.remove('active');
         }
 
+        // ============================================================
+        // 指令路由器 v1 —— 正则匹配用户输入，直接调用已有函数
+        // ============================================================
+        let _voiceRecognition = null;
+        let _voiceActive = false;
+        let _voiceFinalText = '';
+
+        // 给路由器暴露的极简任务构造器（绕开 DOM 表单）
+        function _quickAddTask(opts) {
+            opts = opts || {};
+            var title = (opts.title || '').trim();
+            if (!title) return false;
+            var platform = opts.platform || ['抖音'];
+            var priority = opts.priority || 'medium';
+            var isDaily = !!opts.isDaily;
+            var dueDate = opts.dueDate || null;
+
+            if (isDaily) {
+                var tmpl = {
+                    id: generateId(),
+                    title: title,
+                    priority: priority,
+                    platform: platform,
+                    status: 'pending',
+                    isDaily: true,
+                    dueDate: null
+                };
+                tasks.push(tmpl);
+                var todayInst = {
+                    id: generateId(),
+                    title: title,
+                    priority: priority,
+                    platform: platform,
+                    status: 'pending',
+                    isDaily: true,
+                    autoGenerated: false,
+                    dueDate: getTodayDate()
+                };
+                tasks.push(todayInst);
+            } else {
+                tasks.push({
+                    id: generateId(),
+                    title: title,
+                    priority: priority,
+                    platform: platform,
+                    status: 'pending',
+                    isDaily: false,
+                    dueDate: dueDate || getTodayDate()
+                });
+            }
+            saveData(STORAGE_KEY_TASKS, tasks);
+            try { renderTasks(); renderCalendar(); } catch(e) {}
+            if (typeof pushToCloud === 'function') pushToCloud().catch(function(){});
+            return true;
+        }
+
+        // 指令定义表（顺序很重要，长匹配在前）
+        const _COMMAND_REGISTRY = [
+            // ---------- 添加任务 ----------
+            {
+                name: 'addDailyTask',
+                match: /^(?:(?:添加|新增|加|创建|新建)\s*(?:一个|条|项|个)?\s*)?(?:日常|每日|每天|每日例行|routine)\s*任务?[：: ]*(.+)$|^(?:日常|每日|每天)\s*任务?[：: ]*(.+)$/i,
+                extractTitle: (m) => (m[3] || m[1] || '').trim(),
+                run: function(title) {
+                    if (!title) return false;
+                    _quickAddTask({ title: title, isDaily: true });
+                    return '已添加日常任务：' + title;
+                }
+            },
+            {
+                name: 'addStudyTask',
+                match: /^(?:(?:添加|新增|加|创建|新建)\s*(?:一个|条|项|个)?\s*)?(?:学习|study)\s*任务?[：: ]*(.+)$|^(?:学习)\s*任务?[：: ]*(.+)$/i,
+                extractTitle: (m) => (m[2] || m[1] || '').trim(),
+                run: function(title) {
+                    if (!title) return false;
+                    if (typeof addStudyTask === 'function') {
+                        // 直接写 study tasks 数组
+                        var st = typeof getStudyTasks === 'function' ? getStudyTasks() : [];
+                        st.unshift({
+                            id: 'study_' + Date.now(),
+                            title: title,
+                            type: 'long',
+                            deadline: null,
+                            done: false,
+                            doneDate: null,
+                            createdAt: Date.now()
+                        });
+                        if (typeof saveStudyTasks === 'function') saveStudyTasks(st);
+                        if (typeof renderStudyTasks === 'function') renderStudyTasks();
+                        if (typeof renderStudyCheckin === 'function') renderStudyCheckin();
+                        if (typeof pushToCloud === 'function') pushToCloud().catch(function(){});
+                        return '已添加学习任务：' + title;
+                    }
+                    return false;
+                }
+            },
+            {
+                name: 'addTask',
+                match: /^(?:(?:添加|新增|加|创建|新建)\s*(?:一个|条|项|个)?\s*)(?!(?:日常|每日|每天|每日例行|学习|study|routine)\b)(.+?)(?:\s*(?:任务|task))?$/i,
+                extractTitle: (m) => (m[3] || m[1] || m[2] || '').trim(),
+                run: function(title) {
+                    if (!title) return false;
+                    _quickAddTask({ title: title, isDaily: false });
+                    return '已添加任务：' + title;
+                }
+            },
+
+            // ---------- 完成任务 ----------
+            {
+                name: 'completeTask',
+                match: /^(?:(?:完成|标记完成|done|finish)\s*(?:任务)?\s*[：: ]*)?(.{2,})$/,
+                cond: (raw) => /^(?:完成|标记完成|done|finish)/i.test(raw),
+                extractTitle: (m) => (m[1] || '').trim(),
+                run: function(title) {
+                    // 防止"完成"单字触发：标题太短（<3字符）返回 false 让它继续尝试搜索
+                    if (!title || title.length < 3) return false;
+                    var candidates = tasks.filter(function(t) {
+                        return t.status === 'pending' && t.title && t.title.indexOf(title) !== -1;
+                    });
+                    if (candidates.length === 0) {
+                        // 也试试精确匹配
+                        candidates = tasks.filter(function(t) {
+                            return t.status === 'pending' && t.title && t.title.trim() === title;
+                        });
+                    }
+                    if (candidates.length === 0) return '未找到匹配的待处理任务：' + title;
+                    if (candidates.length > 1) return '匹配到 ' + candidates.length + ' 条，请缩小范围';
+                    candidates[0].status = 'completed';
+                    saveData(STORAGE_KEY_TASKS, tasks);
+                    try { renderTasks(); renderCalendar(); } catch(e) {}
+                    if (typeof pushToCloud === 'function') pushToCloud().catch(function(){});
+                    return '已标记完成：' + candidates[0].title;
+                }
+            },
+
+            // ---------- 删除任务 ----------
+            {
+                name: 'deleteTask',
+                match: /^(?:删除|移除|delete|remove)\s*(?:任务)?\s*[：: ]*(.+)$/i,
+                extractTitle: (m) => (m[1] || '').trim(),
+                run: function(title) {
+                    if (!title) return false;
+                    var before = tasks.length;
+                    tasks = tasks.filter(function(t) {
+                        return !t.title || t.title.indexOf(title) === -1;
+                    });
+                    var removed = before - tasks.length;
+                    if (removed === 0) return '未找到匹配的任务';
+                    saveData(STORAGE_KEY_TASKS, tasks);
+                    try { renderTasks(); renderCalendar(); } catch(e) {}
+                    if (typeof pushToCloud === 'function') pushToCloud().catch(function(){});
+                    return '已删除 ' + removed + ' 条包含 "' + title + '" 的任务';
+                }
+            },
+
+            // ---------- 番茄钟 ----------
+            {
+                name: 'pomodoro',
+                match: /^(?:\/?pomodoro|\/?番茄(?:钟)?|\/?开始番茄(?:钟)?|\/?开始专注|\/?专注)$/i,
+                run: function() {
+                    if (typeof startPomodoro === 'function') { startPomodoro(); return '番茄钟已启动'; }
+                    if (typeof initPomodoroTimer === 'function') { initPomodoroTimer(); return '番茄钟已启动'; }
+                    return false;
+                }
+            },
+            {
+                name: 'stopPomodoro',
+                match: /^(?:\/?stop\s*番茄|\/?停止番茄(?:钟)?|\/?停止专注|\/?番茄(?:钟)?\s*停止|\/?专注\s*停止)$/i,
+                run: function() {
+                    if (typeof stopPomodoro === 'function') { stopPomodoro(); return '番茄钟已停止'; }
+                    return false;
+                }
+            },
+
+            // ---------- 跳转页面 ----------
+            {
+                name: 'goPage',
+                match: /^(?:\/?go\s+|\/?跳转\s+|\/?打开\s+|\/?去\s+)(.+)$/i,
+                extractTitle: (m) => (m[1] || '').trim(),
+                run: function(target) {
+                    var map = {
+                        'home': 'home', '主页': 'home', '首页': 'home',
+                        'kanban': 'kanban', '看板': 'kanban', '任务': 'kanban', '工作任务': 'kanban',
+                        'account': 'account', '账号': 'account', '账号管理': 'account',
+                        'workflow': 'workflow', '工作流': 'workflow',
+                        'materials': 'materials', '素材': 'materials', '素材池': 'materials',
+                        'calendar': 'calendar', '日历': 'calendar', '工作日历': 'calendar',
+                        'news': 'news', 'news': 'news', '快讯': 'news', '每日快讯': 'news', '资讯': 'news',
+                        'study': 'study', '学习': 'study', '个人学习': 'study',
+                        'health': 'health', '健康': 'health', '个人健康': 'health', '个人健康管理': 'health'
+                    };
+                    var lower = target.toLowerCase().trim();
+                    var page = map[lower] || map[target.trim()] || null;
+                    if (!page) return '未知页面：' + target;
+                    if (typeof switchPage === 'function') switchPage(page);
+                    return '已跳转至：' + target;
+                }
+            },
+
+            // ---------- 快捷操作 ----------
+            {
+                name: 'help',
+                match: /^(?:\/?help|\/?帮助|\/?指令|\/?commands|\/?cmd)$/i,
+                run: function() {
+                    var msg = '📝 可用指令：\n' +
+                        '• 添加日常任务 xxx\n' +
+                        '• 添加任务 xxx\n' +
+                        '• 添加学习任务 xxx\n' +
+                        '• 完成 xxx（标记包含xxx的待处理任务）\n' +
+                        '• 删除 xxx\n' +
+                        '• 番茄 / 停止番茄\n' +
+                        '• /go news / /go home / /go kanban ...\n' +
+                        '• 点搜索栏旁边的 🎤 说话（需 HTTPS + Chrome/Safari）';
+                    showToast('帮助已显示在控制台');
+                    console.log(msg);
+                    return '帮助已打印到 F12 控制台';
+                }
+            }
+        ];
+
+        // 统一入口：解析用户输入 → 执行指令 → 返回结果文案（null 表示不是指令）
+        function dispatchCommand(rawInput) {
+            if (!rawInput) return null;
+            var raw = String(rawInput).trim();
+            if (!raw) return null;
+
+            for (var i = 0; i < _COMMAND_REGISTRY.length; i++) {
+                var cmd = _COMMAND_REGISTRY[i];
+                if (cmd.cond && !cmd.cond(raw)) continue;
+                var m = raw.match(cmd.match);
+                if (!m) continue;
+                var title = cmd.extractTitle ? cmd.extractTitle(m) : '';
+                var result = cmd.run(title || '');
+                // 返回 false 表示内部执行失败，继续尝试下一条；返回字符串表示命中
+                if (result === false) continue;
+                return result || ('执行了：' + cmd.name);
+            }
+            return null;
+        }
+
+        // ============================================================
+        // 语音识别（Web Speech API，浏览器原生，无需 API Key）
+        // ============================================================
+        function _speechSupported() {
+            return !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+        }
+
+        function toggleVoiceCommand() {
+            if (_voiceActive) { stopVoiceCommand(); return; }
+            startVoiceCommand();
+        }
+
+        function startVoiceCommand() {
+            if (!_speechSupported()) {
+                showToast('当前浏览器不支持语音识别（需 Chrome/Safari + HTTPS）', 'error');
+                return;
+            }
+            try {
+                var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+                _voiceRecognition = new SR();
+                _voiceRecognition.lang = 'zh-CN';
+                _voiceRecognition.interimResults = true;
+                _voiceRecognition.maxAlternatives = 1;
+                _voiceFinalText = '';
+
+                _voiceRecognition.onstart = function() {
+                    _voiceActive = true;
+                    var btn = document.getElementById('voiceBtn');
+                    var hint = document.getElementById('voiceHint');
+                    if (btn) btn.classList.add('recording');
+                    if (hint) hint.style.display = 'flex';
+                    showToast('正在听你说话...', 'loading');
+                };
+
+                _voiceRecognition.onresult = function(e) {
+                    var interim = '';
+                    var finalText = '';
+                    for (var i = 0; i < e.results.length; i++) {
+                        var transcript = e.results[i][0].transcript;
+                        if (e.results[i].isFinal) {
+                            finalText += transcript;
+                        } else {
+                            interim += transcript;
+                        }
+                    }
+                    var full = finalText + interim;
+                    var input = document.getElementById('globalSearchInput');
+                    if (input) input.value = full;
+                    var isFinal = e.results.length > 0 && e.results[e.results.length - 1].isFinal;
+                    if (isFinal && finalText) {
+                        _voiceFinalText += finalText;
+                    }
+                };
+
+                _voiceRecognition.onerror = function(e) {
+                    console.warn('[voice] error:', e.error);
+                    stopVoiceCommand();
+                    if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+                        showToast('语音权限被拒绝，请在浏览器设置允许麦克风', 'error');
+                    } else if (e.error !== 'no-speech' && e.error !== 'aborted') {
+                        showToast('识别出错：' + e.error, 'error');
+                    }
+                };
+
+                _voiceRecognition.onend = function() {
+                    var wasActive = _voiceActive;
+                    stopVoiceCommand();
+                    // 如果是正常结束（不是用户手动停止），自动执行识别到的指令
+                    var finalCmd = _voiceFinalText.trim();
+                    if (!finalCmd) {
+                        var input = document.getElementById('globalSearchInput');
+                        if (input) finalCmd = input.value.trim();
+                    }
+                    if (wasActive && finalCmd) {
+                        var result = dispatchCommand(finalCmd);
+                        if (result) {
+                            showToast('🎤 ' + result, 'success');
+                        } else {
+                            showToast('未识别为指令：' + finalCmd + '（试试搜索）', 'error');
+                        }
+                    }
+                    _voiceFinalText = '';
+                };
+
+                _voiceRecognition.start();
+            } catch (e) {
+                console.error('[voice] start failed:', e);
+                showToast('语音启动失败：' + e.message, 'error');
+                stopVoiceCommand();
+            }
+        }
+
+        function stopVoiceCommand() {
+            _voiceActive = false;
+            if (_voiceRecognition) {
+                try { _voiceRecognition.stop(); } catch(e) {}
+                _voiceRecognition = null;
+            }
+            var btn = document.getElementById('voiceBtn');
+            var hint = document.getElementById('voiceHint');
+            if (btn) btn.classList.remove('recording');
+            if (hint) hint.style.display = 'none';
+        }
+
         let searchTimeout = null;
         let searchResults = [];
         let selectedResultIndex = 0;
@@ -13669,6 +14072,27 @@ CREATE POLICY "allow_all" ON workbench_sync
             });
 
             searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    var rawCmd = e.target.value.trim();
+                    // 前置：先尝试指令匹配（无论有没有搜索结果）
+                    if (rawCmd) {
+                        var cmdResult = dispatchCommand(rawCmd);
+                        if (cmdResult) {
+                            showToast('📝 ' + cmdResult, 'success');
+                            e.target.value = '';
+                            searchClearBtn.style.display = 'none';
+                            hideSearchResults();
+                            return;
+                        }
+                    }
+                    // 没匹配到指令 → 走原有搜索选择逻辑
+                    if (searchResultsEl.classList.contains('active') && searchResults.length > 0) {
+                        selectSearchResult(searchResults[selectedResultIndex]);
+                    }
+                    return;
+                }
+
                 if (!searchResultsEl.classList.contains('active')) return;
 
                 if (e.key === 'ArrowDown') {
@@ -13679,11 +14103,6 @@ CREATE POLICY "allow_all" ON workbench_sync
                     e.preventDefault();
                     selectedResultIndex = Math.max(selectedResultIndex - 1, 0);
                     updateSelectedResult();
-                } else if (e.key === 'Enter') {
-                    e.preventDefault();
-                    if (searchResults.length > 0) {
-                        selectSearchResult(searchResults[selectedResultIndex]);
-                    }
                 } else if (e.key === 'Escape') {
                     hideSearchResults();
                 }
