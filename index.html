@@ -13715,7 +13715,7 @@ CREATE POLICY "allow_all" ON workbench_sync
             opts = opts || {};
             var title = (opts.title || '').trim();
             if (!title) return false;
-            var platform = opts.platform || ['抖音'];
+            var platform = opts.platform || '抖音';  // 逗号分隔字符串
             var priority = opts.priority || 'medium';
             var isDaily = !!opts.isDaily;
             var dueDate = opts.dueDate || null;
