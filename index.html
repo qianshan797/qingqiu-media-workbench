@@ -8621,7 +8621,7 @@ window.__newsFetchPromise = (function() {
             <div class="global-search-container">
                 <div class="global-search-bar">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                    <input type="text" id="globalSearchInput" class="global-search-input" placeholder="搜索... 或输入指令：添加日常任务 xxx / 番茄 / /go news">
+                    <input type="text" id="globalSearchInput" class="global-search-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="搜索... 或输入指令：添加日常任务 xxx / 番茄 / /go news">
                     <button class="voice-btn" id="voiceBtn" onclick="toggleVoiceCommand()" title="语音指令（点一下说话）">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M19 10a7 7 0 0 1-14 0"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
                     </button>
@@ -14121,6 +14121,12 @@ CREATE POLICY "allow_all" ON workbench_sync
             const searchInput = document.getElementById('globalSearchInput');
             const searchResultsEl = document.getElementById('globalSearchResults');
             const searchClearBtn = document.getElementById('searchClearBtn');
+
+            // 防止浏览器自动回填历史输入（例如之前填过的同步地址）造成误显示
+            if (searchInput.value && !localStorage.getItem('media_workflow_search_draft')) {
+                searchInput.value = '';
+            }
+            searchInput.setAttribute('autocomplete', 'off');
 
             searchInput.addEventListener('input', function(e) {
                 clearTimeout(searchTimeout);
