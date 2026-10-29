@@ -13478,7 +13478,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                                     <div class="task-name">${escapeHtml(task.title)}</div>
                                     <div class="task-meta-row">
                                         <span class="priority-badge ${priorityClass}" style="font-size: 10px; padding: 1px 6px;">${priorityLabel}优先</span>
-                                        ${(task.platform||'').split(',').filter(p=>p).map(p=>`<span class="task-meta">${escapeHtml(p)}</span>`).join(' ')}
+                                        ${(Array.isArray(task.platform)?task.platform.join(','):(task.platform||'')).split(',').filter(p=>p).map(p=>`<span class="task-meta">${escapeHtml(p)}</span>`).join(' ')}
                                         <span class="task-status ${statusClass}" style="color: ${statusColor}; background: ${statusColor}15;">${statusText}</span>
                                     </div>
                                 </div>
@@ -13509,7 +13509,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                                 <div class="task-info">
                                     <div class="task-name" style="${titleStyle}">${escapeHtml(task.title)}</div>
                                     <div class="task-meta-row">
-                                        ${(task.platform||'').split(',').filter(p=>p).map(p=>`<span class="task-meta">${escapeHtml(p)}</span>`).join(' ')}
+                                        ${(Array.isArray(task.platform)?task.platform.join(','):(task.platform||'')).split(',').filter(p=>p).map(p=>`<span class="task-meta">${escapeHtml(p)}</span>`).join(' ')}
                                         <span class="task-status ${statusClass}" ${isArchived ? 'style="color:#94a3b8; background:#94a3b815;"' : ''}>${statusText}</span>
                                     </div>
                                 </div>
@@ -15488,7 +15488,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                 <div class="task-title">${escapeHtml(task.title)}</div>
                 <div class="task-meta">
                     <span class="priority-badge ${task.priority}">${priorityLabels[task.priority]}</span>
-                    ${(task.platform || '').split(',').filter(p => p).map(p => `<span class="platform-badge">${escapeHtml(p)}</span>`).join('')}
+                    ${(Array.isArray(task.platform)?task.platform.join(','):(task.platform || '')).split(',').filter(p => p).map(p => `<span class="platform-badge">${escapeHtml(p)}</span>`).join('')}
                     ${dailyBadge}
                     ${dateBadge}
                     ${statusBadge}
