@@ -13905,6 +13905,51 @@ CREATE POLICY "allow_all" ON workbench_sync
 
             // ---------- 快捷操作 ----------
             {
+                name: 'clean',
+                match: /^(?:\/?clean|\/?清理|\/?清测试|\/?cleantest)$/i,
+                run: function() {
+                    var tk = 'media_workflow_tasks';
+                    var raw = localStorage.getItem(tk);
+                    if (!raw) return '没有任务数据';
+                    var tasks;
+                    try { tasks = JSON.parse(raw); } catch(e) { return '任务数据损坏'; }
+                    if (!Array.isArray(tasks)) return '任务数据格式异常';
+                    var before = tasks.length;
+                    // 同时清模板库（daily 模板可能也带"测试"）
+                    var tplKey = 'media_workflow_task_templates';
+                    var tplBefore = 0, tplAfter = 0;
+                    try {
+                        var tplRaw = localStorage.getItem(tplKey);
+                        if (tplRaw) {
+                            var tpls = JSON.parse(tplRaw);
+                            if (Array.isArray(tpls)) {
+                                tplBefore = tpls.length;
+                                tpls = tpls.filter(function(t) {
+                                    var tt = (t.title || '').toLowerCase();
+                                    return !tt.includes('测试') && !tt.includes('test');
+                                });
+                                tplAfter = tplBefore - tpls.length;
+                                localStorage.setItem(tplKey, JSON.stringify(tpls));
+                            }
+                        }
+                    } catch(e) {}
+                    tasks = tasks.filter(function(t) {
+                        var tt = (t.title || '').toLowerCase();
+                        return !tt.includes('测试') && !tt.includes('test');
+                    });
+                    var removed = before - tasks.length;
+                    localStorage.setItem(tk, JSON.stringify(tasks));
+                    // 重渲染
+                    if (typeof renderTasks === 'function') renderTasks();
+                    if (typeof renderHomeMood === 'function') renderHomeMood();
+                    if (typeof pushToCloud === 'function') pushToCloud().catch(function(){});
+                    var msg = '已清理 ' + removed + ' 条测试任务';
+                    if (tplAfter > 0) msg += ' + ' + tplAfter + ' 条模板';
+                    showToast(msg);
+                    return msg;
+                }
+            },
+            {
                 name: 'help',
                 match: /^(?:\/?help|\/?帮助|\/?指令|\/?commands|\/?cmd)$/i,
                 run: function() {
@@ -13916,6 +13961,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                         '• 删除 xxx\n' +
                         '• 番茄 / 停止番茄\n' +
                         '• /go news / /go home / /go kanban ...\n' +
+                        '• /clean（清掉标题含"测试"/"test"的任务）\n' +
                         '• 点搜索栏旁边的 🎤 说话（需 HTTPS + Chrome/Safari）';
                     showToast('帮助已显示在控制台');
                     console.log(msg);
