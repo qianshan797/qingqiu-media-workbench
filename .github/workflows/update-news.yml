@@ -26,9 +26,10 @@ jobs:
         run: |
           python3 - <<'PYEOF'
           import json, urllib.request, os, sys
-          from datetime import datetime, timezone
 
-          url = os.environ["SUPABASE_URL"] + "/workbench_sync?user_id=eq.default&select=data"
+          # ⚠️ 只抽 media_workflow_news 字段，绝不拉整行 data
+          # 整行 data 包含 tasks/accounts/health 等用户所有数据，会把它们写进 news-data.json → 提交回 GitHub
+          url = os.environ["SUPABASE_URL"] + "/workbench_sync?user_id=eq.default&select=data%3Emedia_workflow_news"
           req = urllib.request.Request(url, headers={
               "apikey": os.environ["SUPABASE_KEY"],
               "Authorization": "Bearer " + os.environ["SUPABASE_KEY"],
@@ -40,16 +41,14 @@ jobs:
               print("无云端数据，退出")
               sys.exit(0)
 
-          cloud = rows[0]["data"]
-          news = cloud.get("media_workflow_news", "[]")
-          if isinstance(news, str):
-              news = json.loads(news)
+          cloud = rows[0].get("data") or {}
+          news_raw = cloud.get("media_workflow_news", "[]")
+          news = json.loads(news_raw) if isinstance(news_raw, str) else (news_raw or [])
 
           if not news:
               print("云端无快讯数据，退出")
               sys.exit(0)
 
-          # 按日期降序排序
           news.sort(key=lambda x: x.get("date", ""), reverse=True)
 
           with open("news-data.json", "w", encoding="utf-8") as f:
@@ -57,8 +56,30 @@ jobs:
 
           print(f"写入 {len(news)} 条快讯")
           for n in news[:5]:
-              print(f"  {n.get('date')} {n.get('title','')[:30]}")
+              print(f"  {n.get('date')} {n.get('title','')[:40]}")
           PYEOF
+
+      - name: Verify output is news-only
+        run: |
+          if [ -f news-data.json ]; then
+            bad=$(python3 -c "
+              import json, sys
+              try:
+                arr = json.load(open('news-data.json'))
+                if not isinstance(arr, list): print('not-array'); sys.exit(1)
+                # 检查有没有混入 tasks 类字段
+                has_task = any('platform' in x and ('title' in x or 'dueDate' in x) for x in arr[:3])
+                print('has-task-fields=' + str(has_task))
+              except Exception as e:
+                print('parse-error: ' + str(e))
+            ")
+            echo "$bad"
+            if echo "$bad" | grep -qi "has-task-fields=True\|not-array\|parse-error"; then
+              echo "❌ news-data.json 校验失败，拒绝提交！"
+              git checkout HEAD -- news-data.json 2>/dev/null || true
+              exit 1
+            fi
+          fi
 
       - name: Commit and push
         run: |
