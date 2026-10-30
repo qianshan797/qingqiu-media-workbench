@@ -1236,6 +1236,14 @@ window.__newsFetchPromise = (function() {
         .health-cal-detail-row .tag.ok { background: rgba(52,199,89,.12); color: var(--success); }
         .health-cal-detail-row .tag.bad { background: rgba(255,59,48,.12); color: var(--danger); }
         .health-cal-empty { font-size: 12.5px; color: var(--text-muted); text-align: center; padding: 8px 0; }
+        .health-cal-cell.pickable { cursor: pointer; }
+        .health-cal-cell.pickable:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,0,0,.08); }
+        .health-cal-cell.future { opacity: .42; cursor: default; }
+        .health-cal-edit-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 10px; }
+        .health-cal-edit-actions { display: flex; gap: 8px; margin-top: 10px; }
+        .health-cal-save, .health-cal-clear { flex: 1; padding: 8px 0; font-size: 13px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text); cursor: pointer; }
+        .health-cal-save { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 600; }
+        .health-cal-save:hover, .health-cal-clear:hover { opacity: .88; }
         @media (max-width: 640px) {
             .health-cal-grid, .health-cal-weekdays { gap: 4px; }
             .health-cal-cell { min-height: 40px; border-radius: 8px; }
@@ -15254,8 +15262,67 @@ CREATE POLICY "allow_all" ON workbench_sync
         }
 
         function selectHealthCalendarDay(ds) {
+            if (!ds || ds > _todayStr()) return; // 不能选中未来日期
             healthCalSelected = (healthCalSelected === ds) ? null : ds;
             renderHealthCalendar();
+        }
+
+        // v51：日历选中日期后可直接填写/修改该日数据
+        function _healthDayValuesFrom(v) {
+            function r2(x) { return Math.round((parseFloat(x) || 0) * 100) / 100; }
+            return {
+                sleepHours: r2(Math.max(0, parseFloat(v.sleepHours) || 0)),
+                focusHours: r2(Math.max(0, parseFloat(v.focusHours) || 0)),
+                standSteps: Math.max(0, Math.round(parseFloat(v.standSteps) || 0)),
+                screenHours: r2(Math.max(0, parseFloat(v.screenHours) || 0))
+            };
+        }
+
+        function saveHealthDayData(ds) {
+            if (!ds || ds > _todayStr()) return;
+            var raw = {};
+            ['sleepHours', 'focusHours', 'standSteps', 'screenHours'].forEach(function(k) {
+                var el = document.getElementById('hcd_' + k);
+                raw[k] = el ? el.value : 0;
+            });
+            var vals = _healthDayValuesFrom(raw);
+            var hasAny = vals.sleepHours || vals.focusHours || vals.standSteps || vals.screenHours;
+            var h = getHealth();
+            var todayStr = _todayStr();
+
+            if (ds === todayStr) {
+                h.daily = Object.assign({}, h.daily, vals, { date: todayStr });
+            } else {
+                var idx = -1;
+                for (var i = 0; i < h.history.length; i++) {
+                    if (h.history[i] && h.history[i].date === ds) { idx = i; break; }
+                }
+                if (!hasAny) {
+                    if (idx >= 0) h.history.splice(idx, 1);
+                } else {
+                    var rec = Object.assign({ date: ds }, vals);
+                    if (idx >= 0) h.history[idx] = rec;
+                    else {
+                        h.history.push(rec);
+                        h.history.sort(function(a, b) { return a.date < b.date ? -1 : (a.date > b.date ? 1 : 0); });
+                    }
+                    if (h.history.length > 365) h.history = h.history.slice(-365);
+                }
+            }
+            saveHealth(h);
+            renderHealth();
+            showSyncToast(hasAny
+                ? '已保存 ' + ds.slice(5) + ' 的数据'
+                : '已清除 ' + ds.slice(5) + ' 的记录', 'success');
+        }
+
+        function clearHealthDayData(ds) {
+            if (!ds || ds > _todayStr()) return;
+            ['sleepHours', 'focusHours', 'standSteps', 'screenHours'].forEach(function(k) {
+                var el = document.getElementById('hcd_' + k);
+                if (el) el.value = 0;
+            });
+            saveHealthDayData(ds);
         }
 
         // v50：快速跳转到指定日期（自动切月 + 选中该日）
@@ -15306,11 +15373,13 @@ CREATE POLICY "allow_all" ON workbench_sync
                 var ds = y + '-' + String(m + 1).padStart(2, '0') + '-' + String(day).padStart(2, '0');
                 var rec = recMap[ds];
                 var lvl = _healthDayLevel(rec, G);
+                var isFuture = ds > todayStr;
                 var cls = 'health-cal-cell';
                 if (ds === todayStr) cls += ' today';
                 if (lvl >= 0) cls += ' has-data lvl-' + lvl;
                 if (healthCalSelected === ds) cls += ' selected';
-                html += '<div class="' + cls + '"' + (lvl >= 0 ? ' onclick="selectHealthCalendarDay(\'' + ds + '\')"' : '') + '>' +
+                if (isFuture) cls += ' future'; else cls += ' pickable';
+                html += '<div class="' + cls + '"' + (isFuture ? '' : ' onclick="selectHealthCalendarDay(\'' + ds + '\')"') + '>' +
                     '<span class="d">' + day + '</span><span class="lvl"></span></div>';
             }
             grid.innerHTML = html;
@@ -15348,39 +15417,42 @@ CREATE POLICY "allow_all" ON workbench_sync
             }
 
             if (!healthCalSelected) {
-                box.innerHTML = '<div class="health-cal-empty">' + summary + '<br>点击日历中有颜色的日期查看当日明细</div>';
+                box.innerHTML = '<div class="health-cal-empty">' + summary + '<br>点击日历中今天及以前的任意日期，查看或填写当日数据</div>';
                 return;
             }
 
             var ds = healthCalSelected;
             var rec = (ds === todayStr) ? D : h.history.find(function(x) { return x.date === ds; });
-            if (!rec) {
-                box.innerHTML = '<div class="health-cal-empty">该日期暂无记录</div>';
-                return;
-            }
-
-            var rows = [
-                { label: '睡眠', value: rec.sleepHours || 0, goal: G.sleepHours, unit: 'h', invert: false },
-                { label: '专注', value: rec.focusHours || 0, goal: G.focusHours, unit: 'h', invert: false },
-                { label: '步数', value: Math.round(rec.standSteps || 0), goal: G.standSteps, unit: '', invert: false },
-                { label: '屏幕', value: rec.screenHours || 0, goal: G.screenHours, unit: 'h', invert: true }
-            ];
+            var hasRec = !!rec && !!(rec.sleepHours || rec.focusHours || rec.standSteps || rec.screenHours);
+            var vals = {
+                sleepHours: (rec && rec.sleepHours) || 0,
+                focusHours: (rec && rec.focusHours) || 0,
+                standSteps: (rec && rec.standSteps) || 0,
+                screenHours: (rec && rec.screenHours) || 0
+            };
             var parts = ds.split('-');
             var head = parseInt(parts[1], 10) + '月' + parseInt(parts[2], 10) + '日' +
                 (ds === todayStr ? ' · 今天' : '') +
-                '<em>达标 ' + _healthDayLevel(rec, G) + '/4</em>';
+                (hasRec ? '<em>达标 ' + _healthDayLevel(rec, G) + '/4</em>' : '<em>暂无记录</em>');
 
-            var rowsHtml = '';
-            rows.forEach(function(r) {
-                var ok = r.invert ? (r.value > 0 && r.value <= r.goal) : (r.value >= r.goal);
-                var valTxt = r.unit === '' ? r.value.toLocaleString() : r.value + r.unit;
-                var goalTxt = r.unit === '' ? r.goal.toLocaleString() : r.goal + r.unit;
-                rowsHtml += '<div class="health-cal-detail-row"><span>' + r.label + '</span>' +
-                    '<b>' + valTxt + '</b><span style="font-size:11px;color:var(--text-muted)">/ ' + goalTxt + '</span>' +
-                    '<span class="tag ' + (ok ? 'ok' : 'bad') + '">' + (ok ? '达标' : '未达标') + '</span></div>';
+            var fields = [
+                { key: 'sleepHours', label: '睡眠 (h)', step: '0.1', value: vals.sleepHours },
+                { key: 'focusHours', label: '专注 (h)', step: '0.1', value: vals.focusHours },
+                { key: 'standSteps', label: '步数 (步)', step: '100', value: Math.round(vals.standSteps) },
+                { key: 'screenHours', label: '屏幕 (h)', step: '0.1', value: vals.screenHours }
+            ];
+            var inputs = '';
+            fields.forEach(function(f) {
+                inputs += '<div class="health-goal-field"><label>' + f.label + '</label>' +
+                    '<input type="number" min="0" step="' + f.step + '" id="hcd_' + f.key + '" value="' + f.value + '"></div>';
             });
 
-            box.innerHTML = '<div class="health-cal-detail-head">' + head + '</div>' + rowsHtml +
+            box.innerHTML = '<div class="health-cal-detail-head">' + head + '</div>' +
+                '<div class="health-cal-edit-grid">' + inputs + '</div>' +
+                '<div class="health-cal-edit-actions">' +
+                    '<button class="health-cal-save" onclick="saveHealthDayData(\'' + ds + '\')">保存当日数据</button>' +
+                    (hasRec ? '<button class="health-cal-clear" onclick="clearHealthDayData(\'' + ds + '\')">清除记录</button>' : '') +
+                '</div>' +
                 (summary ? '<div class="health-cal-empty" style="margin-top:8px">' + summary + '</div>' : '');
         }
         // ============ v46 页面副标题就地编辑 ============
