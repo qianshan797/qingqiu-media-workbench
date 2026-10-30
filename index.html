@@ -15000,6 +15000,7 @@ CREATE POLICY "allow_all" ON workbench_sync
                 grid.innerHTML = info.photos.map(function(dataUrl, i) {
                     return '<div class="checkin-thumb">' +
                         '<img src="' + dataUrl + '" alt="打卡照片" onclick="viewCheckinPhoto(\'' + dateStr + '\',' + i + ')"/>' +
+                        '<button type="button" class="checkin-thumb-remove" onclick="removeCheckinDetailPhoto(\'' + dateStr + '\',' + i + ')" title="删除这张">×</button>' +
                     '</div>';
                 }).join('');
                 if (countEl) countEl.textContent = info.photos.length + ' 张照片';
@@ -15010,6 +15011,21 @@ CREATE POLICY "allow_all" ON workbench_sync
             const modal = document.getElementById('checkinDetailModal');
             if (modal) modal.classList.remove('active');
             currentCheckinDetailDate = null;
+        }
+        // 从详情弹窗直接删除某一张照片（v52：不必跳去重新上传面板）
+        function removeCheckinDetailPhoto(dateStr, i) {
+            const map = getStudyCheckin();
+            const info = getCheckinInfo(map, dateStr);
+            if (!info || !info.photos || !info.photos[i]) return;
+            const pairs = checkinPairs(info);
+            if (i < 0 || i >= pairs.length) return;
+            pairs.splice(i, 1);
+            map[dateStr] = pairsToEntry(pairs, info.checked);
+            saveStudyCheckin(map);
+            showSyncToast('已删除第 ' + (i + 1) + ' 张（剩余 ' + pairs.length + ' 张）', 'success');
+            // 刷新当前详情面板
+            if (currentCheckinDetailDate === dateStr) openCheckinDetail(dateStr);
+            renderStudyCheckin();
         }
         // 从详情弹窗跳到上传照片弹窗（自动带上该日期+已有照片）
         function openReuploadCheckinPhoto() {
